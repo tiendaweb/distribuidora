@@ -82,7 +82,7 @@
 <body class="min-h-screen flex flex-col">
 
 <!-- ===== HEADER ===== -->
-<header class="bg-ink sticky top-0 z-40 shadow-lg">
+<header class="bg-gradient-to-r from-amber-50 via-yellow-50 to-white sticky top-0 z-40 shadow-md border-b border-amber-200">
   <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
     <!-- Logo -->
     <div class="flex items-center gap-2 shrink-0 cursor-pointer" onclick="showTab('catalogo')">
@@ -91,21 +91,21 @@
       </div>
       <div class="hidden sm:block">
         <div class="logo-text text-brand text-xl leading-none">La Distribuidora</div>
-        <div class="text-gray-400 text-[10px] leading-none font-body">Mayorista de Alimentos</div>
+        <div class="text-amber-700/70 text-[10px] leading-none font-body">Mayorista de Alimentos</div>
       </div>
     </div>
 
     <!-- Search (Store) -->
     <div class="flex-1 max-w-md relative" id="header-search">
       <input id="search-input" type="text" placeholder="Buscar productos..." 
-        class="w-full pl-9 pr-3 py-2 rounded-lg bg-gray-800 text-white placeholder-gray-400 text-sm border border-gray-700 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand" />
-      <svg class="absolute left-2.5 top-2.5 text-gray-400" width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M20 20l-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        class="w-full pl-9 pr-3 py-2 rounded-lg bg-white text-ink placeholder-gray-400 text-sm border border-amber-200 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand" />
+      <svg class="absolute left-2.5 top-2.5 text-amber-500" width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M20 20l-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
     </div>
 
     <div class="flex items-center gap-2 shrink-0">
       <!-- Admin Toggle -->
-      <button onclick="toggleAdminMode()" class="text-gray-400 hover:text-white flex items-center gap-1 text-xs font-bold px-2 py-2 border border-gray-700 rounded-lg">
-        ⚙️ <span class="hidden sm:inline">Admin</span>
+      <button onclick="toggleAdminMode()" class="text-amber-700 hover:text-amber-900 flex items-center gap-1 text-xs font-bold px-2 py-2 border border-amber-200 rounded-lg bg-white">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15.5A3.5 3.5 0 1 0 12 8.5a3.5 3.5 0 0 0 0 7z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82L4.21 7.2a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> <span class="hidden sm:inline">Admin</span>
       </button>
 
       <!-- Cart button -->
@@ -118,20 +118,20 @@
   </div>
 
   <!-- Nav Tabs Store -->
-  <nav class="bg-gray-900 border-t border-gray-800" id="nav-store">
+  <nav class="bg-white/90 border-t border-amber-200" id="nav-store">
     <div class="max-w-7xl mx-auto px-4 flex gap-1 overflow-x-auto no-scrollbar py-1">
-      <button class="tab-btn active text-sm px-4 py-2 rounded-lg whitespace-nowrap" onclick="showTab('catalogo')">🏠 Catálogo</button>
-      <button class="tab-btn text-gray-300 text-sm px-4 py-2 rounded-lg whitespace-nowrap" onclick="showTab('categorias')">📂 Categorías</button>
+      <button class="tab-btn active text-sm px-4 py-2 rounded-lg whitespace-nowrap flex items-center gap-1" onclick="showTab('catalogo')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg> Catálogo</button>
+      <button class="tab-btn text-gray-600 text-sm px-4 py-2 rounded-lg whitespace-nowrap flex items-center gap-1" onclick="showTab('categorias')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h6l2 2h10v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></svg> Categorías</button>
     </div>
   </nav>
 
   <!-- Nav Tabs Admin -->
-  <nav class="bg-gray-900 border-t border-gray-800 hidden" id="nav-admin">
+  <nav class="bg-white/90 border-t border-amber-200 hidden" id="nav-admin">
     <div class="max-w-7xl mx-auto px-4 flex gap-4 overflow-x-auto no-scrollbar pt-2">
-      <button class="admin-tab active text-sm pb-2 font-bold whitespace-nowrap text-gray-400" onclick="showAdminTab('facturacion', this)">🧾 Punto de Venta</button>
-      <button class="admin-tab text-sm pb-2 font-bold whitespace-nowrap text-gray-400" onclick="showAdminTab('pedidos', this)">🛒 Pedidos Web</button>
-      <button class="admin-tab text-sm pb-2 font-bold whitespace-nowrap text-gray-400" onclick="showAdminTab('stock', this)">📦 Stock & Precios</button>
-      <button class="admin-tab text-sm pb-2 font-bold whitespace-nowrap text-gray-400" onclick="showAdminTab('clientes', this)">👥 Clientes</button>
+      <button class="admin-tab active text-sm pb-2 font-bold whitespace-nowrap text-gray-600" onclick="showAdminTab('facturacion', this)">Punto de Venta</button>
+      <button class="admin-tab text-sm pb-2 font-bold whitespace-nowrap text-gray-600" onclick="showAdminTab('pedidos', this)">Pedidos Web</button>
+      <button class="admin-tab text-sm pb-2 font-bold whitespace-nowrap text-gray-600" onclick="showAdminTab('stock', this)">Stock & Precios</button>
+      <button class="admin-tab text-sm pb-2 font-bold whitespace-nowrap text-gray-600" onclick="showAdminTab('clientes', this)">Clientes</button>
     </div>
   </nav>
 </header>
@@ -162,16 +162,18 @@
     <section class="bg-white border-b border-gray-100 py-3 px-4 sticky top-[108px] z-30 shadow-sm">
       <div class="max-w-7xl mx-auto flex gap-2 overflow-x-auto no-scrollbar" id="cat-pills">
         <button class="cat-btn active text-sm px-4 py-1.5 rounded-full border border-gray-200 whitespace-nowrap font-semibold transition" onclick="filterCat('all',this)">Todos</button>
-        <button class="cat-btn text-sm px-4 py-1.5 rounded-full border border-gray-200 whitespace-nowrap font-semibold transition" onclick="filterCat('helados',this)">🍦 Helados</button>
-        <button class="cat-btn text-sm px-4 py-1.5 rounded-full border border-gray-200 whitespace-nowrap font-semibold transition" onclick="filterCat('pastas',this)">🍝 Pastas Frescas</button>
-        <button class="cat-btn text-sm px-4 py-1.5 rounded-full border border-gray-200 whitespace-nowrap font-semibold transition" onclick="filterCat('congelados',this)">❄️ Congelados</button>
+        <button class="cat-btn text-sm px-4 py-1.5 rounded-full border border-gray-200 whitespace-nowrap font-semibold transition" onclick="filterCat('helados',this)">Helados</button>
+        <button class="cat-btn text-sm px-4 py-1.5 rounded-full border border-gray-200 whitespace-nowrap font-semibold transition" onclick="filterCat('pastas',this)">Pastas Frescas</button>
+        <button class="cat-btn text-sm px-4 py-1.5 rounded-full border border-gray-200 whitespace-nowrap font-semibold transition" onclick="filterCat('congelados',this)">Congelados</button>
       </div>
     </section>
 
     <!-- Products grid -->
     <main class="max-w-7xl mx-auto px-4 py-6">
       <div id="no-results" class="hidden text-center py-16 text-gray-400">
-        <div class="text-4xl mb-2">🔍</div>
+        <div class="text-4xl mb-2">
+          <svg class="mx-auto text-amber-500" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3-3"/></svg>
+        </div>
         <p class="font-semibold">No se encontraron productos</p>
       </div>
       <div id="products-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"></div>
@@ -184,21 +186,21 @@
       <h2 class="font-display text-3xl mb-6 text-ink">Nuestras Categorías</h2>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
         <div class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition cursor-pointer" onclick="filterCat('helados', null); showTab('catalogo')">
-          <div class="h-36 bg-gradient-to-br from-cyan-100 to-blue-200 flex items-center justify-center text-6xl">🍦</div>
+          <div class="h-36 bg-gradient-to-br from-cyan-100 to-blue-200 flex items-center justify-center text-6xl"><svg class="text-cyan-600" width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 10h8l-1.5 10h-5z"/><path d="M9 10a3 3 0 0 1 6 0"/></svg></div>
           <div class="p-4">
             <h3 class="font-display text-2xl text-ink">Helados Montevideana</h3>
             <span class="inline-block mt-2 bg-brand text-ink text-xs font-bold px-3 py-1 rounded-full">Ver productos →</span>
           </div>
         </div>
         <div class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition cursor-pointer" onclick="filterCat('pastas', null); showTab('catalogo')">
-          <div class="h-36 bg-gradient-to-br from-yellow-50 to-amber-100 flex items-center justify-center text-6xl">🍝</div>
+          <div class="h-36 bg-gradient-to-br from-yellow-50 to-amber-100 flex items-center justify-center text-6xl"><svg class="text-amber-600" width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 15h16"/><path d="M6 12h12"/><path d="M8 9h8"/></svg></div>
           <div class="p-4">
             <h3 class="font-display text-2xl text-ink">Pastas Frescas</h3>
             <span class="inline-block mt-2 bg-brand text-ink text-xs font-bold px-3 py-1 rounded-full">Ver productos →</span>
           </div>
         </div>
         <div class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition cursor-pointer" onclick="filterCat('congelados', null); showTab('catalogo')">
-          <div class="h-36 bg-gradient-to-br from-indigo-50 to-purple-100 flex items-center justify-center text-6xl">❄️</div>
+          <div class="h-36 bg-gradient-to-br from-indigo-50 to-purple-100 flex items-center justify-center text-6xl"><svg class="text-indigo-600" width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v20M4.9 6l14.2 12M19.1 6L4.9 18"/></svg></div>
           <div class="p-4">
             <h3 class="font-display text-2xl text-ink">Congelados</h3>
             <span class="inline-block mt-2 bg-brand text-ink text-xs font-bold px-3 py-1 rounded-full">Ver productos →</span>
@@ -232,8 +234,8 @@
       </div>
 
       <!-- Panel Derecho: Ticket -->
-      <div class="w-full lg:w-[400px] bg-white rounded-xl shadow-lg p-5 flex flex-col h-[calc(100vh-160px)] sticky top-28">
-        <h2 class="font-display text-2xl mb-4 border-b pb-2">Ticket Actual</h2>
+      <div class="w-full lg:w-[430px] bg-gradient-to-b from-zinc-100 to-zinc-200 rounded-2xl shadow-2xl p-5 flex flex-col h-[calc(100vh-160px)] sticky top-28 border border-zinc-300">
+        <h2 class="font-display text-2xl mb-4 border-b pb-2 text-zinc-800">Caja Registradora</h2>
         
         <!-- Datos comprobante -->
         <div class="space-y-3 mb-4">
@@ -259,14 +261,20 @@
 
         <!-- Totales y Botón -->
         <div class="pt-4">
-          <div class="flex justify-between text-xl font-bold mb-4">
+          <div class="flex justify-between text-xl font-bold mb-4 bg-zinc-900 text-lime-300 rounded-lg px-3 py-2 font-mono tracking-wider">
             <span>TOTAL</span>
             <span id="admin-cart-total" class="text-brand">$0</span>
           </div>
-          <button onclick="procesarFactura()" class="w-full bg-ink hover:bg-gray-800 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition">
-            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
-            Emitir e Imprimir PDF
-          </button>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <button onclick="procesarFactura(false)" class="w-full bg-zinc-700 hover:bg-zinc-800 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition">
+              <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              Guardar
+            </button>
+            <button onclick="procesarFactura(true)" class="w-full bg-brand hover:bg-brand-dark text-ink font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition">
+              <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
+              Guardar e Imprimir
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -497,19 +505,45 @@
 const BASE_IMG = 'https://aapp.space/storage/';
 
 let products = [
-  { id: 'p1', name: 'Milanesas de Soja Rebozadas', short: 'Milanesas de soja, ideales para horno o fritura.', cat: 'congelados', badge: 'Ofertas', img: BASE_IMG + 'images/69c2ec882de0c-69c30dbbc3e7d.png', cost: 5000, margin: 60, sale: 8000, price: 10000, stock: 50 },
-  { id: 'p2', name: 'Ravioles Pollo y Espinaca x 1kg', short: 'Ravioles El Sol. Calidad premium.', cat: 'pastas', badge: 'Ofertas', img: BASE_IMG + 'images/69c2ec882de0c-69c49625e4a09.png', cost: 1800, margin: 53.8, sale: 2770, price: 3000, stock: 30 },
-  { id: 'p3', name: 'Copa Caribe Dulce de Leche', short: 'Helado cremoso sabor dulce de leche, sin gluten.', cat: 'helados', badge: 'Ofertas', img: BASE_IMG + 'images/69c2ec882de0c-69c30ff7a3584.png', cost: 1500, margin: 66.6, sale: 2500, price: 3000, stock: 100 },
-  { id: 'p4', name: 'Ravioles Ricotta x 1kg', short: 'Ravioles El Sol con relleno de ricotta.', cat: 'pastas', badge: '', img: BASE_IMG + 'images/69c2ec882de0c-69c496269320e.png', cost: 1800, margin: 53.8, sale: 2770, price: 2770, stock: 45 },
-  { id: 'p5', name: 'Summun Tres Mix (caja x24u)', short: 'Helado de agua sabor frutilla, manzana y ananá.', cat: 'helados', badge: '', img: BASE_IMG + 'images/69c2ec882de0c-69c89043e9d55.png', cost: 8000, margin: 50, sale: 12000, price: 14000, stock: 10 }
+  { id: '69c30deeb7a1f', name: 'Milanesas de Soja Rebozadas', short: 'Ricas y crocantes milanesas de soja, ideales para horno o fritura.', desc: 'Proteína vegetal con rebozado crocante. Opción vegetal, listas en minutos y aptas para horno o fritura.', price: 10000, sale: 8000, cat: 'congelados', badge: 'Ofertas', img: BASE_IMG + 'images/69c2ec882de0c-69c30dbbc3e7d.png', cost: 5200, margin: 53.8, stock: 40 },
+  { id: '69c30eb05e223', name: 'Ravioles Pollo y Espinaca x 1kg', short: 'Ravioles El Sol. Calidad premium, relleno de pollo y espinaca.', desc: 'Calidad premium. Relleno de pollo y espinaca. Listos en minutos. Presentación 1 kg.', price: 30000, sale: 2770, cat: 'pastas', badge: 'Ofertas', img: BASE_IMG + 'images/69c2ec882de0c-69c49625e4a09.png', cost: 1800, margin: 53.8, stock: 35 },
+  { id: '69c3100355174', name: 'Copa Caribe Dulce de Leche Sin Gluten', short: 'Helado cremoso sabor dulce de leche, sin gluten.', desc: 'Sabor dulce de leche intenso, textura cremosa y sin gluten.', price: 3000, sale: 2500, cat: 'helados', badge: 'Ofertas', img: BASE_IMG + 'images/69c2ec882de0c-69c30ff7a3584.png', cost: 1550, margin: 61.3, stock: 80 },
+  { id: '69c49f59f19a6', name: 'Ravioles Ricotta x 1kg', short: 'Ravioles El Sol con relleno de ricotta. Sabor casero único.', desc: 'Calidad premium con relleno de ricotta. Listos en minutos. Presentación 1 kg.', price: 3000, sale: 2770, cat: 'pastas', badge: '', img: BASE_IMG + 'images/69c2ec882de0c-69c496269320e.png', cost: 1800, margin: 53.8, stock: 50 },
+  { id: '69c4a49fb1004', name: 'Ravioles 4 Quesos x 1kg', short: 'Ravioles El Sol con relleno de 4 quesos. Sabor intenso.', desc: 'Calidad premium con relleno de 4 quesos. Listos en minutos. Presentación 1 kg.', price: 3000, sale: 2770, cat: 'pastas', badge: '', img: BASE_IMG + 'images/69c2ec882de0c-69c4962631b73.png', cost: 1800, margin: 53.8, stock: 44 },
+  { id: '69c4a4fcc731a', name: 'Ravioles Espinaca x 1kg', short: 'Ravioles El Sol con relleno de espinaca. Receta casera.', desc: 'Calidad premium con relleno de espinaca. Listos en minutos. Presentación 1 kg.', price: 3000, sale: 2770, cat: 'pastas', badge: '', img: BASE_IMG + 'images/69c2ec882de0c-69c496264e233.png', cost: 1800, margin: 53.8, stock: 37 },
+  { id: '69c4a563b886e', name: 'Ravioles Tomate y Muzarella x 1kg', short: 'Ravioles El Sol con relleno de tomate y muzarella.', desc: 'Calidad premium con relleno de tomate y muzarella. Listos en minutos. Presentación 1 kg.', price: 3000, sale: 2770, cat: 'pastas', badge: '', img: BASE_IMG + 'images/69c2ec882de0c-69c58f5744318.jpg', cost: 1800, margin: 53.8, stock: 30 },
+  { id: '69c4a5ee73e5a', name: 'Capelettis Jamón y Muzarella x 500gr', short: 'Capelettis El Sol con jamón y muzarella. Relleno abundante.', desc: 'Calidad premium con relleno de jamón y muzarella. Presentación 500 gr.', price: 2100, sale: 1875, cat: 'pastas', badge: '', img: BASE_IMG + 'images/69c2ec882de0c-69c4962702cc5.png', cost: 1210, margin: 55, stock: 70 },
+  { id: '69c4a675d5b8e', name: 'Sorrentinos Jamón y Muzarella x 400gr', short: 'Sorrentinos El Sol con jamón y muzarella. Masa suave.', desc: 'Calidad premium con relleno de jamón y muzarella. Presentación 400 gr.', price: 2180, sale: 1970, cat: 'pastas', badge: '', img: BASE_IMG + 'images/69c2ec882de0c-69c496271b346.png', cost: 1295, margin: 52.1, stock: 52 },
+  { id: '69c4a73365474', name: 'Ravioles Calabaza y Muzarella x 1kg', short: 'Ravioles El Sol con calabaza y muzarella. Combo irresistible.', desc: 'Calidad premium con relleno de calabaza y muzarella. Presentación 1 kg.', price: 3000, sale: 2770, cat: 'pastas', badge: '', img: BASE_IMG + 'images/69c2ec882de0c-69c49625be8f4.png', cost: 1800, margin: 53.8, stock: 48 },
+  { id: '69c593ac02326', name: 'Ravioles Pollo y Espinaca x 500gr', short: 'Ravioles El Sol, presentación 500g. Relleno de pollo y espinaca.', desc: 'Calidad premium con relleno de pollo y espinaca. Presentación 500 g.', price: 2100, sale: 1800, cat: 'pastas', badge: '', img: BASE_IMG + 'images/69c2ec882de0c-69c591ba518fd.jpg', cost: 1150, margin: 56.5, stock: 54 },
+  { id: '69c5956bb0be7', name: 'Ravioles 4 Quesos x 500gr', short: 'Ravioles El Sol, presentación 500g. Relleno 4 quesos.', desc: 'Calidad premium con relleno de 4 quesos. Presentación 500 g.', price: 2100, sale: 1800, cat: 'pastas', badge: '', img: BASE_IMG + 'images/69c2ec882de0c-69c591ba50a29.jpg', cost: 1150, margin: 56.5, stock: 58 },
+  { id: '69c88aece4514', name: 'Tallarines al Huevo x 500gr', short: 'Tallarines al huevo. Ideales para compartir en familia.', desc: 'Tallarines al huevo especiales para toda la familia. Presentación bandeja 500 g.', price: 1950, sale: 1738, cat: 'pastas', badge: '', img: BASE_IMG + 'images/69c2ec882de0c-69c88960d8ece.jpg', cost: 1120, margin: 55.2, stock: 63 },
+  { id: '69c892aaea1a1', name: 'Summun Tres Mix (caja x24u)', short: 'Helado de agua sabor frutilla, manzana y ananá.', desc: 'Tres sabores: frutilla, manzana y ananá. Helado de agua. Presentación caja x24.', price: 14000, sale: 12000, cat: 'helados', badge: '', img: BASE_IMG + 'images/69c2ec882de0c-69c89043e9d55.png', cost: 7800, margin: 53.8, stock: 18 },
+  { id: '69c89325d26db', name: 'Summun Frutilla y Limón (caja x24u)', short: 'Helado de agua sabor frutilla y limón. Caja x 24u.', desc: 'Sabores frutilla y limón. Helado de agua. Presentación caja x24.', price: 14000, sale: 12000, cat: 'helados', badge: '', img: BASE_IMG + 'images/69c2ec882de0c-69c89043e9f19.png', cost: 7800, margin: 53.8, stock: 15 },
+  { id: '69c89420ee6af', name: 'Summun Frutilla (caja x24u)', short: 'Helado de agua sabor frutilla. Caja x 24u.', desc: 'Sabor frutilla. Helado de agua. Presentación caja x24.', price: 14000, sale: 12000, cat: 'helados', badge: '', img: BASE_IMG + 'images/69c2ec882de0c-69c89045023da.png', cost: 7800, margin: 53.8, stock: 14 },
+  { id: '69c894b2cc6b8', name: 'Summun Mix Naranja/Ananá (caja x24u)', short: 'Helado de agua sabor naranja y ananá. Caja x 24u.', desc: 'Sabores naranja y ananá. Helado de agua. Presentación caja x24.', price: 14000, sale: 12000, cat: 'helados', badge: '', img: BASE_IMG + 'images/69c2ec882de0c-69c89045027ee.png', cost: 7800, margin: 53.8, stock: 12 },
+  { id: '69c894f917b58', name: 'Summun Limón (caja x24u)', short: 'Helado de agua sabor limón. Caja x 24u.', desc: 'Sabor limón. Helado de agua. Presentación caja x24.', price: 14000, sale: 12000, cat: 'helados', badge: '', img: BASE_IMG + 'images/69c2ec882de0c-69c89045f1dd6.png', cost: 7800, margin: 53.8, stock: 16 },
+  { id: '69c9e77d430af', name: 'Ñoquis de Papa x 500gr', short: 'Ñoquis de papa artesanales. Presentación x 500g.', desc: 'Ñoquis de papa artesanales para toda la familia. Presentación 500 g.', price: 1800, sale: 1600, cat: 'pastas', badge: '', img: BASE_IMG + 'images/69c2ec882de0c-69c9e710b8000.jpg', cost: 1030, margin: 55.3, stock: 75 },
+  { id: '69c9e7e4bb56e', name: 'Ñoquis de Papa x 1kg', short: 'Ñoquis de papa artesanales. Presentación x 1kg o bulto x10u.', desc: 'Ñoquis de papa artesanales. Presentación 1 kg o bulto cerrado x10.', price: 3000, sale: 2780, cat: 'pastas', badge: '', img: BASE_IMG + 'images/69c2ec882de0c-69c9e710ba04b.jpg', cost: 1800, margin: 54.4, stock: 41 }
 ];
 
 let clients = [
   { id: 'c1', name: 'Consumidor Final', address: '', phone: '', cuit: '', tax: 'Consumidor Final' },
-  { id: 'c2', name: 'Almacén Don José', address: 'Av. Siempreviva 123', phone: '1123456789', cuit: '20-12345678-9', tax: 'Monotributista' }
+  { id: 'c2', name: 'Almacén Don José', address: 'Av. Siempreviva 123', phone: '1123456789', cuit: '20-12345678-9', tax: 'Monotributista' },
+  { id: 'c3', name: 'Kiosco La Esquina', address: 'San Martín 450', phone: '1141202201', cuit: '27-30111222-4', tax: 'Monotributista' },
+  { id: 'c4', name: 'Despensa Santa Ana', address: 'Belgrano 912', phone: '1139918844', cuit: '20-28999111-5', tax: 'Responsable Inscripto' },
+  { id: 'c5', name: 'Super Norte', address: 'Rivadavia 1700', phone: '1161200099', cuit: '30-71222333-8', tax: 'Responsable Inscripto' },
+  { id: 'c6', name: 'Autoservicio Los Primos', address: 'Mitre 220', phone: '1159100001', cuit: '20-33777666-9', tax: 'Monotributista' },
+  { id: 'c7', name: 'Minimarket Plaza', address: 'Sarmiento 300', phone: '1133001122', cuit: '20-33000111-2', tax: 'Monotributista' },
+  { id: 'c8', name: 'Almacén La Familia', address: 'Urquiza 765', phone: '1129912233', cuit: '20-31122444-6', tax: 'Consumidor Final' },
+  { id: 'c9', name: 'Distribuciones Sur', address: 'Ruta 3 km 34', phone: '1178883322', cuit: '30-70988776-1', tax: 'Responsable Inscripto' },
+  { id: 'c10', name: 'Mercado El Puente', address: 'Lavalle 1180', phone: '1149876655', cuit: '20-29888777-3', tax: 'Monotributista' },
+  { id: 'c11', name: 'Kiosco 24 Horas', address: 'Moreno 55', phone: '1162230099', cuit: '20-35544333-7', tax: 'Consumidor Final' },
+  { id: 'c12', name: 'Comedor Buen Sabor', address: 'Italia 402', phone: '1144001122', cuit: '27-34455666-1', tax: 'Monotributista' }
 ];
 
 let adminOrders = []; // Aca se guardarán los pedidos web
+let adminInvoices = []; // Pedidos/facturas guardados desde caja
 
 // ============================================================
 // STATE
@@ -528,6 +562,26 @@ let adminCart = [];
 // Formatters
 const fmt = n => '$' + Number(n).toLocaleString('es-AR');
 const unFmt = s => parseFloat(s) || 0;
+
+const DB_KEYS = { products:'dist_products_v1', clients:'dist_clients_v1', webOrders:'dist_web_orders_v1', invoices:'dist_invoices_v1' };
+function loadPersistedData(){
+  try {
+    const savedProducts = JSON.parse(localStorage.getItem(DB_KEYS.products) || 'null');
+    const savedClients = JSON.parse(localStorage.getItem(DB_KEYS.clients) || 'null');
+    const savedOrders = JSON.parse(localStorage.getItem(DB_KEYS.webOrders) || 'null');
+    const savedInvoices = JSON.parse(localStorage.getItem(DB_KEYS.invoices) || 'null');
+    if(Array.isArray(savedProducts) && savedProducts.length) products = savedProducts;
+    if(Array.isArray(savedClients) && savedClients.length) clients = savedClients;
+    if(Array.isArray(savedOrders)) adminOrders = savedOrders;
+    if(Array.isArray(savedInvoices)) adminInvoices = savedInvoices;
+  } catch(err) { console.warn('No se pudo leer localStorage', err); }
+}
+function persistData(){
+  localStorage.setItem(DB_KEYS.products, JSON.stringify(products));
+  localStorage.setItem(DB_KEYS.clients, JSON.stringify(clients));
+  localStorage.setItem(DB_KEYS.webOrders, JSON.stringify(adminOrders));
+  localStorage.setItem(DB_KEYS.invoices, JSON.stringify(adminInvoices));
+}
 
 // ============================================================
 // APP INIT & MODE SWITCHER
@@ -617,7 +671,7 @@ function renderProducts() {
       </div>
       <div class="p-3 flex flex-col flex-1">
         <h3 class="font-bold text-xs text-ink leading-tight mb-1 line-clamp-2">${p.name}</h3>
-        <p class="text-gray-400 text-[10px] leading-tight mb-2 line-clamp-2">${p.short}</p>
+        <p class="text-amber-700/70 text-[10px] leading-tight mb-2 line-clamp-2">${p.short}</p>
         <div class="mt-auto">
           ${p.price !== p.sale ? `<div class="price-regular text-[10px]">${fmt(p.price)}</div>` : '<div class="h-[15px]"></div>'}
           <div class="text-brand font-display text-xl leading-none mb-2">${fmt(p.sale)}</div>
@@ -673,7 +727,8 @@ function addToCart(id, qty) {
   }
   
   updateCartUI();
-  showToast(`✅ Agregado al carrito`);
+persistData();
+  showToast('Agregado al carrito');
 }
 
 function updateCartUI() {
@@ -724,11 +779,13 @@ function updateCartQty(id, delta) {
   item.qty = newQty;
   if (item.qty <= 0) cart = cart.filter(c => c.id !== id);
   updateCartUI();
+persistData();
 }
 
 function removeFromCart(id) {
   cart = cart.filter(c => c.id !== id);
   updateCartUI();
+persistData();
 }
 
 function toggleCart() {
@@ -740,12 +797,12 @@ function toggleCart() {
 
 // LOGICA NUEVA DE ENVÍO Y GUARDADO DE PEDIDO WEB
 function enviarPedidoWeb(withWhatsApp) {
-  if (!cart.length) { showToast('⚠️ El carrito está vacío'); return; }
+  if (!cart.length) { showToast('El carrito está vacío'); return; }
   
   const name = document.getElementById('store-client-name').value.trim();
   const address = document.getElementById('store-client-address').value.trim();
   
-  if(!name) { showToast('⚠️ Por favor ingresa tu Nombre / Negocio'); return; }
+  if(!name) { showToast('Por favor ingresa tu Nombre / Negocio'); return; }
   
   const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
   const date = new Date().toLocaleDateString('es-AR');
@@ -763,6 +820,7 @@ function enviarPedidoWeb(withWhatsApp) {
   };
   adminOrders.unshift(newOrder); // Agrega al principio
   renderAdminOrders(); // Actualiza la tabla del admin
+  persistData();
 
   // 2. Si eligió WhatsApp, abrimos la ventana
   if (withWhatsApp) {
@@ -780,7 +838,7 @@ function enviarPedidoWeb(withWhatsApp) {
     window.open(`https://wa.me/+5491100000000?text=${encoded}`, '_blank');
   } else {
     // Si no manda WhatsApp avisamos en pantalla nomas
-    showToast('✅ Pedido guardado en el sistema con éxito');
+    showToast('Pedido guardado en el sistema con éxito');
   }
 
   // 3. Limpiar carrito de la tienda
@@ -788,6 +846,7 @@ function enviarPedidoWeb(withWhatsApp) {
   document.getElementById('store-client-name').value = '';
   document.getElementById('store-client-address').value = '';
   updateCartUI();
+persistData();
   toggleCart();
 }
 
@@ -947,6 +1006,7 @@ function markAdminOrder(id) {
     o.status = 'Completado';
     showToast('Pedido marcado como Completado');
     renderAdminOrders();
+    persistData();
   }
 }
 
@@ -978,7 +1038,7 @@ function saveClient() {
     tax: document.getElementById('c-tax').value
   };
 
-  if(!data.name) { showToast('⚠️ Ingresa el nombre del cliente'); return; }
+  if(!data.name) { showToast('Ingresa el nombre del cliente'); return; }
 
   if(id) {
     const idx = clients.findIndex(c => c.id === id);
@@ -989,7 +1049,8 @@ function saveClient() {
   
   resetClientForm();
   renderAdminClients();
-  showToast('✅ Cliente guardado');
+  persistData();
+  showToast('Cliente guardado');
 }
 
 function editClient(id) {
@@ -1082,7 +1143,8 @@ function saveAdminProduct() {
   
   closeAdminModal();
   renderAdminStock();
-  showToast('✅ Producto actualizado');
+  persistData();
+  showToast('Producto actualizado');
 }
 
 
@@ -1169,27 +1231,39 @@ function removeAdminCart(id) {
 }
 
 // PROCESAMIENTO Y PDF
-function procesarFactura() {
-  if(!adminCart.length) { showToast('⚠️ Agrega productos al ticket'); return; }
+function procesarFactura(printNow = true) {
+  if(!adminCart.length) { showToast('Agrega productos al ticket'); return; }
   
   const clientId = document.getElementById('admin-client-select').value;
   const tipo = document.getElementById('admin-tipo-comp').value; // 'blanco' o 'negro'
   const client = clients.find(c => c.id === clientId) || clients[0];
   
-  // 1. Generar PDF
-  generateInvoicePDF(client, tipo);
+  // 1. Guardar comprobante en historial
+  const total = adminCart.reduce((acc, item) => acc + item.price * item.qty, 0);
+  adminInvoices.unshift({
+    id: "inv-" + Date.now(),
+    date: new Date().toLocaleString('es-AR'),
+    client: client.name,
+    tipo,
+    items: adminCart.map(i => ({...i})),
+    total
+  });
 
-  // 2. Descontar Stock
+  // 2. Imprimir opcional
+  if (printNow) generateInvoicePDF(client, tipo);
+
+  // 3. Descontar Stock
   adminCart.forEach(item => {
     const p = products.find(prod => prod.id === item.id);
     if(p) p.stock -= item.qty;
   });
 
-  // 3. Limpiar caja
+  // 4. Limpiar caja
   adminCart = [];
   renderAdminCart();
   renderAdminProdList(); // refresca stock visual
-  showToast('✅ Comprobante generado y stock actualizado');
+  persistData();
+  showToast(printNow ? 'Comprobante guardado, impreso y stock actualizado' : 'Comprobante guardado y stock actualizado');
 }
 
 function generateInvoicePDF(client, tipo) {
@@ -1334,9 +1408,11 @@ function showToast(msg) {
 // ============================================================
 // BOOTSTRAP
 // ============================================================
+loadPersistedData();
 renderProducts();
 resetSliderTimer();
 updateCartUI();
+persistData();
 </script>
 </body>
 </html>
