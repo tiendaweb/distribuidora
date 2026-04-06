@@ -1,0 +1,352 @@
+/* ============================================================
+   STORE (TIENDA - LADO CLIENTE)
+   ============================================================ */
+
+// PRODUCT FILTERING & RENDERING
+function getFilteredProducts() {
+  let filtered = STATE.products;
+
+  // Filter by category
+  if (STATE.currentFilter !== 'all') {
+    filtered = filtered.filter(p => p.cat === STATE.currentFilter);
+  }
+
+  // Filter by search
+  if (STATE.currentSearch) {
+    const q = STATE.currentSearch.toLowerCase();
+    filtered = filtered.filter(p =>
+      p.name.toLowerCase().includes(q) ||
+      p.short.toLowerCase().includes(q) ||
+      p.desc.toLowerCase().includes(q)
+    );
+  }
+
+  return filtered;
+}
+
+function renderProducts() {
+  const grid = document.getElementById('products-grid');
+  const noRes = document.getElementById('no-results');
+  if (!grid) return;
+
+  const filtered = getFilteredProducts();
+
+  if (!filtered.length) {
+    grid.innerHTML = '';
+    if (noRes) noRes.classList.remove('hidden');
+    return;
+  }
+
+  if (noRes) noRes.classList.add('hidden');
+
+  grid.innerHTML = filtered.map(p => {
+    const discount = p.badge ? calculateDiscount(p.price, p.sale) : 0;
+    const cartItem = STATE.cart.find(c => c.id === p.id);
+    const qty = cartItem ? cartItem.qty : 1;
+    const outOfStock = p.stock <= 0;
+
+    return `
+    <div class="product-card ${outOfStock ? 'disabled' : ''}" onclick="${outOfStock ? '' : `openStoreProduct('${p.id}')`}">
+      <div style="position: relative;">
+        <img src="${p.img}" alt="${p.name}" class="product-card-img"
+          onerror="this.src='https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&q=70'"/>
+        ${p.badge ? `<span class="badge-oferta" style="position: absolute; top: 8px; left: 8px;">${discount}% OFF</span>` : ''}
+        ${outOfStock ? `<div style="position: absolute; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; border-radius: 12px 12px 0 0;">
+          <span style="color: white; font-weight: bold; font-size: 12px; text-transform: uppercase;">Sin Stock</span>
+        </div>` : ''}
+      </div>
+      <div class="product-card-body">
+        <h3 class="product-card-name">${escapeHtml(p.name)}</h3>
+        <p class="product-card-short">${escapeHtml(p.short)}</p>
+        <div style="margin-top: auto;">
+          ${p.price !== p.sale ? `<div class="price-regular">${fmt(p.price)}</div>` : ''}
+          <div class="price-sale">${fmt(p.sale)}</div>
+
+          ${outOfStock ? '' : `
+          <div style="display: flex; align-items: center; gap: 4px; margin: 8px 0;">
+            <button class="qty-btn" onclick="event.stopPropagation(); changeStoreQty('${p.id}', -1)">−</button>
+            <input type="number" id="qty-${p.id}" value="${qty}" min="1" max="${p.stock}" class="qty-input" readonly />
+            <button class="qty-btn" onclick="event.stopPropagation(); changeStoreQty('${p.id}', 1)">+</button>
+          </div>
+          <button onclick="event.stopPropagation(); addToCart('${p.id}')"
+            class="btn btn-primary" style="width: 100%; font-size: 12px;">
+            Agregar
+          </button>
+          `}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// CART MANAGEMENT
+function addToCart(productId, qty = null) {
+  const product = STATE.products.find(p => p.id === productId);
+  if (!product || product.stock <= 0) return;
+
+  if (!qty) {
+    const input = document.getElementById('qty-' + productId);
+    qty = input ? parseInt(input.value) || 1 : 1;
+  }
+
+  const existing = STATE.cart.find(c => c.id === productId);
+  let finalQty = existing ? existing.qty + qty : qty;
+
+  if (finalQty > product.stock) {
+    finalQty = product.stock;
+    showToast(`Solo quedan ${product.stock} unidades`, 'warning');
+  }
+
+  if (existing) {
+    existing.qty = finalQty;
+  } else {
+    STATE.cart.push({
+      id: productId,
+      name: product.name,
+      price: product.sale,
+      qty: finalQty,
+      img: product.img,
+      stock: product.stock
+    });
+  }
+
+  updateStoreCartUI();
+  persistData();
+  showToast('Agregado al carrito', 'success');
+}
+
+function removeFromCart(productId) {
+  STATE.cart = STATE.cart.filter(c => c.id !== productId);
+  updateStoreCartUI();
+  persistData();
+}
+
+function updateCartQty(productId, delta) {
+  const item = STATE.cart.find(c => c.id === productId);
+  if (!item) return;
+
+  let newQty = item.qty + delta;
+  if (newQty > item.stock) {
+    showToast('Stock máximo: ' + item.stock, 'warning');
+    return;
+  }
+
+  if (newQty <= 0) {
+    removeFromCart(productId);
+  } else {
+    item.qty = newQty;
+    updateStoreCartUI();
+  }
+
+  persistData();
+}
+
+function updateStoreCartUI() {
+  const badge = document.getElementById('cart-badge');
+  const totalEl = document.getElementById('cart-total');
+  const itemsContainer = document.getElementById('cart-items');
+
+  if (!badge || !totalEl || !itemsContainer) return;
+
+  const total = STATE.cart.reduce((s, c) => s + c.price * c.qty, 0);
+  const count = STATE.cart.reduce((s, c) => s + c.qty, 0);
+
+  badge.textContent = count;
+  badge.classList.toggle('hidden', count === 0);
+  totalEl.textContent = fmt(total);
+
+  if (!STATE.cart.length) {
+    itemsContainer.innerHTML = '<p style="color: #999; font-size: 13px; text-align: center; padding: 20px 0;">Tu carrito está vacío</p>';
+    return;
+  }
+
+  itemsContainer.innerHTML = STATE.cart.map(c => `
+    <div style="display: flex; align-items: center; gap: 12px; background: white; border: 1px solid #eee; border-radius: 10px; padding: 8px; margin-bottom: 8px;">
+      <img src="${c.img}" alt="${c.name}" style="width: 56px; height: 56px; object-fit: cover; border-radius: 8px; background: #f5f5f5; flex-shrink: 0;"/>
+      <div style="flex: 1; min-width: 0;">
+        <p style="margin: 0; font-weight: bold; font-size: 12px; color: var(--color-ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(c.name)}</p>
+        <p style="margin: 2px 0 0; font-size: 11px; color: #666;">${fmt(c.price)} × ${c.qty}</p>
+        <p style="margin: 4px 0 0; font-size: 13px; font-weight: 800; color: var(--color-brand);">${fmt(c.price * c.qty)}</p>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; flex-shrink: 0;">
+        <div style="display: flex; align-items: center; gap: 4px; background: #f5f5f5; border-radius: 4px; padding: 2px;">
+          <button class="qty-btn" style="width: 24px; height: 24px; font-size: 13px; background: white; border: 1px solid #ddd;" onclick="updateCartQty('${c.id}', -1)">−</button>
+          <span style="font-size: 11px; font-weight: bold; width: 16px; text-align: center;">${c.qty}</span>
+          <button class="qty-btn" style="width: 24px; height: 24px; font-size: 13px; background: white; border: 1px solid #ddd;" onclick="updateCartQty('${c.id}', 1)">+</button>
+        </div>
+        <button onclick="removeFromCart('${c.id}')" style="color: #ef4444; background: none; border: none; font-size: 11px; font-weight: bold; cursor: pointer; padding: 0; text-transform: uppercase;">Quitar</button>
+      </div>
+    </div>`).join('');
+}
+
+function changeStoreQty(productId, delta) {
+  const product = STATE.products.find(p => p.id === productId);
+  const input = document.getElementById('qty-' + productId);
+  if (!input || !product) return;
+
+  let v = parseInt(input.value) + delta;
+  if (v < 1) v = 1;
+  if (v > product.stock) {
+    v = product.stock;
+    showToast('Stock máximo: ' + product.stock, 'warning');
+  }
+  input.value = v;
+}
+
+// PRODUCT MODAL
+function openStoreProduct(productId) {
+  const product = STATE.products.find(p => p.id === productId);
+  if (!product) return;
+
+  const modalImg = document.getElementById('modal-img');
+  const modalName = document.getElementById('modal-name');
+  const modalDesc = document.getElementById('modal-desc');
+  const modalPriceSale = document.getElementById('modal-price-sale');
+  const modalPriceRegular = document.getElementById('modal-price-regular');
+  const modalBadge = document.getElementById('modal-badge');
+  const modalQty = document.getElementById('modal-qty');
+  const modalAddBtn = document.getElementById('modal-add-btn');
+
+  if (modalImg) modalImg.src = product.img;
+  if (modalName) modalName.textContent = escapeHtml(product.name);
+  if (modalDesc) modalDesc.textContent = escapeHtml(product.short);
+  if (modalPriceSale) modalPriceSale.textContent = fmt(product.sale);
+
+  if (modalPriceRegular) {
+    if (product.price !== product.sale) {
+      modalPriceRegular.textContent = fmt(product.price);
+      modalPriceRegular.classList.remove('hidden');
+    } else {
+      modalPriceRegular.classList.add('hidden');
+    }
+  }
+
+  if (modalBadge) {
+    if (product.badge) {
+      modalBadge.textContent = calculateDiscount(product.price, product.sale) + '% OFF';
+      modalBadge.classList.remove('hidden');
+    } else {
+      modalBadge.classList.add('hidden');
+    }
+  }
+
+  if (modalQty) {
+    modalQty.value = 1;
+    modalQty.max = product.stock;
+  }
+
+  if (modalAddBtn) {
+    modalAddBtn.onclick = () => {
+      const qty = parseInt(modalQty?.value) || 1;
+      addToCart(productId, qty);
+      closeModal('product-modal');
+    };
+  }
+
+  openModal('product-modal');
+}
+
+// CATEGORY & SEARCH
+function filterByCategory(category, btnElement = null) {
+  STATE.currentFilter = category;
+  if (btnElement) {
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    btnElement.classList.add('active');
+  }
+  renderProducts();
+}
+
+function searchProducts(query) {
+  STATE.currentSearch = query.trim();
+  switchTab('catalogo');
+  renderProducts();
+}
+
+// SLIDER
+function changeSlide(direction) {
+  STATE.sliderIdx = (STATE.sliderIdx + direction + 2) % 2;
+  goToSlide(STATE.sliderIdx);
+}
+
+function goToSlide(index) {
+  STATE.sliderIdx = index;
+  const track = document.getElementById('slider-track');
+  if (track) {
+    track.style.transform = `translateX(-${index * 100}%)`;
+  }
+  document.querySelectorAll('.dot').forEach((d, i) => {
+    d.classList.toggle('active', i === index);
+  });
+  resetSliderTimer();
+}
+
+function resetSliderTimer() {
+  clearInterval(STATE.sliderTimer);
+  STATE.sliderTimer = setInterval(() => changeSlide(1), 4500);
+}
+
+// WEB ORDER
+function submitWebOrder(sendViaWhatsApp = false) {
+  if (!STATE.cart.length) {
+    showToast('El carrito está vacío', 'error');
+    return;
+  }
+
+  const nameInput = document.getElementById('store-client-name');
+  const addressInput = document.getElementById('store-client-address');
+
+  if (!nameInput || !addressInput) {
+    showToast('Error: formulario no encontrado', 'error');
+    return;
+  }
+
+  const name = nameInput.value.trim();
+  const address = addressInput.value.trim();
+
+  if (!name) {
+    showToast('Por favor ingresa tu Nombre / Negocio', 'warning');
+    return;
+  }
+
+  const total = STATE.cart.reduce((s, c) => s + c.price * c.qty, 0);
+  const date = formatDate(new Date());
+  const time = formatTime(new Date());
+
+  // Save to admin orders
+  const newOrder = {
+    id: generateId('ord'),
+    date: `${date} ${time}`,
+    client: name,
+    address: address || '—',
+    items: [...STATE.cart],
+    total: total,
+    source: 'web',
+    status: 'pending'
+  };
+
+  STATE.adminOrders.unshift(newOrder);
+  persistData();
+
+  if (sendViaWhatsApp) {
+    let msg = `🛒 *NUEVO PEDIDO*\n`;
+    msg += `👤 Cliente: ${name}\n`;
+    if (address) msg += `📍 Envío a: ${address}\n`;
+    msg += `📅 ${date} ${time}\n\n`;
+
+    STATE.cart.forEach(c => {
+      msg += `• ${c.qty}x ${c.name} (${fmt(c.price)}) = *${fmt(c.price * c.qty)}*\n`;
+    });
+    msg += `\n💰 *TOTAL: ${fmt(total)}*\n`;
+
+    const encoded = encodeURIComponent(msg);
+    window.open(`https://wa.me/+5491100000000?text=${encoded}`, '_blank');
+  }
+
+  // Clear cart & form
+  STATE.cart = [];
+  nameInput.value = '';
+  addressInput.value = '';
+  updateStoreCartUI();
+  closeDrawer('cart-drawer');
+  showToast('Pedido guardado con éxito', 'success');
+}
