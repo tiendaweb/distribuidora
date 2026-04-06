@@ -13,6 +13,8 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
+  user-select: none;
+  touch-action: manipulation;
 }
 
 .btn-primary {
@@ -25,6 +27,11 @@
   box-shadow: 0 4px 12px rgba(245, 192, 0, 0.2);
 }
 
+.btn-primary:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
 .btn-secondary {
   background-color: var(--color-gray-200);
   color: var(--color-ink);
@@ -32,6 +39,11 @@
 
 .btn-secondary:hover {
   background-color: var(--color-gray-300);
+}
+
+.btn-secondary:active {
+  transform: scale(0.98);
+  opacity: 0.85;
 }
 
 .btn-danger {
@@ -43,6 +55,11 @@
   background-color: #dc2626;
 }
 
+.btn-danger:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
 .btn-success {
   background-color: var(--color-success);
   color: white;
@@ -50,6 +67,11 @@
 
 .btn-success:hover {
   background-color: #059669;
+}
+
+.btn-success:active {
+  transform: scale(0.98);
+  opacity: 0.9;
 }
 
 .btn-sm {
@@ -80,11 +102,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s;
+  transition: all 0.2s;
+  user-select: none;
+  touch-action: manipulation;
 }
 
 .qty-btn:hover {
   background: var(--color-gray-300);
+}
+
+.qty-btn:active {
+  background: var(--color-gray-300);
+  transform: scale(0.95);
 }
 
 .qty-input {
@@ -133,14 +162,21 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   overflow: hidden;
   cursor: pointer;
-  transition: box-shadow 0.2s, transform 0.2s;
+  transition: box-shadow 0.2s, transform 0.2s, opacity 0.15s;
   display: flex;
   flex-direction: column;
+  user-select: none;
+  touch-action: manipulation;
 }
 
 .product-card:hover:not(.disabled) {
   box-shadow: 0 8px 32px rgba(245, 192, 0, 0.18);
   transform: translateY(-4px);
+}
+
+.product-card:active:not(.disabled) {
+  opacity: 0.9;
+  box-shadow: 0 2px 8px rgba(245, 192, 0, 0.12);
 }
 
 .product-card.disabled {
@@ -262,6 +298,15 @@ select {
   font-family: inherit;
   font-size: 14px;
   transition: border-color 0.2s;
+  touch-action: manipulation;
+}
+
+/* Mobile-optimized inputs */
+input[type="number"] {
+  min-height: 44px;
+  min-width: 50px;
+  font-size: 16px;
+  padding: 8px 12px;
 }
 
 input:focus,
@@ -304,3 +349,25 @@ select:focus {
   font-size: 12px;
   margin-top: 4px;
 }
+
+/* ============================================================
+   TOUCH-FRIENDLY ENHANCEMENTS
+   ============================================================ */
+
+button,
+.btn,
+[onclick],
+.clickable {
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+/* Better scrollbar visibility */
+::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+/* Prevent tap highlight on iOS */
+-webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);

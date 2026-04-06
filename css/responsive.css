@@ -18,6 +18,87 @@ header {
   padding: 12px 16px;
 }
 
+/* ============================================================
+   MOBILE-OPTIMIZED INTERACTIVE ELEMENTS
+   ============================================================ */
+
+/* Quantity buttons - larger on mobile */
+@media (max-width: 640px) {
+  .qty-btn {
+    min-width: 44px;
+    min-height: 44px;
+    width: 44px;
+    height: 44px;
+    font-size: 18px;
+    border-radius: 8px;
+  }
+
+  /* Small buttons - larger on mobile */
+  .btn-sm {
+    padding: 10px 16px;
+    min-height: 44px;
+    font-size: 13px;
+  }
+
+  /* Action buttons - larger on mobile */
+  .action-btn {
+    padding: 10px 16px;
+    min-height: 44px;
+    border-radius: 6px;
+  }
+
+  /* Spacing between buttons */
+  .btn + .btn {
+    margin-left: 8px;
+  }
+
+  /* Input fields - larger on mobile for touch */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  input[type="tel"],
+  textarea,
+  select {
+    min-height: 44px;
+    font-size: 16px;
+    padding: 10px 12px;
+  }
+
+  /* Quantity input - wider on mobile */
+  .qty-input {
+    min-width: 50px;
+    min-height: 44px;
+    width: auto;
+    font-size: 14px;
+  }
+
+  /* Category pills - larger tap target */
+  .category-pills .cat-btn {
+    padding: 10px 16px;
+    min-height: 44px;
+  }
+
+  /* Tab buttons - larger */
+  .tab-btn {
+    padding: 10px 16px;
+    min-height: 44px;
+  }
+
+  /* Admin tab buttons - larger */
+  .admin-tab {
+    padding: 12px 16px;
+    min-height: 44px;
+  }
+
+  /* Drawer/Modal buttons - always visible and large */
+  .modal-content button,
+  #cart-drawer button {
+    min-height: 44px;
+    padding: 10px 16px;
+  }
+}
+
 /* SLIDER */
 .slide {
   height: 180px;

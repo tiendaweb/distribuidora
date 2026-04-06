@@ -285,6 +285,65 @@ function resetSliderTimer() {
   STATE.sliderTimer = setInterval(() => changeSlide(1), 4500);
 }
 
+// SWIPE SUPPORT FOR SLIDER
+function setupSliderSwipe() {
+  const track = document.getElementById('slider-track');
+  if (!track) return;
+
+  let touchStartX = 0;
+  let touchStartY = 0;
+
+  track.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  track.addEventListener('touchend', (e) => {
+    if (!e.changedTouches.length) return;
+
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
+
+    const diffX = touchStartX - touchEndX;
+    const diffY = touchStartY - touchEndY;
+
+    // Solo si es más horizontal que vertical
+    if (Math.abs(diffX) > Math.abs(diffY)) {
+      if (diffX > 50) changeSlide(1);      // Swipe izquierdo
+      else if (diffX < -50) changeSlide(-1); // Swipe derecho
+    }
+  }, { passive: true });
+}
+
+// SWIPE SUPPORT FOR CART DRAWER
+function setupCartDrawerSwipe() {
+  const drawer = document.getElementById('cart-drawer');
+  if (!drawer) return;
+
+  let touchStartX = 0;
+  let touchStartY = 0;
+
+  drawer.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  drawer.addEventListener('touchend', (e) => {
+    if (!e.changedTouches.length) return;
+
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
+
+    const diffX = touchStartX - touchEndX;
+    const diffY = Math.abs(touchStartY - touchEndY);
+
+    // Solo si es más horizontal que vertical y el swipe es hacia la derecha
+    if (Math.abs(diffX) > diffY && diffX > 100) {
+      closeDrawer('cart-drawer');
+    }
+  }, { passive: true });
+}
+
 // WEB ORDER
 function submitWebOrder(sendViaWhatsApp = false) {
   if (!STATE.cart.length) {

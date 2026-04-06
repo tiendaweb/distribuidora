@@ -249,3 +249,53 @@ select:focus {
 .slide-up {
   animation: slideUp 0.3s ease-out;
 }
+
+/* ============================================================
+   TOUCH DEVICE OPTIMIZATIONS
+   ============================================================ */
+
+/* Desactivar hover effects en touch devices */
+@media (hover: none) {
+  .product-card:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transform: translateY(0);
+  }
+
+  .btn:hover {
+    transform: none;
+  }
+
+  .btn-primary:hover {
+    background-color: var(--color-brand);
+  }
+
+  .btn-secondary:hover {
+    background-color: var(--color-gray-200);
+  }
+
+  .btn-danger:hover {
+    background-color: var(--color-error);
+  }
+
+  .btn-success:hover {
+    background-color: var(--color-success);
+  }
+
+  .qty-btn:hover {
+    background: var(--color-gray-200);
+  }
+
+  .cat-btn:hover {
+    border-color: var(--color-gray-200);
+    color: var(--color-ink);
+  }
+
+  .admin-table tbody tr:hover {
+    background-color: transparent;
+  }
+
+  .card:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transform: none;
+  }
+}

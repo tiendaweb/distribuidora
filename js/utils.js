@@ -277,3 +277,28 @@ async function geocodeAddress(address) {
 function deepClone(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
+
+// ============================================================
+// TOUCH & MOBILE UTILITIES
+// ============================================================
+
+function isTouchDevice() {
+  return (
+    window.matchMedia("(hover: none)").matches ||
+    (typeof window.ontouchstart !== "undefined")
+  );
+}
+
+function isLandscapeMode() {
+  return window.innerHeight < window.innerWidth;
+}
+
+function getViewportSize() {
+  return {
+    width: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
+    height: Math.max(document.documentElement.clientHeight, window.innerHeight || 0),
+    isMobile: window.innerWidth < 640,
+    isTablet: window.innerWidth >= 640 && window.innerWidth < 1024,
+    isDesktop: window.innerWidth >= 1024
+  };
+}

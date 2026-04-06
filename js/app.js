@@ -119,6 +119,10 @@ document.addEventListener('DOMContentLoaded', function() {
     ordersFilterBtn.addEventListener('click', clearOrdersFilters);
   }
 
+  // Setup touch/swipe support
+  setupSliderSwipe();
+  setupCartDrawerSwipe();
+
   // Persist data periodically
   setInterval(persistData, 30000); // Every 30 seconds
 
