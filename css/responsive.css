@@ -1,0 +1,404 @@
+/* ============================================================
+   RESPONSIVE DESIGN
+   ============================================================ */
+
+/* MOBILE FIRST */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* HEADER */
+header {
+  padding: 12px 16px;
+}
+
+/* SLIDER */
+.slide {
+  height: 180px;
+}
+
+/* GRID DEFAULTS (MOBILE) */
+#products-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 12px;
+}
+
+/* TAB SECTION DEFAULTS */
+.tab-section {
+  padding: 16px;
+}
+
+/* CATEGORY BUTTONS MOBILE */
+.category-pills {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 12px 16px;
+  scroll-behavior: smooth;
+}
+
+.category-pills::-webkit-scrollbar {
+  height: 4px;
+}
+
+/* ============================================================
+   TABLET (640px and up)
+   ============================================================ */
+
+@media (min-width: 640px) {
+  .slide {
+    height: 240px;
+  }
+
+  #products-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    padding: 16px;
+  }
+
+  header {
+    padding: 16px 20px;
+  }
+
+  .hidden\@sm {
+    display: none !important;
+  }
+
+  .flex\@sm {
+    display: flex !important;
+  }
+}
+
+/* ============================================================
+   TABLET LANDSCAPE (768px and up)
+   ============================================================ */
+
+@media (min-width: 768px) {
+  .slide {
+    height: 280px;
+  }
+
+  #products-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  /* POS LAYOUT TABLET */
+  .pos-container {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+}
+
+/* ============================================================
+   DESKTOP (1024px and up)
+   ============================================================ */
+
+@media (min-width: 1024px) {
+  .slide {
+    height: 320px;
+  }
+
+  #products-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+    padding: 20px;
+  }
+
+  header {
+    padding: 16px 32px;
+  }
+
+  .hidden\@lg {
+    display: none !important;
+  }
+
+  .flex\@lg {
+    display: flex !important;
+  }
+
+  /* POS CONTAINER LARGE */
+  .pos-container {
+    grid-template-columns: 60% 40%;
+  }
+}
+
+/* ============================================================
+   LARGE DESKTOP (1280px and up)
+   ============================================================ */
+
+@media (min-width: 1280px) {
+  #products-grid {
+    grid-template-columns: repeat(6, 1fr);
+    gap: 24px;
+    padding: 24px;
+  }
+
+  .pos-container {
+    grid-template-columns: 65% 35%;
+    gap: 28px;
+  }
+}
+
+/* ============================================================
+   DRAWER & MODAL RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 640px) {
+  #cart-drawer,
+  .drawer {
+    width: 100%;
+    height: 100vh;
+  }
+
+  .modal-overlay {
+    padding: 12px;
+  }
+
+  .modal-content {
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+}
+
+@media (min-width: 641px) {
+  #cart-drawer,
+  .drawer {
+    width: 450px;
+    height: 100vh;
+  }
+
+  .modal-overlay {
+    padding: 32px;
+  }
+
+  .modal-content {
+    max-width: 600px;
+    border-radius: 12px;
+  }
+}
+
+/* ============================================================
+   ADMIN LAYOUT RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 768px) {
+  .pos-container {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    height: auto;
+  }
+
+  .admin-table {
+    font-size: 12px;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding: 8px;
+  }
+
+  .admin-section {
+    padding: 12px !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .pos-container {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .admin-section {
+    padding: 20px;
+  }
+}
+
+/* ============================================================
+   HEADER RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 640px) {
+  .header-brand {
+    width: 32px;
+  }
+
+  .header-brand span {
+    display: none;
+  }
+
+  #header-search {
+    max-width: 100%;
+  }
+
+  .nav-tabs {
+    overflow-x: auto;
+  }
+}
+
+@media (min-width: 641px) {
+  .header-brand {
+    display: flex;
+  }
+
+  .header-brand span {
+    display: block;
+  }
+
+  #header-search {
+    max-width: 400px;
+  }
+}
+
+/* ============================================================
+   TABLE RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 768px) {
+  .admin-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .admin-table thead {
+    display: none;
+  }
+
+  .admin-table tbody,
+  .admin-table tr,
+  .admin-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .admin-table tr {
+    margin-bottom: 16px;
+    border: 1px solid var(--color-gray-200);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .admin-table td {
+    padding: 8px;
+    padding-left: 120px;
+    position: relative;
+  }
+
+  .admin-table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 8px;
+    font-weight: 700;
+    width: 110px;
+    color: var(--color-gray-600);
+  }
+}
+
+/* ============================================================
+   BUTTON RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 640px) {
+  .btn {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+
+  .pos-buttons {
+    flex-direction: column;
+  }
+}
+
+@media (min-width: 641px) {
+  .btn {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+
+  .pos-buttons {
+    flex-direction: row;
+  }
+}
+
+/* ============================================================
+   FONT SIZES RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 640px) {
+  body {
+    font-size: 13px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  h2 {
+    font-size: 18px;
+  }
+
+  .pos-display-value {
+    font-size: 24px;
+  }
+}
+
+@media (min-width: 641px) {
+  body {
+    font-size: 14px;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+
+  .pos-display-value {
+    font-size: 36px;
+  }
+}
+
+/* ============================================================
+   UTILITY CLASSES
+   ============================================================ */
+
+@media (max-width: 640px) {
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
+@media (min-width: 641px) {
+  .hide-desktop {
+    display: none !important;
+  }
+}
+
+.container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 0 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding: 0 32px;
+  }
+}
