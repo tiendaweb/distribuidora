@@ -87,10 +87,10 @@
   <!-- Nav Tabs Admin -->
   <nav class="bg-white/90 border-t border-amber-200 hidden" id="nav-admin">
     <div class="max-w-7xl mx-auto px-4 flex gap-4 overflow-x-auto no-scrollbar pt-2">
-      <button class="admin-tab active text-sm pb-2 font-bold whitespace-nowrap text-gray-600" onclick="showAdminTab('facturacion', this)">Punto de Venta</button>
-      <button class="admin-tab text-sm pb-2 font-bold whitespace-nowrap text-gray-600" onclick="showAdminTab('pedidos', this)">Pedidos Web</button>
-      <button class="admin-tab text-sm pb-2 font-bold whitespace-nowrap text-gray-600" onclick="showAdminTab('stock', this)">Stock & Precios</button>
-      <button class="admin-tab text-sm pb-2 font-bold whitespace-nowrap text-gray-600" onclick="showAdminTab('clientes', this)">Clientes</button>
+      <button class="admin-tab active text-sm pb-2 font-bold whitespace-nowrap text-gray-600" data-tab="facturacion" onclick="showAdminTab('facturacion', this)">Punto de Venta</button>
+      <button class="admin-tab text-sm pb-2 font-bold whitespace-nowrap text-gray-600" data-tab="pedidos" onclick="showAdminTab('pedidos', this)">Pedidos</button>
+      <button class="admin-tab text-sm pb-2 font-bold whitespace-nowrap text-gray-600" data-tab="stock" onclick="showAdminTab('stock', this)">Stock & Precios</button>
+      <button class="admin-tab text-sm pb-2 font-bold whitespace-nowrap text-gray-600" data-tab="clientes" onclick="showAdminTab('clientes', this)">Clientes</button>
     </div>
   </nav>
 </header>
@@ -239,11 +239,11 @@
     </div>
   </div>
 
-  <!-- ADMIN: PEDIDOS WEB -->
+  <!-- ADMIN: PEDIDOS -->
   <div id="admin-pedidos" class="admin-section hidden max-w-7xl mx-auto px-4 py-6">
     <div class="bg-white rounded-xl shadow-sm overflow-hidden">
       <div class="p-4 border-b bg-gray-50 flex justify-between items-center">
-        <h2 class="font-display text-2xl text-ink">Pedidos Web Recibidos</h2>
+        <h2 class="font-display text-2xl text-ink">Pedidos Recibidos</h2>
       </div>
       <div class="overflow-x-auto">
         <table class="w-full admin-table">
@@ -253,6 +253,7 @@
               <th>Cliente</th>
               <th>Dirección</th>
               <th>Total</th>
+              <th>Origen</th>
               <th>Estado</th>
               <th class="text-right">Acción</th>
             </tr>

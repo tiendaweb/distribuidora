@@ -67,7 +67,7 @@ function renderOrdersTable() {
       <td style="font-weight: bold; color: var(--color-ink);">${escapeHtml(o.client)}</td>
       <td>${o.address}</td>
       <td style="font-weight: bold; color: var(--color-brand);">${fmt(o.total)}</td>
-      <td><span style="font-size: 11px; padding: 2px 8px; border-radius: 4px; ${isWeb ? 'background: #dbeafe; color: #1e40af;' : 'background: #f3e8ff; color: #6b21a8;'}">${isWeb ? 'Web' : 'Admin'}</span></td>
+      <td><span style="font-size: 11px; padding: 2px 8px; border-radius: 4px; ${isWeb ? 'background: #dbeafe; color: #1e40af;' : 'background: #f3e8ff; color: #6b21a8;'}">${isWeb ? 'Web' : 'POS'}</span></td>
       <td><span style="font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 600; ${statusColor}">${o.status === 'pending' ? 'Pendiente' : 'Completado'}</span></td>
       <td style="text-align: right;">
         <button onclick="viewOrderDetail('${o.id}')" style="background: none; border: none; color: #3b82f6; cursor: pointer; font-size: 11px; font-weight: bold; text-decoration: underline;">Ver</button>
@@ -87,7 +87,7 @@ function viewOrderDetail(orderId) {
       <p style="margin: 4px 0;"><strong style="color: #666;">Cliente:</strong> <span style="font-weight: bold; font-size: 16px;">${escapeHtml(order.client)}</span></p>
       <p style="margin: 4px 0;"><strong style="color: #666;">Dirección:</strong> ${order.address}</p>
       <p style="margin: 4px 0;"><strong style="color: #666;">Fecha:</strong> ${order.date}</p>
-      <p style="margin: 4px 0;"><strong style="color: #666;">Origen:</strong> ${order.source === 'web' ? 'Web' : 'Admin'}</p>
+      <p style="margin: 4px 0;"><strong style="color: #666;">Origen:</strong> ${order.source === 'web' ? 'Web' : 'POS'}</p>
       <p style="margin: 4px 0;"><strong style="color: #666;">Estado:</strong> ${order.status === 'pending' ? 'Pendiente' : 'Completado'}</p>
     </div>
     <h4 style="font-weight: bold; margin: 12px 0 8px; border-bottom: 2px solid #f5c000; padding-bottom: 4px; color: #666;">Productos:</h4>
