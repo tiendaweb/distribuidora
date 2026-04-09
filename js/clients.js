@@ -4,11 +4,17 @@
 
 let map = null;
 let clientMarkers = {};
+let missingGeocodeClients = [];
+let geocodeToastShown = false;
 
 function initClientsTab() {
   initMap();
   renderClientsTable();
   resetClientForm();
+
+  if (map) {
+    setTimeout(() => map.invalidateSize(), 120);
+  }
 }
 
 function initMap() {
@@ -38,13 +44,17 @@ async function loadClientMarkers() {
   // Clear existing markers
   Object.values(clientMarkers).forEach(marker => marker.remove());
   clientMarkers = {};
+  missingGeocodeClients = [];
 
   // Add markers for all clients
   for (const client of STATE.clients) {
     if (!client.address || client.id === 'c1') continue;
 
     const coords = await geocodeAddress(client.address);
-    if (!coords) continue;
+    if (!coords) {
+      missingGeocodeClients.push(client);
+      continue;
+    }
 
     const marker = L.marker([coords.lat, coords.lng]).addTo(map)
       .bindPopup(`
@@ -58,6 +68,40 @@ async function loadClientMarkers() {
 
     clientMarkers[client.id] = marker;
   }
+
+  renderPendingGeocodeList();
+
+  if (missingGeocodeClients.length > 0 && !geocodeToastShown) {
+    showToast(
+      `${missingGeocodeClients.length} dirección(es) no se pudieron ubicar en el mapa`,
+      'warning'
+    );
+    geocodeToastShown = true;
+  }
+
+  if (missingGeocodeClients.length === 0) {
+    geocodeToastShown = false;
+  }
+}
+
+function renderPendingGeocodeList() {
+  const panel = document.getElementById('clients-geocode-pending');
+  const list = document.getElementById('clients-geocode-pending-list');
+  if (!panel || !list) return;
+
+  if (!missingGeocodeClients.length) {
+    panel.classList.add('hidden');
+    list.innerHTML = '';
+    return;
+  }
+
+  panel.classList.remove('hidden');
+  list.innerHTML = missingGeocodeClients.map(client => `
+    <li>
+      <strong>${escapeHtml(client.name)}</strong>:
+      <span>${escapeHtml(client.address || 'Sin dirección')}</span>
+    </li>
+  `).join('');
 }
 
 function centerMapToClient(clientId) {

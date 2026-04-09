@@ -237,6 +237,7 @@ function saveClient() {
   renderClientsTable();
   renderPosClientSelect();
   resetClientForm();
+  if (typeof loadClientMarkers === 'function') loadClientMarkers();
 }
 
 function deleteClient(clientId) {
@@ -251,6 +252,7 @@ function deleteClient(clientId) {
     renderClientsTable();
     renderPosClientSelect();
     resetClientForm();
+    if (typeof loadClientMarkers === 'function') loadClientMarkers();
     showToast('Cliente eliminado', 'success');
   });
 }

@@ -190,6 +190,10 @@ function showTab(tabName) {
 function showAdminTab(tabName, btn = null) {
   switchAdminTab(tabName);
 
+  if (tabName === 'clientes' && typeof initClientsTab === 'function') {
+    initClientsTab();
+  }
+
   if (btn) {
     document.querySelectorAll('.admin-tab').forEach(tab => tab.classList.remove('active'));
     btn.classList.add('active');

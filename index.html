@@ -344,6 +344,18 @@
           </table>
         </div>
       </div>
+
+      <div class="md:col-span-3 bg-white rounded-xl shadow-sm p-4">
+        <div class="flex items-center justify-between gap-2 mb-3">
+          <h3 class="font-display text-xl text-ink">Mapa de Clientes</h3>
+          <span class="text-xs text-gray-500">Base OSM / Nominatim</span>
+        </div>
+        <div id="clients-map" class="w-full rounded-lg border border-gray-200" style="height: 420px;"></div>
+        <div id="clients-geocode-pending" class="hidden mt-3 rounded-lg border border-amber-200 bg-amber-50 p-3">
+          <p class="text-xs font-bold text-amber-700 mb-2">Direcciones pendientes de geocodificación</p>
+          <ul id="clients-geocode-pending-list" class="list-disc pl-5 text-xs text-amber-900 space-y-1"></ul>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -462,6 +474,10 @@
 
 
 
+<!-- Librerías Externas -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+
 <!-- JavaScript Modulares -->
 <script src="js/config.js"></script>
 <script src="js/state.js"></script>
@@ -476,10 +492,6 @@
 <script src="js/products.js"></script>
 <script src="js/reports.js"></script>
 <script src="js/pdf.js"></script>
-
-<!-- Librerías Externas -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 
 <!-- Main App -->
 <script src="js/app.js"></script>
