@@ -51,6 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const tab = this.dataset.tab || 'facturacion';
       switchAdminTab(tab);
       if (tab === 'facturacion' || tab === 'pos') renderPosProductList();
+      if (tab === 'pedidos') renderOrdersTable();
       if (tab === 'clientes') initClientsTab();
       if (tab === 'reportes' && document.getElementById('admin-reportes')) generateAllReports();
     });
