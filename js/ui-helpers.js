@@ -155,6 +155,7 @@ function switchAdminTab(tabName) {
   const sections = document.querySelectorAll('.admin-section');
   sections.forEach(section => {
     section.classList.add('hidden');
+    section.classList.remove('active');
   });
 
   const sectionMap = {
@@ -168,6 +169,7 @@ function switchAdminTab(tabName) {
   const activeSection = document.getElementById('admin-' + normalizedTab);
   if (activeSection) {
     activeSection.classList.remove('hidden');
+    activeSection.classList.add('active');
   }
 
   // Update button states

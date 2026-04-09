@@ -53,12 +53,8 @@
 }
 
 /* ADMIN SECTIONS */
-.admin-section {
-  display: none;
-}
-
 .admin-section.active {
-  display: block;
+  /* Se mantiene para estado semántico; la visibilidad se controla con la clase `hidden`. */
 }
 
 /* POS SPECIFIC */
