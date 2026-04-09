@@ -185,7 +185,7 @@
         <!-- Buscador -->
         <div class="bg-white p-4 rounded-xl shadow-sm">
           <h2 class="font-bold text-lg mb-3">Agregar Productos</h2>
-          <input type="text" id="admin-search-prod" placeholder="Buscar por nombre..." class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand mb-3" oninput="renderAdminProdList()">
+          <input type="text" id="admin-search-prod" placeholder="Buscar por nombre..." class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand mb-3" oninput="renderPosProductList()">
           <div id="admin-prod-list" class="max-h-60 overflow-y-auto space-y-2 pr-1">
             <!-- Listado de productos para agregar -->
           </div>
@@ -225,11 +225,11 @@
             <span id="admin-cart-total" class="text-brand">$0</span>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <button onclick="procesarFactura(false)" class="w-full bg-zinc-700 hover:bg-zinc-800 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition">
+            <button onclick="procesarVenta(false)" class="w-full bg-zinc-700 hover:bg-zinc-800 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition">
               <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
               Guardar
             </button>
-            <button onclick="procesarFactura(true)" class="w-full bg-brand hover:bg-brand-dark text-ink font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition">
+            <button onclick="procesarVenta(true)" class="w-full bg-brand hover:bg-brand-dark text-ink font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition">
               <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
               Guardar e Imprimir
             </button>
@@ -425,11 +425,11 @@
       </div>
       <div>
         <label class="block text-xs font-bold text-gray-500">Costo de Compra ($)</label>
-        <input type="number" id="edit-p-cost" class="w-full border rounded p-2 text-sm focus:border-brand" oninput="recalcPrice()">
+        <input type="number" id="edit-p-cost" class="w-full border rounded p-2 text-sm focus:border-brand" oninput="recalculatePrice()">
       </div>
       <div>
         <label class="block text-xs font-bold text-gray-500">Margen de Ganancia (%)</label>
-        <input type="number" id="edit-p-margin" class="w-full border rounded p-2 text-sm focus:border-brand" oninput="recalcPrice()">
+        <input type="number" id="edit-p-margin" class="w-full border rounded p-2 text-sm focus:border-brand" oninput="recalculatePrice()">
       </div>
       <div class="bg-gray-50 p-3 rounded border">
         <label class="block text-xs font-bold text-gray-500">Precio de Venta Final ($)</label>
