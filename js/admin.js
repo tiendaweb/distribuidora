@@ -47,6 +47,78 @@ function initAdminPanel() {
   renderStockTable();
 }
 
+function getOrderInvoice(order) {
+  if (!order) return null;
+
+  if (order.invoiceId) {
+    const linkedInvoice = STATE.adminInvoices.find(inv => inv.id === order.invoiceId);
+    if (linkedInvoice) return linkedInvoice;
+  }
+
+  return STATE.adminInvoices.find(inv => inv.orderId === order.id) || null;
+}
+
+function buildClientFromOrder(order) {
+  const existingClient = STATE.clients.find(c => c.id === order.clientId)
+    || STATE.clients.find(c => c.name === order.client);
+
+  return {
+    name: order.client || existingClient?.name || 'Cliente',
+    address: order.address || existingClient?.address || '—',
+    tax: existingClient?.tax || 'Consumidor Final',
+    cuit: existingClient?.cuit || ''
+  };
+}
+
+function createAndStoreOrderInvoice(order) {
+  const existingInvoice = getOrderInvoice(order);
+  if (existingInvoice) return existingInvoice;
+
+  const invoice = {
+    id: generateId('inv'),
+    orderId: order.id,
+    date: getCurrentDateTime(),
+    client: order.client,
+    clientId: order.clientId || null,
+    docType: 'negro',
+    items: deepClone(order.items || []),
+    total: order.total || 0,
+    itemsCount: (order.items || []).reduce((sum, item) => sum + (item.qty || 0), 0)
+  };
+
+  STATE.adminInvoices.unshift(invoice);
+  order.invoiceId = invoice.id;
+  persistData();
+
+  return invoice;
+}
+
+function downloadOrderInvoice(orderId) {
+  const order = STATE.adminOrders.find(o => o.id === orderId);
+  if (!order) {
+    showToast('No se encontró el pedido seleccionado', 'error');
+    return;
+  }
+
+  let invoice = getOrderInvoice(order);
+
+  if (!invoice && order.source === 'web') {
+    invoice = createAndStoreOrderInvoice(order);
+  }
+
+  if (!invoice) {
+    showToast('Este pedido no tiene factura asociada', 'warning');
+    return;
+  }
+
+  const clientData = buildClientFromOrder(order);
+  const items = deepClone(invoice.items || order.items || []);
+  const total = invoice.total || order.total || 0;
+  const docType = invoice.docType || (order.source === 'web' ? 'negro' : 'blanco');
+
+  generateInvoicePDF(clientData, docType, items, total);
+}
+
 // ORDERS
 function renderOrdersTable() {
   const tbody = document.getElementById('admin-orders-tbody');
@@ -71,6 +143,7 @@ function renderOrdersTable() {
       <td><span style="font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 600; ${statusColor}">${o.status === 'pending' ? 'Pendiente' : 'Completado'}</span></td>
       <td style="text-align: right;">
         <button onclick="viewOrderDetail('${o.id}')" style="background: none; border: none; color: #3b82f6; cursor: pointer; font-size: 11px; font-weight: bold; text-decoration: underline;">Ver</button>
+        <button onclick="downloadOrderInvoice('${o.id}')" style="background: none; border: none; color: #7c3aed; cursor: pointer; font-size: 11px; font-weight: bold; text-decoration: underline; margin-left: 8px;">${isWeb ? 'Descargar presupuesto' : 'Descargar factura'}</button>
         ${o.status === 'pending' ? `<button onclick="markOrderCompleted('${o.id}')" style="background: none; border: none; color: #10b981; cursor: pointer; font-size: 11px; font-weight: bold; text-decoration: underline; margin-left: 8px;">Completar</button>` : ''}
       </td>
     </tr>
@@ -104,6 +177,13 @@ function viewOrderDetail(orderId) {
   });
 
   content += `</ul>`;
+  content += `
+    <div style="margin-top: 16px; display: flex; justify-content: flex-end;">
+      <button onclick="downloadOrderInvoice('${order.id}')" class="btn btn-outline" style="font-size: 12px;">
+        ${order.source === 'web' ? 'Descargar presupuesto' : 'Descargar factura'}
+      </button>
+    </div>
+  `;
 
   const modal = document.getElementById('order-detail-modal') || document.getElementById('admin-order-modal');
   const modalContent = document.getElementById('order-detail-content') || document.getElementById('order-modal-content');

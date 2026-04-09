@@ -207,10 +207,13 @@ function procesarVenta(printPDF = false) {
   const docType = STATE.adminDocumentType;
 
   const total = STATE.adminCart.reduce((sum, item) => sum + item.price * item.qty, 0);
+  const orderId = generateId('ord');
+  const invoiceId = generateId('inv');
 
   // Save invoice
   const invoice = {
-    id: generateId('inv'),
+    id: invoiceId,
+    orderId,
     date: getCurrentDateTime(),
     client: client.name,
     clientId: client.id,
@@ -224,7 +227,8 @@ function procesarVenta(printPDF = false) {
 
 
   const order = {
-    id: generateId('ord'),
+    id: orderId,
+    invoiceId,
     date: getCurrentDateTime(),
     client: client.name,
     address: client.address || '—',
