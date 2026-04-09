@@ -350,3 +350,29 @@ function submitWebOrder(sendViaWhatsApp = false) {
   closeDrawer('cart-drawer');
   showToast('Pedido guardado con éxito', 'success');
 }
+
+// Legacy compatibility for inline handlers in index.html
+function filterCat(category, btnElement = null) {
+  filterByCategory(category, btnElement);
+}
+
+function slideChange(direction) {
+  changeSlide(direction);
+}
+
+function enviarPedidoWeb(sendViaWhatsApp = false) {
+  submitWebOrder(sendViaWhatsApp);
+}
+
+function changeModalQty(delta) {
+  const input = document.getElementById('modal-qty');
+  if (!input) return;
+
+  let qty = parseInt(input.value, 10) || 1;
+  const max = parseInt(input.max, 10) || Number.MAX_SAFE_INTEGER;
+  qty += delta;
+
+  if (qty < 1) qty = 1;
+  if (qty > max) qty = max;
+  input.value = qty;
+}

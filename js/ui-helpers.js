@@ -183,6 +183,10 @@ function switchAdminTab(tabName) {
 }
 
 // Legacy compatibility for inline handlers in index.html
+function showTab(tabName) {
+  switchTab(tabName);
+}
+
 function showAdminTab(tabName, btn = null) {
   switchAdminTab(tabName);
 
@@ -190,6 +194,32 @@ function showAdminTab(tabName, btn = null) {
     document.querySelectorAll('.admin-tab').forEach(tab => tab.classList.remove('active'));
     btn.classList.add('active');
   }
+}
+
+function toggleCart() {
+  const drawer = document.getElementById('cart-drawer');
+  const overlay = document.getElementById('cart-overlay');
+  if (!drawer) return;
+
+  const isOpen = drawer.classList.contains('open');
+  if (isOpen) {
+    drawer.classList.remove('open');
+    if (overlay) overlay.classList.remove('open');
+
+    setTimeout(() => {
+      drawer.classList.add('hidden');
+      if (overlay) overlay.classList.add('hidden');
+    }, 250);
+    return;
+  }
+
+  drawer.classList.remove('hidden');
+  if (overlay) overlay.classList.remove('hidden');
+
+  setTimeout(() => {
+    drawer.classList.add('open');
+    if (overlay) overlay.classList.add('open');
+  }, 10);
 }
 
 // CONFIRM DIALOG
