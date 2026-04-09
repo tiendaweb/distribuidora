@@ -21,7 +21,7 @@ function toggleAdminMode() {
     if (viewAdmin) viewAdmin.classList.remove('hidden');
     if (navAdmin) navAdmin.classList.remove('hidden');
 
-    switchAdminTab('pos');
+    switchAdminTab('facturacion');
     initAdminPanel();
     showToast('Modo Admin activado', 'info');
   } else {
@@ -105,13 +105,13 @@ function viewOrderDetail(orderId) {
 
   content += `</ul>`;
 
-  const modal = document.getElementById('order-detail-modal');
-  const modalContent = document.getElementById('order-detail-content');
-  const modalTotal = document.getElementById('order-detail-total');
+  const modal = document.getElementById('order-detail-modal') || document.getElementById('admin-order-modal');
+  const modalContent = document.getElementById('order-detail-content') || document.getElementById('order-modal-content');
+  const modalTotal = document.getElementById('order-detail-total') || document.getElementById('order-modal-total');
 
   if (modalContent) modalContent.innerHTML = content;
   if (modalTotal) modalTotal.textContent = fmt(order.total);
-  if (modal) openModal('order-detail-modal');
+  if (modal) openModal(modal.id);
 }
 
 function markOrderCompleted(orderId) {
@@ -123,6 +123,7 @@ function markOrderCompleted(orderId) {
     persistData();
     renderOrdersTable();
     closeModal('order-detail-modal');
+    closeModal('admin-order-modal');
     showToast('Pedido marcado como completado', 'success');
   });
 }
@@ -295,6 +296,7 @@ function openEditProductModal(productId) {
   if (saleInput) saleInput.value = product.sale;
 
   openModal('edit-product-modal');
+  openModal('admin-modal-overlay');
 }
 
 function recalculatePrice() {
@@ -329,5 +331,33 @@ function saveEditedProduct() {
   renderStockTable();
   renderPosProductList();
   closeModal('edit-product-modal');
+  closeModal('admin-modal-overlay');
   showToast('Producto actualizado', 'success');
+}
+
+// Legacy compatibility for inline handlers in index.html
+function renderAdminProdList() {
+  renderPosProductList();
+}
+
+function procesarFactura(printPDF = false) {
+  procesarVenta(printPDF);
+}
+
+function recalcPrice() {
+  recalculatePrice();
+}
+
+function saveAdminProduct() {
+  saveEditedProduct();
+}
+
+function closeAdminModal() {
+  closeModal('edit-product-modal');
+  closeModal('admin-modal-overlay');
+}
+
+function closeOrderModal() {
+  closeModal('order-detail-modal');
+  closeModal('admin-order-modal');
 }

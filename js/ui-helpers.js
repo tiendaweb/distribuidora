@@ -157,7 +157,15 @@ function switchAdminTab(tabName) {
     section.classList.add('hidden');
   });
 
-  const activeSection = document.getElementById('admin-' + tabName);
+  const sectionMap = {
+    pos: 'facturacion',
+    facturacion: 'facturacion',
+    pedidos: 'pedidos',
+    stock: 'stock',
+    clientes: 'clientes'
+  };
+  const normalizedTab = sectionMap[tabName] || tabName;
+  const activeSection = document.getElementById('admin-' + normalizedTab);
   if (activeSection) {
     activeSection.classList.remove('hidden');
   }
@@ -170,6 +178,16 @@ function switchAdminTab(tabName) {
       btn.classList.add('active');
     }
   });
+}
+
+// Legacy compatibility for inline handlers in index.html
+function showAdminTab(tabName, btn = null) {
+  switchAdminTab(tabName);
+
+  if (btn) {
+    document.querySelectorAll('.admin-tab').forEach(tab => tab.classList.remove('active'));
+    btn.classList.add('active');
+  }
 }
 
 // CONFIRM DIALOG
