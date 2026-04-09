@@ -140,7 +140,7 @@ function escapeHtml(str) {
 
 // Number utilities
 function roundPrice(price) {
-  return Math.round(price);
+  return Number((Number(price) || 0).toFixed(2));
 }
 
 function formatPercentage(value) {
@@ -153,7 +153,7 @@ function calculateMargin(cost, salePrice) {
 }
 
 function calculateSalePrice(cost, marginPercent) {
-  return Math.round(cost * (1 + marginPercent / 100));
+  return roundPrice((Number(cost) || 0) * (1 + (Number(marginPercent) || 0) / 100));
 }
 
 function calculateDiscount(originalPrice, salePrice) {

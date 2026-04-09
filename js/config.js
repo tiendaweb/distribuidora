@@ -16,8 +16,12 @@ const CONFIG = {
   },
 
   // Format Functions
-  formatPrice: (n) => '$' + Number(n).toLocaleString('es-AR'),
-  unformatPrice: (s) => parseFloat(s) || 0,
+  formatPrice: (n) => '$' + Number(n || 0).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+  unformatPrice: (s) => {
+    if (typeof s === 'number') return s;
+    const normalized = String(s || '').replace(/\./g, '').replace(',', '.').replace(/[^\d.-]/g, '');
+    return Number(normalized) || 0;
+  },
 
   // Locale
   LOCALE: 'es-AR',
