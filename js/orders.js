@@ -95,6 +95,7 @@ function renderOrdersTableFiltered() {
       <td><span style="font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 600; ${statusColor}">${o.status === 'pending' ? 'Pendiente' : 'Completado'}</span></td>
       <td style="text-align: right;">
         <button onclick="viewOrderDetail('${o.id}')" style="background: none; border: none; color: #3b82f6; cursor: pointer; font-size: 11px; font-weight: bold; text-decoration: underline;">Ver</button>
+        <button onclick="downloadOrderInvoice('${o.id}')" style="background: none; border: none; color: #7c3aed; cursor: pointer; font-size: 11px; font-weight: bold; text-decoration: underline; margin-left: 8px;">${isWeb ? 'Descargar presupuesto' : 'Descargar factura'}</button>
         ${o.status === 'pending' ? `<button onclick="markOrderCompleted('${o.id}')" style="background: none; border: none; color: #10b981; cursor: pointer; font-size: 11px; font-weight: bold; text-decoration: underline; margin-left: 8px;">Completar</button>` : ''}
       </td>
     </tr>
