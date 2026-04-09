@@ -48,11 +48,11 @@ document.addEventListener('DOMContentLoaded', function() {
   const adminTabs = document.querySelectorAll('.admin-tab');
   adminTabs.forEach(btn => {
     btn.addEventListener('click', function() {
-      const tab = this.dataset.tab || 'pos';
+      const tab = this.dataset.tab || 'facturacion';
       switchAdminTab(tab);
-      if (tab === 'pos') renderPosProductList();
+      if (tab === 'facturacion' || tab === 'pos') renderPosProductList();
       if (tab === 'clientes') initClientsTab();
-      if (tab === 'reportes') generateAllReports();
+      if (tab === 'reportes' && document.getElementById('admin-reportes')) generateAllReports();
     });
   });
 

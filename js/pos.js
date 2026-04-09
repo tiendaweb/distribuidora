@@ -174,6 +174,20 @@ function procesarVenta(printPDF = false) {
 
   STATE.adminInvoices.unshift(invoice);
 
+
+  const order = {
+    id: generateId('ord'),
+    date: getCurrentDateTime(),
+    client: client.name,
+    address: client.address || '—',
+    items: deepClone(STATE.adminCart),
+    total,
+    source: 'pos',
+    status: 'completed'
+  };
+
+  STATE.adminOrders.unshift(order);
+
   // Deduct stock
   STATE.adminCart.forEach(item => {
     const product = STATE.products.find(p => p.id === item.id);
