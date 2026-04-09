@@ -54,17 +54,12 @@
       </div>
     </div>
 
-    <!-- Search (Store) -->
-    <div class="flex-1 max-w-md relative" id="header-search">
-      <input id="search-input" type="text" placeholder="Buscar productos..." 
-        class="w-full pl-9 pr-3 py-2 rounded-lg bg-white text-ink placeholder-gray-400 text-sm border border-amber-200 focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand" />
-      <svg class="absolute left-2.5 top-2.5 text-amber-500" width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M20 20l-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-    </div>
 
     <div class="flex items-center gap-2 shrink-0">
       <!-- Admin Toggle -->
-      <button onclick="toggleAdminMode()" class="text-amber-700 hover:text-amber-900 flex items-center gap-1 text-xs font-bold px-2 py-2 border border-amber-200 rounded-lg bg-white">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15.5A3.5 3.5 0 1 0 12 8.5a3.5 3.5 0 0 0 0 7z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82L4.21 7.2a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> <span class="hidden sm:inline">Admin</span>
+      <button id="btn-admin" onclick="toggleAdminMode()" class="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 text-xs sm:text-sm font-bold px-3 py-2 rounded-lg transition-all shadow-sm hover:shadow-md">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15.5A3.5 3.5 0 1 0 12 8.5a3.5 3.5 0 0 0 0 7z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82L4.21 7.2a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span class="hidden sm:inline">Administración</span>
       </button>
 
       <!-- Cart button -->
@@ -77,20 +72,38 @@
   </div>
 
   <!-- Nav Tabs Store -->
-  <nav class="bg-white/90 border-t border-amber-200" id="nav-store">
+  <nav class="bg-gradient-to-r from-amber-50 to-yellow-50 border-t border-amber-200" id="nav-store">
     <div class="max-w-7xl mx-auto px-4 flex gap-1 overflow-x-auto no-scrollbar py-1">
-      <button class="tab-btn active text-sm px-4 py-2 rounded-lg whitespace-nowrap flex items-center gap-1" onclick="showTab('catalogo')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg> Catálogo</button>
-      <button class="tab-btn text-gray-600 text-sm px-4 py-2 rounded-lg whitespace-nowrap flex items-center gap-1" onclick="showTab('categorias')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h6l2 2h10v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></svg> Categorías</button>
+      <button class="tab-btn active text-sm px-4 py-2 rounded-lg whitespace-nowrap flex items-center gap-2 font-semibold text-amber-700 hover:bg-amber-100 transition" onclick="switchTab('catalogo')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>
+        Catálogo
+      </button>
+      <button class="tab-btn text-sm px-4 py-2 rounded-lg whitespace-nowrap flex items-center gap-2 font-semibold text-gray-700 hover:text-amber-700 hover:bg-amber-50 transition" onclick="switchTab('categorias')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h6l2 2h10v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></svg>
+        Categorías
+      </button>
     </div>
   </nav>
 
   <!-- Nav Tabs Admin -->
-  <nav class="bg-white/90 border-t border-amber-200 hidden" id="nav-admin">
-    <div class="max-w-7xl mx-auto px-4 flex gap-4 overflow-x-auto no-scrollbar pt-2">
-      <button class="admin-tab active text-sm pb-2 font-bold whitespace-nowrap text-gray-600" data-tab="facturacion" onclick="showAdminTab('facturacion', this)">Punto de Venta</button>
-      <button class="admin-tab text-sm pb-2 font-bold whitespace-nowrap text-gray-600" data-tab="pedidos" onclick="showAdminTab('pedidos', this)">Pedidos</button>
-      <button class="admin-tab text-sm pb-2 font-bold whitespace-nowrap text-gray-600" data-tab="stock" onclick="showAdminTab('stock', this)">Stock & Precios</button>
-      <button class="admin-tab text-sm pb-2 font-bold whitespace-nowrap text-gray-600" data-tab="clientes" onclick="showAdminTab('clientes', this)">Clientes</button>
+  <nav class="bg-gradient-to-r from-blue-50 to-blue-100 border-t border-blue-200 hidden" id="nav-admin">
+    <div class="max-w-7xl mx-auto px-4 flex gap-1 overflow-x-auto no-scrollbar py-1">
+      <button class="admin-tab active text-sm px-4 py-2 rounded-lg whitespace-nowrap flex items-center gap-2 font-semibold text-blue-700 hover:bg-blue-200 transition" data-tab="facturacion" onclick="showAdminTab('facturacion', this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4m0-18v18m0-18h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-10m0-18v18"/></svg>
+        POS
+      </button>
+      <button class="admin-tab text-sm px-4 py-2 rounded-lg whitespace-nowrap flex items-center gap-2 font-semibold text-gray-700 hover:text-blue-700 hover:bg-blue-100 transition" data-tab="pedidos" onclick="showAdminTab('pedidos', this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        Pedidos
+      </button>
+      <button class="admin-tab text-sm px-4 py-2 rounded-lg whitespace-nowrap flex items-center gap-2 font-semibold text-gray-700 hover:text-blue-700 hover:bg-blue-100 transition" data-tab="stock" onclick="showAdminTab('stock', this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/></svg>
+        Stock
+      </button>
+      <button class="admin-tab text-sm px-4 py-2 rounded-lg whitespace-nowrap flex items-center gap-2 font-semibold text-gray-700 hover:text-blue-700 hover:bg-blue-100 transition" data-tab="clientes" onclick="showAdminTab('clientes', this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Clientes
+      </button>
     </div>
   </nav>
 </header>
@@ -120,10 +133,20 @@
     <!-- Categories pills -->
     <section class="bg-white border-b border-gray-100 py-3 px-4 sticky top-[108px] z-30 shadow-sm">
       <div class="max-w-7xl mx-auto flex gap-2 overflow-x-auto no-scrollbar" id="cat-pills">
-        <button class="cat-btn active text-sm px-4 py-1.5 rounded-full border border-gray-200 whitespace-nowrap font-semibold transition" onclick="filterCat('all',this)">Todos</button>
-        <button class="cat-btn text-sm px-4 py-1.5 rounded-full border border-gray-200 whitespace-nowrap font-semibold transition" onclick="filterCat('helados',this)">Helados</button>
-        <button class="cat-btn text-sm px-4 py-1.5 rounded-full border border-gray-200 whitespace-nowrap font-semibold transition" onclick="filterCat('pastas',this)">Pastas Frescas</button>
-        <button class="cat-btn text-sm px-4 py-1.5 rounded-full border border-gray-200 whitespace-nowrap font-semibold transition" onclick="filterCat('congelados',this)">Congelados</button>
+        <button class="cat-btn active text-sm px-4 py-1.5 rounded-full border border-gray-200 whitespace-nowrap font-semibold transition hover:bg-brand hover:text-white hover:border-brand" data-category="all">Todos</button>
+        <button class="cat-btn text-sm px-4 py-1.5 rounded-full border border-gray-200 whitespace-nowrap font-semibold transition hover:bg-brand hover:text-white hover:border-brand" data-category="helados">Helados</button>
+        <button class="cat-btn text-sm px-4 py-1.5 rounded-full border border-gray-200 whitespace-nowrap font-semibold transition hover:bg-brand hover:text-white hover:border-brand" data-category="pastas">Pastas Frescas</button>
+        <button class="cat-btn text-sm px-4 py-1.5 rounded-full border border-gray-200 whitespace-nowrap font-semibold transition hover:bg-brand hover:text-white hover:border-brand" data-category="congelados">Congelados</button>
+      </div>
+    </section>
+
+    <!-- Search for mobile & desktop content -->
+    <section class="bg-white border-b border-gray-100 py-4 px-4">
+      <div class="max-w-7xl mx-auto">
+        <div class="relative">
+          <input id="search-input" type="text" placeholder="🔍 Buscar productos..."
+            class="w-full pl-10 pr-4 py-2.5 rounded-lg bg-gray-50 text-ink placeholder-gray-500 text-sm border border-gray-200 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand focus:bg-white transition" />
+        </div>
       </div>
     </section>
 
@@ -144,21 +167,21 @@
     <div class="max-w-7xl mx-auto px-4 py-8">
       <h2 class="font-display text-3xl mb-6 text-ink">Nuestras Categorías</h2>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        <div class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition cursor-pointer" onclick="filterCat('helados', null); showTab('catalogo')">
+        <div class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition cursor-pointer" onclick="filterByCategory('helados'); switchTab('catalogo')">
           <div class="h-36 bg-gradient-to-br from-cyan-100 to-blue-200 flex items-center justify-center text-6xl"><svg class="text-cyan-600" width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 10h8l-1.5 10h-5z"/><path d="M9 10a3 3 0 0 1 6 0"/></svg></div>
           <div class="p-4">
             <h3 class="font-display text-2xl text-ink">Helados Montevideana</h3>
             <span class="inline-block mt-2 bg-brand text-ink text-xs font-bold px-3 py-1 rounded-full">Ver productos →</span>
           </div>
         </div>
-        <div class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition cursor-pointer" onclick="filterCat('pastas', null); showTab('catalogo')">
+        <div class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition cursor-pointer" onclick="filterByCategory('pastas'); switchTab('catalogo')">
           <div class="h-36 bg-gradient-to-br from-yellow-50 to-amber-100 flex items-center justify-center text-6xl"><svg class="text-amber-600" width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 15h16"/><path d="M6 12h12"/><path d="M8 9h8"/></svg></div>
           <div class="p-4">
             <h3 class="font-display text-2xl text-ink">Pastas Frescas</h3>
             <span class="inline-block mt-2 bg-brand text-ink text-xs font-bold px-3 py-1 rounded-full">Ver productos →</span>
           </div>
         </div>
-        <div class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition cursor-pointer" onclick="filterCat('congelados', null); showTab('catalogo')">
+        <div class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition cursor-pointer" onclick="filterByCategory('congelados'); switchTab('catalogo')">
           <div class="h-36 bg-gradient-to-br from-indigo-50 to-purple-100 flex items-center justify-center text-6xl"><svg class="text-indigo-600" width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v20M4.9 6l14.2 12M19.1 6L4.9 18"/></svg></div>
           <div class="p-4">
             <h3 class="font-display text-2xl text-ink">Congelados</h3>
@@ -177,64 +200,79 @@
 <div id="view-admin" class="flex-1 bg-gray-100 hidden">
   
   <!-- ADMIN: FACTURACIÓN (PUNTO DE VENTA) -->
-  <div id="admin-facturacion" class="admin-section max-w-7xl mx-auto px-4 py-6">
-    <div class="flex flex-col lg:flex-row gap-6">
-      
-      <!-- Panel Izquierdo: Selección -->
-      <div class="flex-1 space-y-4">
-        <!-- Buscador -->
-        <div class="bg-white p-4 rounded-xl shadow-sm">
-          <h2 class="font-bold text-lg mb-3">Agregar Productos</h2>
-          <input type="text" id="admin-search-prod" placeholder="Buscar por nombre..." class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand mb-3" oninput="renderPosProductList()">
-          <div id="admin-pos-categories" class="pos-category-filters mb-3" aria-label="Filtros por categoría POS"></div>
-          <div id="admin-prod-list" class="max-h-60 overflow-y-auto space-y-2 pr-1">
+  <div id="admin-facturacion" class="admin-section w-full">
+    <div class="h-screen flex flex-col lg:flex-row bg-gray-50">
+
+      <!-- PANEL IZQUIERDO/CENTRO: Búsqueda y productos -->
+      <div class="flex-1 flex flex-col overflow-hidden border-r border-gray-200">
+
+        <!-- Header con cliente y búsqueda -->
+        <div class="bg-white border-b border-gray-200 p-4 space-y-3 flex-shrink-0">
+          <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Cliente</label>
+            <input type="search" id="admin-client-search" placeholder="Buscar cliente..." class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand">
+          </div>
+          <select id="admin-client-select" class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand">
+            <option value="">Seleccionar cliente...</option>
+          </select>
+        </div>
+
+        <!-- Buscador de productos y filtros -->
+        <div class="bg-white border-b border-gray-200 p-3 space-y-2 flex-shrink-0">
+          <input type="text" id="admin-search-prod" placeholder="🔍 Buscar producto..." class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand">
+          <div id="admin-pos-categories" class="flex gap-2 flex-wrap" aria-label="Filtros por categoría POS"></div>
+        </div>
+
+        <!-- Lista de productos -->
+        <div class="flex-1 overflow-y-auto p-3 space-y-2">
+          <div id="admin-prod-list" class="space-y-2">
             <!-- Listado de productos para agregar -->
           </div>
-          <div id="admin-pos-no-results" class="pos-no-results hidden">No se encontraron productos para el filtro actual.</div>
+          <div id="admin-pos-no-results" class="hidden text-center py-8 text-gray-400">
+            <p class="text-sm">No se encontraron productos</p>
+          </div>
         </div>
       </div>
 
-      <!-- Panel Derecho: Ticket -->
-      <div class="w-full lg:w-[430px] bg-gradient-to-b from-zinc-100 to-zinc-200 rounded-2xl shadow-2xl p-5 flex flex-col h-[calc(100vh-160px)] sticky top-28 border border-zinc-300">
-        <h2 class="font-display text-2xl mb-4 border-b pb-2 text-zinc-800">Caja Registradora</h2>
-        
-        <!-- Datos comprobante -->
-        <div class="space-y-3 mb-4">
-          <div>
-            <label class="block text-xs font-bold text-gray-500 uppercase">Cliente</label>
-            <input type="search" id="admin-client-search" placeholder="Buscar cliente por nombre, CUIT o teléfono..." class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand mb-2">
-            <select id="admin-client-select" class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand">
-              <!-- Options -->
-            </select>
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-gray-500 uppercase">Tipo de Comprobante</label>
-            <select id="admin-tipo-comp" class="w-full border-b py-1 text-sm focus:outline-none focus:border-brand bg-gray-50">
-              <option value="negro">Presupuesto Interno (No Válido / X)</option>
-              <option value="blanco">Factura AFIP (Original/Duplicado)</option>
-            </select>
-          </div>
+      <!-- PANEL DERECHO: Caja Registradora (Ticket) -->
+      <div class="w-full lg:w-[420px] bg-white flex flex-col h-screen lg:h-auto lg:sticky lg:top-0 border-l border-gray-200">
+
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 flex-shrink-0 border-b border-blue-800">
+          <h2 class="font-bold text-2xl">CAJA</h2>
+          <p class="text-xs text-blue-100 mt-1">Punto de Venta</p>
         </div>
 
-        <!-- Lista carrito admin -->
-        <div class="flex-1 overflow-y-auto border-t border-b py-2 space-y-2" id="admin-cart-items">
-          <!-- Items caja -->
+        <!-- Tipo de comprobante -->
+        <div class="px-4 py-3 border-b border-gray-200 flex-shrink-0">
+          <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Comprobante</label>
+          <select id="admin-tipo-comp" class="w-full border rounded px-2 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="negro">Presupuesto (X)</option>
+            <option value="blanco">Factura AFIP</option>
+          </select>
         </div>
 
-        <!-- Totales y Botón -->
-        <div class="pt-4">
-          <div class="flex justify-between text-xl font-bold mb-4 bg-zinc-900 text-lime-300 rounded-lg px-3 py-2 font-mono tracking-wider">
-            <span>TOTAL</span>
-            <span id="admin-cart-total" class="text-brand">$0</span>
+        <!-- Carrito -->
+        <div class="flex-1 overflow-y-auto px-4 py-3 space-y-2" id="admin-cart-items">
+          <p class="text-center text-gray-400 text-sm py-8">El carrito está vacío</p>
+        </div>
+
+        <!-- Totales -->
+        <div class="border-t border-gray-200 px-4 py-4 bg-gray-50 flex-shrink-0 space-y-3">
+          <div class="bg-blue-900 text-lime-300 rounded-lg px-4 py-3 text-center">
+            <p class="text-xs text-blue-100 font-semibold uppercase tracking-wide">Total a Pagar</p>
+            <p class="text-3xl font-mono font-bold" id="admin-cart-total">$0</p>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <button onclick="procesarVenta(false)" class="w-full bg-zinc-700 hover:bg-zinc-800 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition">
-              <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+
+          <!-- Botones de acción -->
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="procesarVenta(false)" class="w-full bg-gray-700 hover:bg-gray-800 text-white font-bold py-2 rounded-lg text-sm flex items-center justify-center gap-2 transition">
+              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
               Guardar
             </button>
-            <button onclick="procesarVenta(true)" class="w-full bg-brand hover:bg-brand-dark text-ink font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition">
-              <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
-              Guardar e Imprimir
+            <button onclick="procesarVenta(true)" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg text-sm flex items-center justify-center gap-2 transition">
+              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
+              Imprimir
             </button>
           </div>
         </div>
