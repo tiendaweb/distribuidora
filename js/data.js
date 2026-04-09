@@ -27,15 +27,15 @@ const DEFAULT_PRODUCTS = [
 
 const DEFAULT_CLIENTS = [
   { id: 'c1', name: 'Consumidor Final', address: 'Necochea, Buenos Aires', phone: '', email: '', cuit: '', tax: 'Consumidor Final', notes: '' },
-  { id: 'c2', name: 'Almacén Don José', address: 'Calle 73 entre 1 y 3, Necochea', phone: '2262-123456', email: 'donjose@mail.com', cuit: '20-12345678-9', tax: 'Monotributista', notes: 'Entrega martes y jueves' },
-  { id: 'c3', name: 'Kiosco La Esquina', address: 'Av. 9 de Julio 450, Necochea', phone: '2262-234567', email: 'laesquina@mail.com', cuit: '27-30111222-4', tax: 'Monotributista', notes: '' },
-  { id: 'c4', name: 'Despensa Santa Ana', address: 'Calle 85 nº 250, Necochea', phone: '2262-345678', email: 'santaana@mail.com', cuit: '20-28999111-5', tax: 'Responsable Inscripto', notes: 'Grandes volúmenes' },
-  { id: 'c5', name: 'Super Mercado Centro', address: 'Av. 2 nº 1700, Necochea', phone: '2262-456789', email: 'supercentro@mail.com', cuit: '30-71222333-8', tax: 'Responsable Inscripto', notes: '' },
-  { id: 'c6', name: 'Autoservicio Los Primos', address: 'Calle 83 nº 220, Necochea', phone: '2262-567890', email: 'losprimos@mail.com', cuit: '20-33777666-9', tax: 'Monotributista', notes: '' },
-  { id: 'c7', name: 'Minimarket Plaza', address: 'Calle 75 nº 300, Necochea', phone: '2262-678901', email: 'minimarket@mail.com', cuit: '20-33000111-2', tax: 'Monotributista', notes: '' },
-  { id: 'c8', name: 'Almacén La Familia', address: 'Calle 79 nº 765, Necochea', phone: '2262-789012', email: 'lafamilia@mail.com', cuit: '20-31122444-6', tax: 'Consumidor Final', notes: '' },
-  { id: 'c9', name: 'Distribuciones Sur', address: 'Ruta 3 km 34, Necochea', phone: '2262-890123', email: 'distr.sur@mail.com', cuit: '30-70988776-1', tax: 'Responsable Inscripto', notes: 'Distribuidor regional' },
-  { id: 'c10', name: 'Mercado El Puente', address: 'Calle 81 nº 1180, Necochea', phone: '2262-901234', email: 'elpuente@mail.com', cuit: '20-29888777-3', tax: 'Monotributista', notes: '' },
-  { id: 'c11', name: 'Kiosco 24 Horas', address: 'Av. 1 nº 55, Necochea', phone: '2262-012345', email: '', cuit: '20-35544333-7', tax: 'Consumidor Final', notes: '' },
-  { id: 'c12', name: 'Comedor Buen Sabor', address: 'Calle 87 nº 402, Necochea', phone: '2262-321098', email: 'buensabor@mail.com', cuit: '27-34455666-1', tax: 'Monotributista', notes: 'Restaurante' }
+  { id: 'c2', name: 'Almacén Don José', address: 'Calle 64 2901, Necochea, Buenos Aires', phone: '2262-123456', email: 'donjose@mail.com', cuit: '20-12345678-9', tax: 'Monotributista', notes: 'Entrega martes y jueves' },
+  { id: 'c3', name: 'Kiosco La Esquina', address: 'Avenida 59 2199, Necochea, Buenos Aires', phone: '2262-234567', email: 'laesquina@mail.com', cuit: '27-30111222-4', tax: 'Monotributista', notes: '' },
+  { id: 'c4', name: 'Despensa Santa Ana', address: 'Calle 85 250, Necochea, Buenos Aires', phone: '2262-345678', email: 'santaana@mail.com', cuit: '20-28999111-5', tax: 'Responsable Inscripto', notes: 'Grandes volúmenes' },
+  { id: 'c5', name: 'Super Mercado Centro', address: 'Avenida 58 3025, Necochea, Buenos Aires', phone: '2262-456789', email: 'supercentro@mail.com', cuit: '30-71222333-8', tax: 'Responsable Inscripto', notes: '' },
+  { id: 'c6', name: 'Autoservicio Los Primos', address: 'Calle 61 3348, Necochea, Buenos Aires', phone: '2262-567890', email: 'losprimos@mail.com', cuit: '20-33777666-9', tax: 'Monotributista', notes: '' },
+  { id: 'c7', name: 'Minimarket Plaza', address: 'Avenida 42 2601, Necochea, Buenos Aires', phone: '2262-678901', email: 'minimarket@mail.com', cuit: '20-33000111-2', tax: 'Monotributista', notes: '' },
+  { id: 'c8', name: 'Almacén La Familia', address: 'Calle 83 330, Necochea, Buenos Aires', phone: '2262-789012', email: 'lafamilia@mail.com', cuit: '20-31122444-6', tax: 'Consumidor Final', notes: '' },
+  { id: 'c9', name: 'Distribuciones Sur', address: 'Avenida 10 4022, Necochea, Buenos Aires', phone: '2262-890123', email: 'distr.sur@mail.com', cuit: '30-70988776-1', tax: 'Responsable Inscripto', notes: 'Distribuidor regional' },
+  { id: 'c10', name: 'Mercado El Puente', address: 'Avenida 2 3899, Necochea, Buenos Aires', phone: '2262-901234', email: 'elpuente@mail.com', cuit: '20-29888777-3', tax: 'Monotributista', notes: '' },
+  { id: 'c11', name: 'Kiosco 24 Horas', address: 'Calle 4 4302, Necochea, Buenos Aires', phone: '2262-012345', email: '', cuit: '20-35544333-7', tax: 'Consumidor Final', notes: '' },
+  { id: 'c12', name: 'Comedor Buen Sabor', address: 'Calle 87 402, Necochea, Buenos Aires', phone: '2262-321098', email: 'buensabor@mail.com', cuit: '27-34455666-1', tax: 'Monotributista', notes: 'Restaurante' }
 ];

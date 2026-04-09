@@ -254,7 +254,14 @@ function throttle(func, limit) {
 // Geolocation
 async function geocodeAddress(address) {
   try {
-    const query = encodeURIComponent(address + ', Necochea, Buenos Aires, Argentina');
+    const normalizedAddress = (address || '').trim();
+    if (!normalizedAddress) return null;
+
+    const hasCityContext = /necochea|buenos aires|argentina/i.test(normalizedAddress);
+    const fullAddress = hasCityContext
+      ? normalizedAddress
+      : `${normalizedAddress}, Necochea, Buenos Aires, Argentina`;
+    const query = encodeURIComponent(fullAddress);
     const response = await fetch(
       `https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1`
     );
