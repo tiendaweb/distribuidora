@@ -25,13 +25,15 @@ function generateInvoicePDF(client, docType, items, total) {
     doc.text('Necochea, Buenos Aires', 15, startY + 33);
     doc.text('Tel: 0223-XXXXXX', 15, startY + 38);
 
-    // Document type letter (C=white, X=black)
+    // Document type letter (solo AFIP)
     doc.rect(95, startY + 10, 20, 20);
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(28);
-    doc.text(isBlanco ? 'C' : 'X', 105, startY + 26, { align: 'center' });
-    doc.setFontSize(8);
-    doc.text('COD. 011', 105, startY + 33, { align: 'center' });
+    if (isBlanco) {
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(28);
+      doc.text('C', 105, startY + 26, { align: 'center' });
+      doc.setFontSize(8);
+      doc.text('COD. 011', 105, startY + 33, { align: 'center' });
+    }
 
     // Document header
     doc.setFontSize(16);

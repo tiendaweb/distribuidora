@@ -339,7 +339,7 @@ function submitWebOrder(sendViaWhatsApp = false) {
     msg += `\n💰 *TOTAL: ${fmt(total)}*\n`;
 
     const encoded = encodeURIComponent(msg);
-    window.open(`https://wa.me/+5491100000000?text=${encoded}`, '_blank');
+    window.open(`https://wa.me/5492262556648?text=${encoded}`, '_blank');
   }
 
   // Clear cart & form

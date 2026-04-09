@@ -5,11 +5,66 @@
 // CLIENT SELECT
 function renderPosClientSelect() {
   const select = document.getElementById('admin-client-select');
+  const searchInput = document.getElementById('admin-client-search');
   if (!select) return;
 
   select.innerHTML = STATE.clients.map(c =>
     `<option value="${c.id}">${escapeHtml(c.name)}${c.cuit ? ' - ' + c.cuit : ''}</option>`
   ).join('');
+
+  const currentClient = STATE.clients.find(c => c.id === select.value) || STATE.clients[0];
+  if (currentClient) {
+    select.value = currentClient.id;
+  }
+  if (searchInput && currentClient && !searchInput.value.trim()) {
+    searchInput.value = currentClient.name;
+  }
+}
+
+function syncPosClientSelection() {
+  const select = document.getElementById('admin-client-select');
+  const searchInput = document.getElementById('admin-client-search');
+  if (!select || !searchInput) return;
+
+  const query = searchInput.value.trim().toLowerCase();
+  if (!query) return;
+
+  const matchedClient = STATE.clients.find(client => {
+    const tokens = [client.name, client.cuit, client.phone]
+      .filter(Boolean)
+      .map(token => token.toLowerCase());
+    return tokens.some(token => token.includes(query));
+  });
+
+  if (matchedClient) {
+    select.value = matchedClient.id;
+    searchInput.value = matchedClient.name;
+    filterPosClientOptions('');
+  }
+}
+
+function filterPosClientOptions(query) {
+  const select = document.getElementById('admin-client-select');
+  if (!select) return;
+
+  const normalized = (query || '').trim().toLowerCase();
+  const filteredClients = STATE.clients.filter(client => {
+    if (!normalized) return true;
+    return [client.name, client.cuit, client.phone]
+      .filter(Boolean)
+      .some(value => value.toLowerCase().includes(normalized));
+  });
+
+  const selectedId = select.value;
+  select.innerHTML = filteredClients.map(c =>
+    `<option value="${c.id}">${escapeHtml(c.name)}${c.cuit ? ' - ' + c.cuit : ''}</option>`
+  ).join('');
+
+  if (filteredClients.some(c => c.id === selectedId)) {
+    select.value = selectedId;
+  } else if (filteredClients[0]) {
+    select.value = filteredClients[0].id;
+  }
 }
 
 function renderPosCategoryFilters() {
@@ -201,6 +256,7 @@ function procesarVenta(printPDF = false) {
     return;
   }
 
+  syncPosClientSelection();
   const clientSelect = document.getElementById('admin-client-select');
   const clientId = clientSelect?.value || 'c1';
   const client = STATE.clients.find(c => c.id === clientId) || STATE.clients[0];
@@ -271,10 +327,24 @@ function procesarVenta(printPDF = false) {
 document.addEventListener('DOMContentLoaded', function() {
   renderPosCategoryFilters();
 
+  const clientSearch = document.getElementById('admin-client-search');
+  const clientSelect = document.getElementById('admin-client-select');
+  if (clientSearch) {
+    clientSearch.addEventListener('input', () => {
+      filterPosClientOptions(clientSearch.value);
+    });
+    clientSearch.addEventListener('change', syncPosClientSelection);
+    clientSearch.addEventListener('blur', syncPosClientSelection);
+  }
+  if (clientSelect && clientSearch) {
+    clientSelect.addEventListener('change', () => {
+      const selected = STATE.clients.find(c => c.id === clientSelect.value);
+      if (selected) clientSearch.value = selected.name;
+    });
+  }
+
   const searchInput = document.getElementById('admin-search-prod');
   if (searchInput) {
-    searchInput.addEventListener('input', debounce(() => {
-      renderPosProductList();
-    }, 300));
+    searchInput.addEventListener('input', renderPosProductList);
   }
 });

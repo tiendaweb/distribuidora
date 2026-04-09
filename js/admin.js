@@ -217,10 +217,11 @@ function renderClientsTable() {
     <tr>
       <td style="font-weight: bold;">${escapeHtml(c.name)}</td>
       <td style="font-size: 12px;">${c.address || '—'}</td>
-      <td style="font-size: 12px;">${c.phone || '—'}</td>
+      <td style="font-size: 12px;">${c.cuit || '—'}</td>
       <td><span style="background: #f3f4f6; padding: 2px 8px; border-radius: 4px; font-size: 11px;">${c.tax}</span></td>
       <td style="text-align: right;">
         <button onclick="editClientForm('${c.id}')" style="background: none; border: none; color: #3b82f6; cursor: pointer; font-size: 11px; font-weight: bold;">Editar</button>
+        ${c.id === 'c1' ? '' : `<button onclick="deleteClientWithConfirm('${c.id}')" style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 11px; font-weight: bold; margin-left: 8px;">Eliminar</button>`}
       </td>
     </tr>
   `).join('');
@@ -354,6 +355,7 @@ function renderStockTable() {
       <td style="color: var(--color-brand); font-weight: bold;">${fmt(p.sale)}</td>
       <td style="text-align: right;">
         <button onclick="openEditProductModal('${p.id}')" style="background: none; border: none; color: var(--color-brand); cursor: pointer; font-weight: bold; text-decoration: underline;">Ajustar</button>
+        <button onclick="deleteProductWithConfirm('${p.id}')" style="background: none; border: none; color: #ef4444; cursor: pointer; font-weight: bold; text-decoration: underline; margin-left: 8px;">Eliminar</button>
       </td>
     </tr>
   `).join('');
@@ -365,18 +367,54 @@ function openEditProductModal(productId) {
 
   const idInput = document.getElementById('edit-p-id');
   const nameEl = document.getElementById('edit-p-name');
+  const productNameInput = document.getElementById('edit-p-product-name');
+  const categoryInput = document.getElementById('edit-p-cat');
+  const imageInput = document.getElementById('edit-p-img');
   const stockInput = document.getElementById('edit-p-stock');
   const costInput = document.getElementById('edit-p-cost');
   const marginInput = document.getElementById('edit-p-margin');
   const saleInput = document.getElementById('edit-p-sale');
+  const deleteBtn = document.getElementById('btn-delete-product');
 
   if (idInput) idInput.value = product.id;
-  if (nameEl) nameEl.textContent = escapeHtml(product.name);
+  if (nameEl) nameEl.textContent = 'Editar Producto';
+  if (productNameInput) productNameInput.value = product.name || '';
+  if (categoryInput) categoryInput.value = product.cat || 'congelados';
+  if (imageInput) imageInput.value = product.img || '';
   if (stockInput) stockInput.value = product.stock;
   if (costInput) costInput.value = product.cost;
   if (marginInput) marginInput.value = product.margin;
   if (saleInput) saleInput.value = product.sale;
+  if (deleteBtn) deleteBtn.classList.remove('hidden');
 
+  openModal('edit-product-modal');
+  openModal('admin-modal-overlay');
+}
+
+function openCreateProductModal() {
+  const idInput = document.getElementById('edit-p-id');
+  const nameEl = document.getElementById('edit-p-name');
+  const productNameInput = document.getElementById('edit-p-product-name');
+  const categoryInput = document.getElementById('edit-p-cat');
+  const imageInput = document.getElementById('edit-p-img');
+  const stockInput = document.getElementById('edit-p-stock');
+  const costInput = document.getElementById('edit-p-cost');
+  const marginInput = document.getElementById('edit-p-margin');
+  const saleInput = document.getElementById('edit-p-sale');
+  const deleteBtn = document.getElementById('btn-delete-product');
+
+  if (idInput) idInput.value = '';
+  if (nameEl) nameEl.textContent = 'Nuevo Producto';
+  if (productNameInput) productNameInput.value = '';
+  if (categoryInput) categoryInput.value = 'congelados';
+  if (imageInput) imageInput.value = '';
+  if (stockInput) stockInput.value = 0;
+  if (costInput) costInput.value = 0;
+  if (marginInput) marginInput.value = 35;
+  if (saleInput) saleInput.value = 0;
+  if (deleteBtn) deleteBtn.classList.add('hidden');
+
+  recalculatePrice();
   openModal('edit-product-modal');
   openModal('admin-modal-overlay');
 }
@@ -396,25 +434,79 @@ function recalculatePrice() {
 function saveEditedProduct() {
   const idInput = document.getElementById('edit-p-id');
   const productId = idInput?.value;
-  const product = STATE.products.find(p => p.id === productId);
-
-  if (!product) return;
-
+  const productNameInput = document.getElementById('edit-p-product-name');
+  const categoryInput = document.getElementById('edit-p-cat');
+  const imageInput = document.getElementById('edit-p-img');
   const stockInput = document.getElementById('edit-p-stock');
   const costInput = document.getElementById('edit-p-cost');
   const marginInput = document.getElementById('edit-p-margin');
+  const productName = productNameInput?.value.trim();
 
-  product.stock = parseInt(stockInput?.value) || 0;
-  product.cost = parseFloat(costInput?.value) || 0;
-  product.margin = parseFloat(marginInput?.value) || 0;
-  product.sale = calculateSalePrice(product.cost, product.margin);
+  if (!productName) {
+    showToast('Ingresa el nombre del producto', 'warning');
+    return;
+  }
+
+  const normalizedImage = imageInput?.value.trim() || 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=200&q=80';
+  const productData = {
+    id: productId || generateId('p'),
+    name: productName,
+    short: productName,
+    desc: productName,
+    price: 0,
+    sale: 0,
+    cat: categoryInput?.value || 'congelados',
+    badge: '',
+    img: normalizedImage,
+    stock: parseInt(stockInput?.value) || 0,
+    cost: parseFloat(costInput?.value) || 0,
+    margin: parseFloat(marginInput?.value) || 0
+  };
+  productData.sale = calculateSalePrice(productData.cost, productData.margin);
+  productData.price = productData.sale;
+
+  const existingIdx = STATE.products.findIndex(p => p.id === productData.id);
+  if (existingIdx > -1) {
+    const prev = STATE.products[existingIdx];
+    STATE.products[existingIdx] = {
+      ...prev,
+      ...productData
+    };
+  } else {
+    STATE.products.unshift(productData);
+  }
 
   persistData();
   renderStockTable();
   renderPosProductList();
+  renderProducts();
   closeModal('edit-product-modal');
   closeModal('admin-modal-overlay');
-  showToast('Producto actualizado', 'success');
+  showToast(existingIdx > -1 ? 'Producto actualizado' : 'Producto creado', 'success');
+}
+
+function deleteProductWithConfirm(productId) {
+  const product = STATE.products.find(p => p.id === productId);
+  if (!product) return;
+
+  showConfirmDialog(`¿Eliminar el producto "${product.name}"?`, () => {
+    STATE.products = STATE.products.filter(p => p.id !== productId);
+    persistData();
+    renderStockTable();
+    renderPosProductList();
+    renderProducts();
+    showToast('Producto eliminado', 'success');
+  });
+}
+
+function deleteProductFromModal() {
+  const idInput = document.getElementById('edit-p-id');
+  const productId = idInput?.value;
+  if (!productId) return;
+
+  closeModal('edit-product-modal');
+  closeModal('admin-modal-overlay');
+  deleteProductWithConfirm(productId);
 }
 
 // Legacy compatibility for inline handlers in index.html
