@@ -120,6 +120,26 @@ document.addEventListener('DOMContentLoaded', function() {
     ordersFilterBtn.addEventListener('click', clearOrdersFilters);
   }
 
+
+
+  // Initialize route-driven view state
+  const route = document.body?.dataset?.route || '/';
+  const adminTab = document.body?.dataset?.adminTab || '';
+  const storeTab = document.body?.dataset?.storeTab || '';
+
+  if (route.startsWith('/admin')) {
+    STATE.isAdminMode = true;
+    initAdminPanel();
+    if (adminTab) {
+      switchAdminTab(adminTab);
+      if (adminTab === 'clientes') initClientsTab();
+      if (adminTab === 'pedidos') renderOrdersTable();
+      if (adminTab === 'stock') renderStockTable();
+    }
+  } else if (storeTab) {
+    switchTab(storeTab);
+  }
+
   // Persist data periodically
   setInterval(persistData, 30000); // Every 30 seconds
 
