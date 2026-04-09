@@ -15,6 +15,7 @@ const STATE = {
   adminCart: [],
   adminSelectedClient: null,
   adminDocumentType: 'blanco',
+  adminPosCategory: 'all',
 
   // Products & Clients & Orders
   products: [],

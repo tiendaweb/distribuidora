@@ -12,30 +12,78 @@ function renderPosClientSelect() {
   ).join('');
 }
 
+function renderPosCategoryFilters() {
+  const container = document.getElementById('admin-pos-categories');
+  if (!container) return;
+
+  container.innerHTML = CONFIG.CATEGORIES.map(category => `
+    <button
+      type="button"
+      class="pos-category-btn ${STATE.adminPosCategory === category.id ? 'active' : ''}"
+      data-category="${category.id}"
+      onclick="setPosCategory('${category.id}', this)"
+    >
+      ${escapeHtml(category.name)}
+    </button>
+  `).join('');
+}
+
+function setPosCategory(category, btn = null) {
+  STATE.adminPosCategory = category;
+
+  const container = document.getElementById('admin-pos-categories');
+  if (container) {
+    container.querySelectorAll('.pos-category-btn').forEach(button => {
+      button.classList.toggle('active', button.dataset.category === category);
+    });
+  } else if (btn) {
+    document.querySelectorAll('.pos-category-btn').forEach(button => button.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  renderPosProductList();
+}
+
 // PRODUCT LIST
 function renderPosProductList() {
   const searchInput = document.getElementById('admin-search-prod');
   const list = document.getElementById('admin-prod-list');
+  const noResults = document.getElementById('admin-pos-no-results');
 
   if (!list) return;
 
   const query = searchInput?.value.toLowerCase() || '';
-  const filtered = STATE.products.filter(p =>
-    p.name.toLowerCase().includes(query) ||
-    p.short.toLowerCase().includes(query)
-  );
+  const activeCategory = STATE.adminPosCategory || 'all';
+
+  const filtered = STATE.products.filter(p => {
+    const productName = (p.name || '').toLowerCase();
+    const productShort = (p.short || '').toLowerCase();
+    const categoryMatches = activeCategory === 'all' || p.cat === activeCategory;
+    const searchMatches = productName.includes(query) || productShort.includes(query);
+
+    return categoryMatches && searchMatches;
+  });
+
+  renderPosCategoryFilters();
 
   list.innerHTML = filtered.map(p => `
-    <div style="display: flex; align-items: center; justify-content: space-between; background: #f9fafb; padding: 8px; border-radius: 8px; border: 1px solid #e5e7eb; gap: 8px; margin-bottom: 8px;">
-      <div style="flex: 1; min-width: 0;">
-        <p style="margin: 0; font-weight: bold; font-size: 13px; color: var(--color-ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(p.name)}</p>
-        <p style="margin: 3px 0 0; font-size: 11px; color: #666;">Stock: ${p.stock} | ${fmt(p.sale)}</p>
+    <div class="admin-pos-product-card">
+      <div class="admin-pos-product-main">
+        <img class="admin-pos-product-thumb" src="${escapeHtml(p.img || '')}" alt="${escapeHtml(p.name)}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1488477181946-6428a0291777?w=200&q=80'; this.onerror=null;">
+        <div class="admin-pos-product-info">
+          <p class="admin-pos-product-name">${escapeHtml(p.name)}</p>
+          <p class="admin-pos-product-meta">Stock: ${p.stock} · ${fmt(p.sale)}</p>
+        </div>
       </div>
-      <button onclick="addToAdminCart('${p.id}')" class="btn btn-primary btn-sm" style="${p.stock <= 0 ? 'opacity: 0.5; cursor: not-allowed;' : 'cursor: pointer;'}">
+      <button onclick="addToAdminCart('${p.id}')" class="btn btn-primary btn-sm admin-pos-add-btn" ${p.stock <= 0 ? 'disabled' : ''}>
         + Añadir
       </button>
     </div>
   `).join('');
+
+  if (noResults) {
+    noResults.classList.toggle('hidden', filtered.length > 0);
+  }
 }
 
 // ADMIN CART
@@ -217,6 +265,8 @@ function procesarVenta(printPDF = false) {
 
 // SEARCH PRODUCTS IN POS
 document.addEventListener('DOMContentLoaded', function() {
+  renderPosCategoryFilters();
+
   const searchInput = document.getElementById('admin-search-prod');
   if (searchInput) {
     searchInput.addEventListener('input', debounce(() => {

@@ -186,9 +186,11 @@
         <div class="bg-white p-4 rounded-xl shadow-sm">
           <h2 class="font-bold text-lg mb-3">Agregar Productos</h2>
           <input type="text" id="admin-search-prod" placeholder="Buscar por nombre..." class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand mb-3" oninput="renderPosProductList()">
+          <div id="admin-pos-categories" class="pos-category-filters mb-3" aria-label="Filtros por categoría POS"></div>
           <div id="admin-prod-list" class="max-h-60 overflow-y-auto space-y-2 pr-1">
             <!-- Listado de productos para agregar -->
           </div>
+          <div id="admin-pos-no-results" class="pos-no-results hidden">No se encontraron productos para el filtro actual.</div>
         </div>
       </div>
 
