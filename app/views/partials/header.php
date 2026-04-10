@@ -26,12 +26,4 @@
       </button>
     </div>
   </div>
-
-  <?php if ($showStoreNav): ?>
-    <?php include __DIR__ . '/store_nav.php'; ?>
-  <?php endif; ?>
-
-  <?php if ($showAdminNav): ?>
-    <?php include __DIR__ . '/admin_nav.php'; ?>
-  <?php endif; ?>
 </header>

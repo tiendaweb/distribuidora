@@ -376,20 +376,44 @@ function submitWebOrder(sendViaWhatsApp = false) {
     return;
   }
 
-  const nameInput = document.getElementById('store-client-name');
-  const addressInput = document.getElementById('store-client-address');
+  const isAuthenticated = document.body.dataset.authenticated === '1';
+  let name, address;
 
-  if (!nameInput || !addressInput) {
-    showToast('Error: formulario no encontrado', 'error');
-    return;
-  }
+  if (isAuthenticated) {
+    // Get client from authenticated selector
+    const clientSelect = document.getElementById('store-authenticated-client');
+    const selectedClientId = clientSelect?.value;
 
-  const name = nameInput.value.trim();
-  const address = addressInput.value.trim();
+    if (!selectedClientId) {
+      showToast('Por favor selecciona un cliente', 'warning');
+      return;
+    }
 
-  if (!name) {
-    showToast('Por favor ingresa tu Nombre / Negocio', 'warning');
-    return;
+    const client = STATE.clients?.find(c => c.id === selectedClientId);
+    if (!client) {
+      showToast('Error: cliente no encontrado', 'error');
+      return;
+    }
+
+    name = client.name;
+    address = client.address || '';
+  } else {
+    // Get client from regular inputs
+    const nameInput = document.getElementById('store-client-name');
+    const addressInput = document.getElementById('store-client-address');
+
+    if (!nameInput || !addressInput) {
+      showToast('Error: formulario no encontrado', 'error');
+      return;
+    }
+
+    name = nameInput.value.trim();
+    address = addressInput.value.trim();
+
+    if (!name) {
+      showToast('Por favor ingresa tu Nombre / Negocio', 'warning');
+      return;
+    }
   }
 
   const total = STATE.cart.reduce((s, c) => s + c.price * c.qty, 0);
@@ -428,8 +452,19 @@ function submitWebOrder(sendViaWhatsApp = false) {
 
   // Clear cart & form
   STATE.cart = [];
-  nameInput.value = '';
-  addressInput.value = '';
+
+  if (!isAuthenticated) {
+    const nameInput = document.getElementById('store-client-name');
+    const addressInput = document.getElementById('store-client-address');
+    if (nameInput) nameInput.value = '';
+    if (addressInput) addressInput.value = '';
+  } else {
+    const clientSelect = document.getElementById('store-authenticated-client');
+    if (clientSelect && STATE.clients?.length > 0) {
+      clientSelect.value = STATE.clients[0].id;
+    }
+  }
+
   updateStoreCartUI();
   closeDrawer('cart-drawer');
   showToast('Pedido guardado con éxito', 'success');
@@ -460,3 +495,41 @@ function changeModalQty(delta) {
   if (qty > max) qty = max;
   input.value = qty;
 }
+
+// Initialize client selector if authenticated
+function initializeAuthenticatedClientSelector() {
+  const isAuthenticated = document.body.dataset.authenticated === '1';
+  const clientSelect = document.getElementById('store-authenticated-client');
+
+  if (!isAuthenticated || !clientSelect) return;
+
+  // Check if clients are already loaded
+  const checkAndLoad = setInterval(() => {
+    if (STATE && STATE.clients && STATE.clients.length > 0) {
+      clearInterval(checkAndLoad);
+      populateClientSelector();
+    }
+  }, 100);
+
+  // Timeout after 5 seconds
+  setTimeout(() => clearInterval(checkAndLoad), 5000);
+}
+
+function populateClientSelector() {
+  const clientSelect = document.getElementById('store-authenticated-client');
+  if (!clientSelect || !STATE?.clients) return;
+
+  clientSelect.innerHTML = '<option value="">Seleccionar cliente...</option>' +
+    STATE.clients.map(c => `<option value="${escapeHtml(c.id)}">${escapeHtml(c.name)}</option>`).join('');
+
+  // Auto-select first client (usually "Consumidor Final")
+  if (STATE.clients.length > 0) {
+    clientSelect.value = STATE.clients[0].id;
+  }
+
+  clientSelect.addEventListener('change', (e) => {
+    STATE.storeSelectedClient = e.target.value;
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initializeAuthenticatedClientSelector);
