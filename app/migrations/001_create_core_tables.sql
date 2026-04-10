@@ -80,15 +80,10 @@ CREATE TABLE IF NOT EXISTS invoices (
 );
 
 CREATE TABLE IF NOT EXISTS slides (
-  id TEXT PRIMARY KEY,
-  title TEXT,
-  subtitle TEXT,
-  image TEXT,
-  cta_text TEXT,
-  cta_link TEXT,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  image_url TEXT NOT NULL,
+  title TEXT DEFAULT '',
   sort_order INTEGER DEFAULT 0,
-  active INTEGER DEFAULT 1,
-  payload TEXT,
-  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+  is_active INTEGER DEFAULT 1,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

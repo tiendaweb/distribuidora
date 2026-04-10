@@ -2,17 +2,11 @@
   <div id="tab-catalogo" class="tab-section">
     <section class="relative overflow-hidden bg-ink">
       <div id="slider-container" class="overflow-hidden">
-        <div id="slider-track" class="slider-track">
-          <img src="https://aapp.space/storage/store/images/usSqH9EIpZEjRAkO53Fo.png" class="slide object-cover w-full" alt="Banner 1" />
-          <img src="https://aapp.space/storage/store/images/McJ06c7ki18GY9ZSziWs.png" class="slide object-cover w-full" alt="Banner 2" />
-        </div>
+        <div id="slider-track" class="slider-track"></div>
       </div>
       <button onclick="slideChange(-1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 text-white w-9 h-9 rounded-full">‹</button>
       <button onclick="slideChange(1)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 text-white w-9 h-9 rounded-full">›</button>
-      <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2" id="slider-dots">
-        <div class="dot active" onclick="goToSlide(0)"></div>
-        <div class="dot" onclick="goToSlide(1)"></div>
-      </div>
+      <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2" id="slider-dots"></div>
     </section>
 
     <section class="bg-white border-b border-gray-100 py-3 px-4 sticky top-[108px] z-30 shadow-sm">

@@ -39,3 +39,9 @@ const DEFAULT_CLIENTS = [
   { id: 'c11', name: 'Kiosco 24 Horas', address: 'Calle 4 4302, Necochea, Buenos Aires', phone: '2262-012345', email: '', cuit: '20-35544333-7', tax: 'Consumidor Final', notes: '' },
   { id: 'c12', name: 'Comedor Buen Sabor', address: 'Calle 87 402, Necochea, Buenos Aires', phone: '2262-321098', email: 'buensabor@mail.com', cuit: '27-34455666-1', tax: 'Monotributista', notes: 'Restaurante' }
 ];
+
+
+const DEFAULT_SLIDES = [
+  { image_url: 'https://aapp.space/storage/store/images/usSqH9EIpZEjRAkO53Fo.png', title: 'Banner 1', sort_order: 0, is_active: 1 },
+  { image_url: 'https://aapp.space/storage/store/images/McJ06c7ki18GY9ZSziWs.png', title: 'Banner 2', sort_order: 1, is_active: 1 }
+];

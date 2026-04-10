@@ -31,14 +31,16 @@ async function loadPersistedData() {
 
     STATE.adminOrders = Array.isArray(state?.orders) ? state.orders : [];
     STATE.adminInvoices = Array.isArray(state?.invoices) ? state.invoices : [];
-    STATE.slides = Array.isArray(state?.slides) ? state.slides : [];
+    STATE.slides = Array.isArray(state?.slides) && state.slides.length
+      ? state.slides
+      : JSON.parse(JSON.stringify(DEFAULT_SLIDES));
   } catch (err) {
     console.warn('Error loading persisted data:', err);
     STATE.products = JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
     STATE.clients = JSON.parse(JSON.stringify(DEFAULT_CLIENTS));
     STATE.adminOrders = [];
     STATE.adminInvoices = [];
-    STATE.slides = [];
+    STATE.slides = JSON.parse(JSON.stringify(DEFAULT_SLIDES));
   }
 }
 

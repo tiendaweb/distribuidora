@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
   // Initialize store view
   renderProducts();
+  renderSlider();
   updateStoreCartUI();
   resetSliderTimer();
 
@@ -135,6 +136,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       if (adminTab === 'clientes') initClientsTab();
       if (adminTab === 'pedidos') renderOrdersTable();
       if (adminTab === 'stock') renderStockTable();
+      if (adminTab === 'ajustes' && typeof initSlidesSettings === 'function') initSlidesSettings();
     }
   } else if (storeTab) {
     switchTab(storeTab);
