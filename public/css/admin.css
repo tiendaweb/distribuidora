@@ -360,14 +360,13 @@
 /* Product Card Grid for POS */
 #admin-prod-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
 
-@media (max-width: 640px) {
+@media (min-width: 1024px) {
   #admin-prod-list {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 10px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
@@ -396,16 +395,10 @@
 
 .admin-pos-product-thumb {
   width: 100%;
-  height: 120px;
-  object-fit: cover;
-  background: #f3f4f6;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  background: #f9fafb;
   border-bottom: 1px solid #e5e7eb;
-}
-
-@media (max-width: 640px) {
-  .admin-pos-product-thumb {
-    height: 100px;
-  }
 }
 
 .admin-pos-product-info {

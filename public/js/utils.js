@@ -121,6 +121,13 @@ async function saveSlideApi(slide) {
   return apiFetch(`/api/slides/${encodeURIComponent(slide.id)}`, { method: 'PUT', body: JSON.stringify(slide) });
 }
 
+function normalizeSlideImageUrl(url) {
+  const rawUrl = (url || '').trim();
+  if (!rawUrl) return '';
+  return rawUrl.replace('/storage/images/', '/storage/store/images/');
+}
+
+
 // Validation
 function validateEmail(email) {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

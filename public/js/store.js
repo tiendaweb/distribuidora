@@ -332,7 +332,7 @@ function renderSlider() {
   const resolvedSlides = slides.length ? slides : DEFAULT_SLIDES;
 
   track.innerHTML = resolvedSlides.map((slide, index) => `
-    <img src="${slide.image_url}" class="slide w-full" alt="${escapeHtml(slide.title || `Banner ${index + 1}`)}" />
+    <img src="${normalizeSlideImageUrl(slide.image_url)}" class="slide w-full" alt="${escapeHtml(slide.title || `Banner ${index + 1}`)}" />
   `).join('');
 
   dots.innerHTML = resolvedSlides.map((_, index) => `

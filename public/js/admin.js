@@ -579,7 +579,7 @@ function renderSlidesList() {
   empty.classList.add('hidden');
   list.innerHTML = slides.map(slide => `
     <div class="border border-gray-200 rounded-lg p-3 flex items-center gap-3">
-      <img src="${slide.image_url}" alt="${escapeHtml(slide.title || 'Slide')}" class="w-20 h-14 object-cover rounded bg-gray-100" />
+      <img src="${normalizeSlideImageUrl(slide.image_url)}" alt="${escapeHtml(slide.title || 'Slide')}" class="w-20 h-14 object-cover rounded bg-gray-100" />
       <div class="flex-1 min-w-0">
         <p class="text-sm font-semibold text-ink truncate">${escapeHtml(slide.title || 'Sin texto')}</p>
         <p class="text-xs text-gray-500 truncate">${escapeHtml(slide.image_url)}</p>
@@ -599,7 +599,7 @@ async function createSlide(event) {
   const isActiveInput = document.getElementById('slide-is-active');
 
   const payload = {
-    image_url: imageUrlInput?.value.trim() || '',
+    image_url: normalizeSlideImageUrl(imageUrlInput?.value || ''),
     title: titleInput?.value.trim() || '',
     sort_order: parseInt(sortOrderInput?.value || '0', 10) || 0,
     is_active: isActiveInput?.checked ? 1 : 0
