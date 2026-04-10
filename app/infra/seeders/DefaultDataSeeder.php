@@ -47,9 +47,9 @@ final class DefaultDataSeeder
     ];
 
     private const DEFAULT_SLIDES = [
-        ['image_url' => 'https://aapp.space/storage/images/usSqH9EIpZEjRAkO53Fo.png', 'title' => 'Banner 1', 'sort_order' => 0, 'is_active' => 1],
-        ['image_url' => 'https://aapp.space/storage/images/McJ06c7ki18GY9ZSziWs.png', 'title' => 'Banner 2', 'sort_order' => 1, 'is_active' => 1],
-        ['image_url' => 'https://aapp.space/storage/images/cRUiezU0TrsrG520D5MR.png', 'title' => 'Banner 3', 'sort_order' => 2, 'is_active' => 1],
+        ['image_url' => 'https://aapp.space/storage/store/images/usSqH9EIpZEjRAkO53Fo.png', 'title' => 'Banner 1', 'sort_order' => 0, 'is_active' => 1],
+        ['image_url' => 'https://aapp.space/storage/store/images/McJ06c7ki18GY9ZSziWs.png', 'title' => 'Banner 2', 'sort_order' => 1, 'is_active' => 1],
+        ['image_url' => 'https://aapp.space/storage/store/images/cRUiezU0TrsrG520D5MR.png', 'title' => 'Banner 3', 'sort_order' => 2, 'is_active' => 1],
     ];
 
     private const REQUIRED_HISTORICAL_PRODUCT_IMAGES = [

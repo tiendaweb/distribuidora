@@ -333,7 +333,7 @@ function renderPosProductList() {
         src="${escapeHtml(p.img || '')}"
         alt="${escapeHtml(p.name)}"
         loading="lazy"
-        style="width: 100%; height: 120px; object-fit: cover; border-radius: 6px; background: #f3f4f6;"
+        style="width: 100%; aspect-ratio: 1 / 1; object-fit: contain; border-radius: 6px; background: #f9fafb;"
         onerror="this.src='https://images.unsplash.com/photo-1488477181946-6428a0291777?w=200&q=80'; this.onerror=null;"
       >
       <div class="admin-pos-product-info" style="flex: 1;">
@@ -341,9 +341,8 @@ function renderPosProductList() {
         <p class="admin-pos-product-meta" style="margin: 4px 0 0; font-size: 12px; color: #6b7280;">SKU: ${escapeHtml(p.sku || '') || '—'}</p>
         <p style="margin: 2px 0 0; font-size: 12px; color: #6b7280;">Stock: ${p.stock}</p>
       </div>
-      <div style="display: flex; justify-content: space-between; align-items: baseline; padding-top: 8px; border-top: 1px solid #f3f4f6;">
+      <div style="padding-top: 8px; border-top: 1px solid #f3f4f6;">
         <span style="font-weight: bold; font-size: 16px; color: #f59e0b;">${fmt(p.sale)}</span>
-        <span style="font-size: 12px; color: #9ca3af; text-decoration: line-through;">${fmt(p.price)}</span>
       </div>
     </div>
   `).join('');
