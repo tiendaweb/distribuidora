@@ -51,6 +51,29 @@ final class DefaultDataSeeder
         ['image_url' => 'https://aapp.space/storage/store/images/McJ06c7ki18GY9ZSziWs.png', 'title' => 'Banner 2', 'sort_order' => 1, 'is_active' => 1],
     ];
 
+    private const REQUIRED_HISTORICAL_PRODUCT_IMAGES = [
+        '69c30deeb7a1f' => 'https://aapp.space/storage/store/images/69c2ec882de0c-69c30dbbc3e7d.png',
+        '69c30eb05e223' => 'https://aapp.space/storage/store/images/69c2ec882de0c-69c49625e4a09.png',
+        '69c3100355174' => 'https://aapp.space/storage/store/images/69c2ec882de0c-69c30ff7a3584.png',
+        '69c49f59f19a6' => 'https://aapp.space/storage/store/images/69c2ec882de0c-69c496269320e.png',
+        '69c4a49fb1004' => 'https://aapp.space/storage/store/images/69c2ec882de0c-69c4962631b73.png',
+        '69c4a4fcc731a' => 'https://aapp.space/storage/store/images/69c2ec882de0c-69c496264e233.png',
+        '69c4a563b886e' => 'https://aapp.space/storage/store/images/69c2ec882de0c-69c58f5744318.jpg',
+        '69c4a5ee73e5a' => 'https://aapp.space/storage/store/images/69c2ec882de0c-69c4962702cc5.png',
+        '69c4a675d5b8e' => 'https://aapp.space/storage/store/images/69c2ec882de0c-69c496271b346.png',
+        '69c4a73365474' => 'https://aapp.space/storage/store/images/69c2ec882de0c-69c49625be8f4.png',
+        '69c593ac02326' => 'https://aapp.space/storage/store/images/69c2ec882de0c-69c591ba518fd.jpg',
+        '69c5956bb0be7' => 'https://aapp.space/storage/store/images/69c2ec882de0c-69c591ba50a29.jpg',
+        '69c88aece4514' => 'https://aapp.space/storage/store/images/69c2ec882de0c-69c88960d8ece.jpg',
+        '69c892aaea1a1' => 'https://aapp.space/storage/store/images/69c2ec882de0c-69c89043e9d55.png',
+        '69c89325d26db' => 'https://aapp.space/storage/store/images/69c2ec882de0c-69c89043e9f19.png',
+        '69c89420ee6af' => 'https://aapp.space/storage/store/images/69c2ec882de0c-69c89045023da.png',
+        '69c894b2cc6b8' => 'https://aapp.space/storage/store/images/69c2ec882de0c-69c89045027ee.png',
+        '69c894f917b58' => 'https://aapp.space/storage/store/images/69c2ec882de0c-69c89045f1dd6.png',
+        '69c9e77d430af' => 'https://aapp.space/storage/store/images/69c2ec882de0c-69c9e710b8000.jpg',
+        '69c9e7e4bb56e' => 'https://aapp.space/storage/store/images/69c2ec882de0c-69c9e710ba04b.jpg',
+    ];
+
     public static function seedIfEmpty(PDO $pdo): void
     {
         $pdo->beginTransaction();
@@ -60,6 +83,50 @@ final class DefaultDataSeeder
         self::seedSlidesIfEmpty($pdo);
 
         $pdo->commit();
+    }
+
+    public static function defaults(): array
+    {
+        return [
+            'products' => self::DEFAULT_PRODUCTS,
+            'clients' => self::DEFAULT_CLIENTS,
+            'slides' => self::DEFAULT_SLIDES,
+        ];
+    }
+
+    public static function verifyHistoricalSeed(PDO $pdo): array
+    {
+        $stmt = $pdo->query('SELECT id, img FROM products');
+        $rows = $stmt->fetchAll();
+        $imagesById = [];
+        foreach ($rows as $row) {
+            $imagesById[(string)($row['id'] ?? '')] = (string)($row['img'] ?? '');
+        }
+
+        $missing = [];
+        $wrongUrl = [];
+
+        foreach (self::REQUIRED_HISTORICAL_PRODUCT_IMAGES as $id => $expectedUrl) {
+            if (!array_key_exists($id, $imagesById)) {
+                $missing[] = $id;
+                continue;
+            }
+
+            if ($imagesById[$id] !== $expectedUrl) {
+                $wrongUrl[] = [
+                    'id' => $id,
+                    'expected' => $expectedUrl,
+                    'actual' => $imagesById[$id],
+                ];
+            }
+        }
+
+        return [
+            'ok' => $missing === [] && $wrongUrl === [],
+            'expected_count' => count(self::REQUIRED_HISTORICAL_PRODUCT_IMAGES),
+            'missing_ids' => $missing,
+            'wrong_image_urls' => $wrongUrl,
+        ];
     }
 
     private static function seedProductsIfEmpty(PDO $pdo): void

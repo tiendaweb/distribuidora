@@ -69,6 +69,24 @@ try {
 
     echo "Cargando datos de demo (productos, clientes, slides)...\n";
     DefaultDataSeeder::seedIfEmpty($pdo);
+    echo "Verificando IDs y URLs históricas de productos (aapp.space)...\n";
+    $verification = DefaultDataSeeder::verifyHistoricalSeed($pdo);
+    if (!$verification['ok']) {
+        echo "Error: la verificación del sembrado histórico falló.\n";
+        if ($verification['missing_ids'] !== []) {
+            echo "IDs faltantes: " . implode(', ', $verification['missing_ids']) . "\n";
+        }
+        if ($verification['wrong_image_urls'] !== []) {
+            echo "URLs incorrectas detectadas:\n";
+            foreach ($verification['wrong_image_urls'] as $issue) {
+                echo "- {$issue['id']}\n";
+                echo "  esperado: {$issue['expected']}\n";
+                echo "  actual:   {$issue['actual']}\n";
+            }
+        }
+        exit(1);
+    }
+    echo "Verificación histórica OK ({$verification['expected_count']} productos).\n";
 
     echo "Creando usuario administrador...\n";
     $auth = new AuthController(new UserRepository($pdo));

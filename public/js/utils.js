@@ -18,39 +18,69 @@ async function apiFetch(url, options = {}) {
 }
 
 async function loadPersistedData() {
-  const normalizeProduct = (product = {}) => ({
-    ...product,
-    sku: product.sku || ''
-  });
+  const clone = (value) => JSON.parse(JSON.stringify(value));
 
-  const normalizeClient = (client = {}) => ({
-    ...client,
-    client_code: client.client_code || client.codigo || ''
-  });
+  const normalizeProduct = (product = {}) => {
+    const normalized = { ...product };
+    if (!Object.prototype.hasOwnProperty.call(normalized, 'sku')) {
+      normalized.sku = typeof normalized.id === 'string' && normalized.id
+        ? `SKU-${normalized.id}`
+        : '';
+    }
+    return normalized;
+  };
+
+  const normalizeClient = (client = {}) => {
+    const normalized = { ...client };
+    if (!Object.prototype.hasOwnProperty.call(normalized, 'client_code')) {
+      normalized.client_code = normalized.codigo || '';
+    }
+    return normalized;
+  };
+
+  const resolveDefaults = async () => {
+    try {
+      const defaults = await apiFetch('/api/defaults');
+      return {
+        products: Array.isArray(defaults?.products) ? defaults.products : clone(DEFAULT_PRODUCTS),
+        clients: Array.isArray(defaults?.clients) ? defaults.clients : clone(DEFAULT_CLIENTS),
+        slides: Array.isArray(defaults?.slides) ? defaults.slides : clone(DEFAULT_SLIDES)
+      };
+    } catch (err) {
+      console.warn('Error loading backend defaults:', err);
+      return {
+        products: clone(DEFAULT_PRODUCTS),
+        clients: clone(DEFAULT_CLIENTS),
+        slides: clone(DEFAULT_SLIDES)
+      };
+    }
+  };
 
   try {
+    const defaults = await resolveDefaults();
     const state = await apiFetch('/api/bootstrap');
 
     STATE.products = Array.isArray(state?.products) && state.products.length
       ? state.products.map(normalizeProduct)
-      : JSON.parse(JSON.stringify(DEFAULT_PRODUCTS)).map(normalizeProduct);
+      : defaults.products.map(normalizeProduct);
 
     STATE.clients = Array.isArray(state?.clients) && state.clients.length
       ? state.clients.map(normalizeClient)
-      : JSON.parse(JSON.stringify(DEFAULT_CLIENTS)).map(normalizeClient);
+      : defaults.clients.map(normalizeClient);
 
     STATE.adminOrders = Array.isArray(state?.orders) ? state.orders : [];
     STATE.adminInvoices = Array.isArray(state?.invoices) ? state.invoices : [];
     STATE.slides = Array.isArray(state?.slides) && state.slides.length
       ? state.slides
-      : JSON.parse(JSON.stringify(DEFAULT_SLIDES));
+      : defaults.slides;
   } catch (err) {
     console.warn('Error loading persisted data:', err);
-    STATE.products = JSON.parse(JSON.stringify(DEFAULT_PRODUCTS)).map(normalizeProduct);
-    STATE.clients = JSON.parse(JSON.stringify(DEFAULT_CLIENTS)).map(normalizeClient);
+    const defaults = await resolveDefaults();
+    STATE.products = defaults.products.map(normalizeProduct);
+    STATE.clients = defaults.clients.map(normalizeClient);
     STATE.adminOrders = [];
     STATE.adminInvoices = [];
-    STATE.slides = JSON.parse(JSON.stringify(DEFAULT_SLIDES));
+    STATE.slides = defaults.slides;
   }
 }
 
