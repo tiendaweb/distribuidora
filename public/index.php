@@ -100,6 +100,10 @@ $requireAdmin = static function () use ($auth, $json): void {
 };
 
 if (str_starts_with($currentRoute, '/api/')) {
+    if ($currentRoute === '/api/defaults' && $method === 'GET') {
+        $json(DefaultDataSeeder::defaults());
+    }
+
     if ($currentRoute === '/api/bootstrap' && $method === 'GET') {
         $json([
             'products' => $productService->list(),

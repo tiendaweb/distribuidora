@@ -52,6 +52,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$alreadyInstalled) {
         $pdo = Database::connection();
         MigrationRunner::migrate($pdo);
         DefaultDataSeeder::seedIfEmpty($pdo);
+        $verification = DefaultDataSeeder::verifyHistoricalSeed($pdo);
+        if (!$verification['ok']) {
+            throw new RuntimeException(
+                'La base no coincide con el histórico esperado. ' .
+                'Faltantes: ' . implode(', ', $verification['missing_ids']) . '. ' .
+                'URLs incorrectas: ' . json_encode($verification['wrong_image_urls'], JSON_UNESCAPED_UNICODE)
+            );
+        }
 
         $auth = new AuthController(new UserRepository($pdo));
         $auth->ensureDefaultUser();
@@ -86,6 +94,7 @@ if ($alreadyInstalled) {
 <div class="card">
     <h1>Instalación inicial</h1>
     <p>Este proceso crea la base de datos, aplica migraciones y carga datos de ejemplo.</p>
+    <p>También valida que queden sembrados los IDs y URLs históricas de imágenes de productos de <code>aapp.space</code>.</p>
 
     <?php if ($error): ?>
         <p class="error"><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></p>
