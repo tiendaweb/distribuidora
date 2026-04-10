@@ -176,6 +176,14 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
+function normalizeText(text) {
+  // Remove diacritics and convert to lowercase for accent-insensitive search
+  return text
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')  // Remove diacritical marks
+    .toLowerCase();
+}
+
 // Number utilities
 function roundPrice(price) {
   return Number((Number(price) || 0).toFixed(2));

@@ -2,68 +2,135 @@
    POS (PUNTO DE VENTA - CAJA REGISTRADORA)
    ============================================================ */
 
-// CLIENT SELECT
-function renderPosClientSelect() {
-  const select = document.getElementById('admin-client-select');
-  const searchInput = document.getElementById('admin-client-search');
-  if (!select) return;
+// CLIENT COMBOBOX
+let clientComboboxState = {
+  highlightedIndex: -1,
+  filteredClients: [],
+  isOpen: false
+};
 
-  select.innerHTML = STATE.clients.map(c =>
-    `<option value="${c.id}">${escapeHtml(c.name)}${c.cuit ? ' - ' + c.cuit : ''}</option>`
-  ).join('');
+function renderPosClientCombobox() {
+  const input = document.getElementById('admin-client-input');
+  if (!input) return;
 
-  const currentClient = STATE.clients.find(c => c.id === select.value) || STATE.clients[0];
-  if (currentClient) {
-    select.value = currentClient.id;
+  // Initialize with first client (Consumidor Final)
+  if (!STATE.adminSelectedClient && STATE.clients.length > 0) {
+    STATE.adminSelectedClient = STATE.clients[0].id;
   }
-  if (searchInput && currentClient && !searchInput.value.trim()) {
-    searchInput.value = currentClient.name;
+
+  const selectedClient = STATE.clients.find(c => c.id === STATE.adminSelectedClient);
+  if (selectedClient) {
+    input.value = selectedClient.name;
   }
+
+  filterAndRenderClientList('');
 }
 
-function syncPosClientSelection() {
-  const select = document.getElementById('admin-client-select');
-  const searchInput = document.getElementById('admin-client-search');
-  if (!select || !searchInput) return;
+function filterAndRenderClientList(query = '') {
+  const list = document.getElementById('admin-client-list');
+  if (!list) return;
 
-  const query = searchInput.value.trim().toLowerCase();
-  if (!query) return;
-
-  const matchedClient = STATE.clients.find(client => {
-    const tokens = [client.name, client.cuit, client.phone]
-      .filter(Boolean)
-      .map(token => token.toLowerCase());
-    return tokens.some(token => token.includes(query));
-  });
-
-  if (matchedClient) {
-    select.value = matchedClient.id;
-    searchInput.value = matchedClient.name;
-    filterPosClientOptions('');
-  }
-}
-
-function filterPosClientOptions(query) {
-  const select = document.getElementById('admin-client-select');
-  if (!select) return;
-
-  const normalized = (query || '').trim().toLowerCase();
-  const filteredClients = STATE.clients.filter(client => {
+  const normalized = normalizeText(query);
+  clientComboboxState.filteredClients = STATE.clients.filter(client => {
     if (!normalized) return true;
-    return [client.name, client.cuit, client.phone]
+    return [client.name, client.cuit, client.phone, client.client_code]
       .filter(Boolean)
-      .some(value => value.toLowerCase().includes(normalized));
+      .some(value => normalizeText(value).includes(normalized));
   });
 
-  const selectedId = select.value;
-  select.innerHTML = filteredClients.map(c =>
-    `<option value="${c.id}">${escapeHtml(c.name)}${c.cuit ? ' - ' + c.cuit : ''}</option>`
-  ).join('');
+  clientComboboxState.highlightedIndex = -1;
 
-  if (filteredClients.some(c => c.id === selectedId)) {
-    select.value = selectedId;
-  } else if (filteredClients[0]) {
-    select.value = filteredClients[0].id;
+  if (clientComboboxState.filteredClients.length === 0) {
+    list.innerHTML = '<li style="padding: 8px 12px; color: #999; font-size: 12px;">No se encontraron clientes</li>';
+    list.classList.remove('hidden');
+    return;
+  }
+
+  list.innerHTML = clientComboboxState.filteredClients.map((client, index) => {
+    const isSelected = client.id === STATE.adminSelectedClient;
+    return `
+      <li
+        data-client-id="${client.id}"
+        data-index="${index}"
+        style="
+          padding: 10px 12px;
+          cursor: pointer;
+          background-color: ${isSelected ? '#e0e7ff' : 'transparent'};
+          border-left: 3px solid ${isSelected ? '#3b82f6' : 'transparent'};
+          font-size: 12px;
+          user-select: none;
+        "
+        onclick="selectClient('${client.id}')"
+        onmouseover="this.style.backgroundColor='#f3f4f6'; this.style.borderLeft='3px solid #d1d5db';"
+        onmouseout="this.style.backgroundColor='${isSelected ? '#e0e7ff' : 'transparent'}'; this.style.borderLeft='3px solid ${isSelected ? '#3b82f6' : 'transparent'}';"
+      >
+        <div style="font-weight: 600; color: var(--color-ink);">${escapeHtml(client.name)}</div>
+        <div style="font-size: 11px; color: #666; margin-top: 2px;">
+          ${client.cuit ? '📋 ' + client.cuit + ' · ' : ''}${client.phone ? '📞 ' + client.phone : ''}
+        </div>
+      </li>
+    `;
+  }).join('');
+
+  list.classList.remove('hidden');
+  clientComboboxState.isOpen = true;
+}
+
+function handleClientInputChange(event) {
+  const query = event.target.value;
+  filterAndRenderClientList(query);
+}
+
+function handleClientKeydown(event) {
+  const { key } = event;
+  const list = document.getElementById('admin-client-list');
+  const maxIndex = clientComboboxState.filteredClients.length - 1;
+
+  if (key === 'ArrowDown') {
+    event.preventDefault();
+    clientComboboxState.highlightedIndex = Math.min(clientComboboxState.highlightedIndex + 1, maxIndex);
+    updateClientListHighlight();
+  } else if (key === 'ArrowUp') {
+    event.preventDefault();
+    clientComboboxState.highlightedIndex = Math.max(clientComboboxState.highlightedIndex - 1, -1);
+    updateClientListHighlight();
+  } else if (key === 'Enter') {
+    event.preventDefault();
+    if (clientComboboxState.highlightedIndex >= 0) {
+      const client = clientComboboxState.filteredClients[clientComboboxState.highlightedIndex];
+      selectClient(client.id);
+    }
+  } else if (key === 'Escape') {
+    list.classList.add('hidden');
+    clientComboboxState.isOpen = false;
+  }
+}
+
+function updateClientListHighlight() {
+  const items = document.querySelectorAll('#admin-client-list li[data-index]');
+  items.forEach((item, index) => {
+    if (index === clientComboboxState.highlightedIndex) {
+      item.style.backgroundColor = '#dbeafe';
+      item.style.borderLeft = '3px solid #3b82f6';
+      item.scrollIntoView({ block: 'nearest' });
+    } else {
+      const client = clientComboboxState.filteredClients[index];
+      const isSelected = client.id === STATE.adminSelectedClient;
+      item.style.backgroundColor = isSelected ? '#e0e7ff' : 'transparent';
+      item.style.borderLeft = isSelected ? '3px solid #3b82f6' : 'transparent';
+    }
+  });
+}
+
+function selectClient(clientId) {
+  STATE.adminSelectedClient = clientId;
+  const client = STATE.clients.find(c => c.id === clientId);
+  if (client) {
+    const input = document.getElementById('admin-client-input');
+    const list = document.getElementById('admin-client-list');
+    if (input) input.value = client.name;
+    if (list) list.classList.add('hidden');
+    clientComboboxState.isOpen = false;
   }
 }
 
@@ -207,6 +274,15 @@ function addToAdminCart(productId) {
   }
 
   renderPosCart();
+
+  // Focus and select the quantity input for the new/updated item
+  setTimeout(() => {
+    const qtyInput = document.getElementById(`admin-qty-${productId}`);
+    if (qtyInput) {
+      qtyInput.focus();
+      qtyInput.select();
+    }
+  }, 0);
 }
 
 function removeFromAdminCart(productId) {
@@ -231,6 +307,15 @@ function updateAdminCartQty(productId, qty) {
   }
 
   renderPosCart();
+}
+
+function handleQuantityKeypress(event, productId) {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    procesarVenta(false);  // Process sale without auto-print
+  } else if (event.key === 'Escape') {
+    document.getElementById(`admin-qty-${productId}`).blur();
+  }
 }
 
 function renderPosCart() {
@@ -264,7 +349,7 @@ function renderPosCart() {
       <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f0f0f0; gap: 8px;">
         <div style="flex: 1; min-width: 0;">
           <p style="margin: 0; font-weight: 600; font-size: 12px; color: var(--color-ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(c.name)}</p>
-          <p style="margin: 2px 0 0; font-size: 11px; color: #666;">${fmt(c.price)} × <input type="number" value="${c.qty}" min="1" max="${c.stock}" onchange="updateAdminCartQty('${c.id}', this.value)" style="width: 35px; padding: 2px; border: 1px solid #ddd; border-radius: 3px; text-align: center;"></p>
+          <p style="margin: 2px 0 0; font-size: 11px; color: #666;">${fmt(c.price)} × <input type="number" id="admin-qty-${c.id}" value="${c.qty}" min="1" max="${c.stock}" onchange="updateAdminCartQty('${c.id}', this.value)" onkeypress="handleQuantityKeypress(event, '${c.id}')" style="width: 35px; padding: 2px; border: 1px solid #ddd; border-radius: 3px; text-align: center;"></p>
         </div>
         <div style="text-align: right; flex-shrink: 0;">
           <p style="margin: 0; font-weight: bold; font-size: 13px; color: var(--color-brand);">${fmt(c.price * c.qty)}</p>
@@ -296,9 +381,7 @@ function procesarVenta(printPDF = false) {
     return;
   }
 
-  syncPosClientSelection();
-  const clientSelect = document.getElementById('admin-client-select');
-  const clientId = clientSelect?.value || 'c1';
+  const clientId = STATE.adminSelectedClient || 'c1';
   const client = STATE.clients.find(c => c.id === clientId) || STATE.clients[0];
   const docType = STATE.adminDocumentType;
 
@@ -357,31 +440,62 @@ function procesarVenta(printPDF = false) {
   renderPosProductList();
   renderStockTable();
 
-  const message = printPDF
-    ? 'Venta procesada, impresa y stock actualizado'
-    : 'Venta procesada y stock actualizado';
-  showToast(message, 'success');
+  // Show appropriate feedback
+  if (printPDF) {
+    showToast('Venta procesada, impresa y stock actualizado', 'success');
+  } else {
+    // Show actionable toast with download option
+    showActionableToast(
+      'Venta procesada. Stock actualizado.',
+      'success',
+      {
+        label: 'Descargar Factura',
+        action: () => downloadOrderInvoice(invoice.orderId)
+      }
+    );
+  }
+
+  return { invoiceId: invoice.id, orderId: invoice.orderId };
 }
 
 // SEARCH PRODUCTS IN POS
 document.addEventListener('DOMContentLoaded', function() {
   renderPosCategoryFilters();
 
-  const clientSearch = document.getElementById('admin-client-search');
-  const clientSelect = document.getElementById('admin-client-select');
-  if (clientSearch) {
-    clientSearch.addEventListener('input', () => {
-      filterPosClientOptions(clientSearch.value);
+  // Initialize client combobox
+  renderPosClientCombobox();
+
+  const clientInput = document.getElementById('admin-client-input');
+  const clientList = document.getElementById('admin-client-list');
+
+  if (clientInput) {
+    clientInput.addEventListener('input', handleClientInputChange);
+    clientInput.addEventListener('keydown', handleClientKeydown);
+    clientInput.addEventListener('focus', () => {
+      // Show list with all clients on focus
+      filterAndRenderClientList('');
     });
-    clientSearch.addEventListener('change', syncPosClientSelection);
-    clientSearch.addEventListener('blur', syncPosClientSelection);
-  }
-  if (clientSelect && clientSearch) {
-    clientSelect.addEventListener('change', () => {
-      const selected = STATE.clients.find(c => c.id === clientSelect.value);
-      if (selected) clientSearch.value = selected.name;
+    clientInput.addEventListener('blur', () => {
+      // Hide list after brief delay to allow click on list items
+      setTimeout(() => {
+        if (document.activeElement !== clientList && !clientList?.contains(document.activeElement)) {
+          clientList?.classList.add('hidden');
+          clientComboboxState.isOpen = false;
+        }
+      }, 200);
     });
   }
+
+  // Click outside combobox to close
+  document.addEventListener('click', (e) => {
+    const combobox = document.getElementById('admin-client-combobox');
+    if (combobox && !combobox.contains(e.target)) {
+      if (clientList) {
+        clientList.classList.add('hidden');
+        clientComboboxState.isOpen = false;
+      }
+    }
+  });
 
   const searchInput = document.getElementById('admin-search-prod');
   if (searchInput) {

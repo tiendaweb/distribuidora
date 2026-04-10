@@ -61,6 +61,89 @@ function showToast(message, type = 'info', duration = CONFIG.TOAST_TIMEOUT) {
   }, duration);
 }
 
+function showActionableToast(message, type = 'info', action = null, duration = CONFIG.TOAST_TIMEOUT) {
+  let toast = document.getElementById('app-toast');
+
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'app-toast';
+    document.body.appendChild(toast);
+  }
+
+  // Icon mapping
+  const icons = {
+    success: '✓',
+    error: '✗',
+    warning: '⚠',
+    info: 'ⓘ'
+  };
+
+  // Color mapping
+  const colors = {
+    success: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+    error: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+    warning: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+    info: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)'
+  };
+
+  const icon = icons[type] || icons.info;
+  const bgColor = colors[type] || colors.info;
+
+  toast.style.cssText = `
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: ${bgColor};
+    color: white;
+    padding: 12px 24px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    z-index: 9999;
+    transition: opacity 0.3s ease;
+    white-space: nowrap;
+    border: 2px solid var(--color-brand);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  `;
+
+  let html = `<span>${icon} ${message}</span>`;
+
+  if (action && action.label) {
+    html += `<button id="toast-action-btn" style="
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    " onmouseover="this.style.background='rgba(255, 255, 255, 0.3)'" onmouseout="this.style.background='rgba(255, 255, 255, 0.2)'">${action.label}</button>`;
+  }
+
+  toast.innerHTML = html;
+  toast.style.opacity = '1';
+
+  if (action && action.label) {
+    const btn = document.getElementById('toast-action-btn');
+    btn.addEventListener('click', () => {
+      toast.style.opacity = '0';
+      clearTimeout(toast._timer);
+      if (action.action) action.action();
+    });
+  }
+
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => {
+    toast.style.opacity = '0';
+  }, duration);
+}
+
 // MODAL CONTROLS
 function openModal(modalId) {
   const modal = document.getElementById(modalId);

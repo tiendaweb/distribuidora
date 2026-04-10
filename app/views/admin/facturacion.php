@@ -4,8 +4,19 @@
       <div class="flex-1 flex flex-col overflow-hidden border-r border-gray-200">
         <div class="bg-white border-b border-gray-200 p-4 space-y-3 flex-shrink-0">
           <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Cliente</label>
-          <input type="search" id="admin-client-search" placeholder="Buscar cliente..." class="w-full border rounded-lg px-3 py-2 text-sm">
-          <select id="admin-client-select" class="w-full border rounded-lg px-3 py-2 text-sm"><option value="">Seleccionar cliente...</option></select>
+          <div id="admin-client-combobox" class="relative w-full">
+            <input
+              type="text"
+              id="admin-client-input"
+              placeholder="Buscar cliente por nombre, CUIT, teléfono o código..."
+              class="w-full border rounded-lg px-3 py-2 text-sm"
+              autocomplete="off"
+            >
+            <ul
+              id="admin-client-list"
+              class="absolute top-full left-0 right-0 border border-t-0 rounded-b-lg bg-white shadow-lg max-h-48 overflow-y-auto hidden z-50"
+            ></ul>
+          </div>
         </div>
         <div class="bg-white border-b border-gray-200 p-3 space-y-2 flex-shrink-0">
           <input type="text" id="admin-search-prod" placeholder="🔍 Buscar por nombre o código..." class="w-full border rounded-lg px-3 py-2 text-sm">
