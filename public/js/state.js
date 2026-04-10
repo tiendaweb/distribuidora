@@ -7,6 +7,7 @@ const STATE = {
   cart: [],
   currentFilter: 'all',
   currentSearch: '',
+  storeSearchActiveIndex: -1,
   sliderIdx: 0,
   sliderTimer: null,
   isAdminMode: false,
@@ -16,6 +17,7 @@ const STATE = {
   adminSelectedClient: null,
   adminDocumentType: 'blanco',
   adminPosCategory: 'all',
+  posSearchActiveIndex: -1,
 
   // Products & Clients & Orders
   products: [],

@@ -143,6 +143,11 @@
   transform: translateY(-4px);
 }
 
+.product-card.search-active:not(.disabled) {
+  outline: 2px solid var(--color-brand);
+  box-shadow: 0 8px 24px rgba(245, 192, 0, 0.3);
+}
+
 .product-card.disabled {
   opacity: 0.6;
   cursor: not-allowed;

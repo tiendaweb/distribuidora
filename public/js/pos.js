@@ -85,6 +85,7 @@ function renderPosCategoryFilters() {
 
 function setPosCategory(category, btn = null) {
   STATE.adminPosCategory = category;
+  STATE.posSearchActiveIndex = -1;
 
   const container = document.getElementById('admin-pos-categories');
   if (container) {
@@ -100,17 +101,12 @@ function setPosCategory(category, btn = null) {
 }
 
 // PRODUCT LIST
-function renderPosProductList() {
+function getFilteredPosProducts() {
   const searchInput = document.getElementById('admin-search-prod');
-  const list = document.getElementById('admin-prod-list');
-  const noResults = document.getElementById('admin-pos-no-results');
-
-  if (!list) return;
-
   const query = searchInput?.value.toLowerCase() || '';
   const activeCategory = STATE.adminPosCategory || 'all';
 
-  const filtered = STATE.products.filter(p => {
+  return STATE.products.filter(p => {
     const productName = (p.name || '').toLowerCase();
     const productShort = (p.short || '').toLowerCase();
     const productSku = (p.sku || '').toLowerCase();
@@ -120,11 +116,26 @@ function renderPosProductList() {
 
     return categoryMatches && searchMatches;
   });
+}
+
+function renderPosProductList() {
+  const list = document.getElementById('admin-prod-list');
+  const noResults = document.getElementById('admin-pos-no-results');
+
+  if (!list) return;
+
+  const filtered = getFilteredPosProducts();
+  const lastIndex = filtered.length - 1;
+  if (lastIndex < 0) {
+    STATE.posSearchActiveIndex = -1;
+  } else if (STATE.posSearchActiveIndex > lastIndex) {
+    STATE.posSearchActiveIndex = lastIndex;
+  }
 
   renderPosCategoryFilters();
 
-  list.innerHTML = filtered.map(p => `
-    <div class="admin-pos-product-card">
+  list.innerHTML = filtered.map((p, index) => `
+    <div class="admin-pos-product-card ${index === STATE.posSearchActiveIndex ? 'search-active' : ''}">
       <div class="admin-pos-product-main">
         <img class="admin-pos-product-thumb" src="${escapeHtml(p.img || '')}" alt="${escapeHtml(p.name)}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1488477181946-6428a0291777?w=200&q=80'; this.onerror=null;">
         <div class="admin-pos-product-info">
@@ -141,6 +152,33 @@ function renderPosProductList() {
   if (noResults) {
     noResults.classList.toggle('hidden', filtered.length > 0);
   }
+}
+
+function handlePosSearchKeydown(event) {
+  const { key } = event;
+  if (!['ArrowDown', 'ArrowUp', 'Enter'].includes(key)) return;
+
+  const filtered = getFilteredPosProducts();
+  if (!filtered.length) return;
+
+  if (key === 'Enter') {
+    if (STATE.posSearchActiveIndex >= 0) {
+      event.preventDefault();
+      const selected = filtered[STATE.posSearchActiveIndex];
+      if (selected) addToAdminCart(selected.id);
+    }
+    return;
+  }
+
+  event.preventDefault();
+  const lastIndex = filtered.length - 1;
+  if (key === 'ArrowDown') {
+    STATE.posSearchActiveIndex = Math.min(STATE.posSearchActiveIndex + 1, lastIndex);
+  } else {
+    STATE.posSearchActiveIndex = Math.max(STATE.posSearchActiveIndex - 1, 0);
+  }
+
+  renderPosProductList();
 }
 
 // ADMIN CART
@@ -347,6 +385,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
   const searchInput = document.getElementById('admin-search-prod');
   if (searchInput) {
-    searchInput.addEventListener('input', renderPosProductList);
+    searchInput.addEventListener('input', () => {
+      STATE.posSearchActiveIndex = -1;
+      renderPosProductList();
+    });
+    searchInput.addEventListener('keydown', handlePosSearchKeydown);
   }
 });

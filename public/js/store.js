@@ -32,6 +32,13 @@ function renderProducts() {
   if (!grid) return;
 
   const filtered = getFilteredProducts();
+  const lastIndex = filtered.length - 1;
+
+  if (lastIndex < 0) {
+    STATE.storeSearchActiveIndex = -1;
+  } else if (STATE.storeSearchActiveIndex > lastIndex) {
+    STATE.storeSearchActiveIndex = lastIndex;
+  }
 
   if (!filtered.length) {
     grid.innerHTML = '';
@@ -41,14 +48,15 @@ function renderProducts() {
 
   if (noRes) noRes.classList.add('hidden');
 
-  grid.innerHTML = filtered.map(p => {
+  grid.innerHTML = filtered.map((p, index) => {
     const discount = p.badge ? calculateDiscount(p.price, p.sale) : 0;
     const cartItem = STATE.cart.find(c => c.id === p.id);
     const qty = cartItem ? cartItem.qty : 1;
     const outOfStock = p.stock <= 0;
+    const isActive = index === STATE.storeSearchActiveIndex;
 
     return `
-    <div class="product-card ${outOfStock ? 'disabled' : ''}" onclick="${outOfStock ? '' : `openStoreProduct('${p.id}')`}">
+    <div class="product-card ${outOfStock ? 'disabled' : ''} ${isActive ? 'search-active' : ''}" onclick="${outOfStock ? '' : `openStoreProduct('${p.id}')`}">
       <div style="position: relative;">
         <img src="${p.img}" alt="${p.name}" class="product-card-img"
           onerror="this.src='https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&q=70'"/>
@@ -251,6 +259,7 @@ function openStoreProduct(productId) {
 // CATEGORY & SEARCH
 function filterByCategory(category, btnElement = null) {
   STATE.currentFilter = category;
+  STATE.storeSearchActiveIndex = -1;
   if (btnElement) {
     document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
     btnElement.classList.add('active');
@@ -260,8 +269,50 @@ function filterByCategory(category, btnElement = null) {
 
 function searchProducts(query) {
   STATE.currentSearch = query.trim();
+  STATE.storeSearchActiveIndex = -1;
   switchTab('catalogo');
   renderProducts();
+}
+
+function handleStoreSearchKeydown(event) {
+  const { key } = event;
+  if (!['ArrowDown', 'ArrowUp', 'Enter'].includes(key)) return;
+
+  const filtered = getFilteredProducts();
+  if (!filtered.length) return;
+
+  if (key === 'Enter') {
+    if (STATE.storeSearchActiveIndex >= 0) {
+      event.preventDefault();
+      const selected = filtered[STATE.storeSearchActiveIndex];
+      if (selected) {
+        addToCart(selected.id);
+      }
+    }
+    return;
+  }
+
+  event.preventDefault();
+  const lastIndex = filtered.length - 1;
+  if (key === 'ArrowDown') {
+    STATE.storeSearchActiveIndex = Math.min(
+      STATE.storeSearchActiveIndex + 1,
+      lastIndex
+    );
+  } else {
+    STATE.storeSearchActiveIndex = Math.max(
+      STATE.storeSearchActiveIndex - 1,
+      0
+    );
+  }
+
+  renderProducts();
+}
+
+function setupStoreSearchInputListeners() {
+  const searchInput = document.getElementById('search-input');
+  if (!searchInput) return;
+  searchInput.addEventListener('keydown', handleStoreSearchKeydown);
 }
 
 // SLIDER
