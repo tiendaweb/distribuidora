@@ -22,6 +22,7 @@ const STATE = {
   clients: [],
   adminOrders: [],
   adminInvoices: [],
+  slides: [],
 
   // UI States
   selectedProductsForBulkEdit: new Set(),
