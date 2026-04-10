@@ -39,12 +39,23 @@ function toggleAdminMode() {
 }
 
 function initAdminPanel() {
-  renderPosClientSelect();
-  renderPosProductList();
-  renderPosCart();
-  renderOrdersTable();
-  renderClientsTable();
-  renderStockTable();
+  try {
+    try {
+      if (typeof renderPosClientCombobox === 'function') {
+        renderPosClientCombobox();
+      }
+      renderPosProductList();
+      renderPosCart();
+    } catch (error) {
+      console.error('Error inicializando componentes POS en admin:', error);
+    }
+
+    renderOrdersTable();
+    renderClientsTable();
+    renderStockTable();
+  } catch (error) {
+    console.error('Error inicializando panel admin:', error);
+  }
 }
 
 function getOrderInvoice(order) {
@@ -323,7 +334,7 @@ function saveClient() {
 
   persistData();
   renderClientsTable();
-  renderPosClientSelect();
+  if (typeof renderPosClientCombobox === 'function') renderPosClientCombobox();
   resetClientForm();
   if (typeof loadClientMarkers === 'function') loadClientMarkers();
 }
@@ -338,7 +349,7 @@ function deleteClient(clientId) {
     STATE.clients = STATE.clients.filter(c => c.id !== clientId);
     persistData();
     renderClientsTable();
-    renderPosClientSelect();
+    if (typeof renderPosClientCombobox === 'function') renderPosClientCombobox();
     resetClientForm();
     if (typeof loadClientMarkers === 'function') loadClientMarkers();
     showToast('Cliente eliminado', 'success');
