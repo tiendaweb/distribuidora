@@ -3,6 +3,19 @@
     <div class="h-screen flex flex-col lg:flex-row bg-gray-50">
       <div class="flex-1 flex flex-col overflow-hidden border-r border-gray-200">
         <div class="bg-white border-b border-gray-200 p-4 space-y-3 flex-shrink-0">
+          <div class="flex items-center justify-between">
+            <h2 class="text-sm font-bold text-gray-700 uppercase tracking-wide">Productos</h2>
+            <button
+              type="button"
+              id="admin-pos-help-btn"
+              onclick="openPosShortcutsModal()"
+              class="w-7 h-7 rounded-full border border-gray-300 text-gray-600 font-bold hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              aria-label="Abrir ayuda de atajos de caja"
+              title="Ver atajos de caja"
+            >
+              ?
+            </button>
+          </div>
           <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Cliente</label>
           <div id="admin-client-combobox" class="relative w-full">
             <input
@@ -29,8 +42,21 @@
       </div>
       <div class="w-full lg:w-[420px] bg-white flex flex-col h-screen lg:h-auto lg:sticky lg:top-0 border-l border-gray-200">
         <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 border-b border-blue-800">
-          <h2 class="font-bold text-2xl">CAJA</h2>
-          <p class="text-xs text-blue-100 mt-1">Facturación</p>
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <h2 class="font-bold text-2xl">CAJA</h2>
+              <p class="text-xs text-blue-100 mt-1">Facturación</p>
+            </div>
+            <button
+              type="button"
+              onclick="openPosShortcutsModal()"
+              class="w-8 h-8 rounded-full border border-blue-300 text-white font-bold hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-white"
+              aria-label="Abrir ayuda de atajos de caja"
+              title="Ver atajos de caja"
+            >
+              ?
+            </button>
+          </div>
         </div>
         <div class="px-4 py-3 border-b border-gray-200"><select id="admin-tipo-comp" class="w-full border rounded px-2 py-2 text-xs"><option value="negro">Presupuesto (X)</option><option value="blanco">Factura AFIP</option></select></div>
         <div class="flex-1 overflow-y-auto px-4 py-3 space-y-2" id="admin-cart-items"><p class="text-center text-gray-400 text-sm py-8">El carrito está vacío</p></div>
@@ -42,6 +68,48 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<div
+  id="admin-pos-shortcuts-modal"
+  class="hidden fixed inset-0 z-[120] bg-black/50 flex items-center justify-center px-4"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="admin-pos-shortcuts-title"
+  onclick="handlePosShortcutsOverlayClick(event)"
+>
+  <div class="w-full max-w-md bg-white rounded-xl shadow-xl p-5" onclick="event.stopPropagation()">
+    <div class="flex items-start justify-between gap-3">
+      <h3 id="admin-pos-shortcuts-title" class="text-lg font-bold text-gray-900">Atajos rápidos de caja</h3>
+      <button
+        type="button"
+        onclick="closePosShortcutsModal()"
+        class="w-8 h-8 rounded-full border border-gray-300 text-gray-600 font-bold hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        aria-label="Cerrar ayuda de atajos"
+      >
+        ×
+      </button>
+    </div>
+    <p class="text-sm text-gray-600 mt-2">
+      Para cobrar más rápido en caja, podés usar estos atajos mientras atendés al cliente:
+    </p>
+    <ul class="mt-4 space-y-2 text-sm text-gray-700">
+      <li><span class="inline-block min-w-10 px-2 py-1 rounded bg-gray-100 font-mono font-bold text-center">/</span> Buscar producto</li>
+      <li><span class="inline-block min-w-10 px-2 py-1 rounded bg-gray-100 font-mono font-bold text-center">+</span> Agregar producto seleccionado</li>
+      <li><span class="inline-block min-w-10 px-2 py-1 rounded bg-gray-100 font-mono font-bold text-center">Enter</span> Finalizar venta</li>
+      <li><span class="inline-block min-w-10 px-2 py-1 rounded bg-gray-100 font-mono font-bold text-center">-</span> Deshacer última venta</li>
+    </ul>
+    <div class="mt-5 flex justify-end">
+      <button
+        type="button"
+        id="admin-pos-shortcuts-close-btn"
+        onclick="closePosShortcutsModal()"
+        class="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        Entendido
+      </button>
     </div>
   </div>
 </div>

@@ -447,9 +447,44 @@ function getActivePosProduct() {
   return filtered[STATE.posSearchActiveIndex] || null;
 }
 
+function isPosShortcutsModalOpen() {
+  return isModalOpen('admin-pos-shortcuts-modal');
+}
+
+function openPosShortcutsModal() {
+  openModal('admin-pos-shortcuts-modal');
+  setTimeout(() => {
+    const closeBtn = document.getElementById('admin-pos-shortcuts-close-btn');
+    closeBtn?.focus();
+  }, 20);
+}
+
+function closePosShortcutsModal() {
+  closeModal('admin-pos-shortcuts-modal');
+  const helpBtn = document.getElementById('admin-pos-help-btn');
+  setTimeout(() => {
+    helpBtn?.focus();
+  }, 260);
+}
+
+function handlePosShortcutsOverlayClick(event) {
+  if (event.target?.id === 'admin-pos-shortcuts-modal') {
+    closePosShortcutsModal();
+  }
+}
+
 function handlePosGlobalShortcuts(event) {
   if (!isPosBillingViewActive()) return;
   const { key, target } = event;
+
+  if (isPosShortcutsModalOpen()) {
+    if (key === 'Escape') {
+      event.preventDefault();
+      closePosShortcutsModal();
+    }
+    return;
+  }
+
   const searchInput = document.getElementById('admin-search-prod');
   if (!searchInput) return;
 

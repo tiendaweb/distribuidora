@@ -1,7 +1,7 @@
 <div id="view-store" class="flex-1">
   <div id="tab-catalogo" class="tab-section">
     <section class="relative overflow-hidden bg-ink">
-      <div id="slider-container" class="overflow-hidden">
+      <div id="slider-container" class="slider-container overflow-hidden">
         <div id="slider-track" class="slider-track"></div>
       </div>
       <button onclick="slideChange(-1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 text-white w-9 h-9 rounded-full">‹</button>
