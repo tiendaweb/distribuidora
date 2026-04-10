@@ -3,15 +3,24 @@
    ============================================================ */
 
 /* SLIDER */
+.slider-container {
+  width: 100%;
+  aspect-ratio: 725 / 408;
+  max-height: min(56vw, 420px);
+  background: #0f172a;
+}
+
 .slider-track {
   display: flex;
+  height: 100%;
   transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .slide {
   min-width: 100%;
-  height: 320px;
-  object-fit: cover;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
 }
 
 /* DRAWERS & MODALS */
