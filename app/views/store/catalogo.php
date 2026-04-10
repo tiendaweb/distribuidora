@@ -21,7 +21,7 @@
     <section class="bg-white border-b border-gray-100 py-4 px-4">
       <div class="max-w-7xl mx-auto">
         <div class="relative">
-          <input id="search-input" type="text" placeholder="🔍 Buscar productos..." class="w-full pl-10 pr-4 py-2.5 rounded-lg bg-gray-50" />
+          <input id="search-input" type="text" placeholder="🔍 Buscar por nombre o código..." class="w-full pl-10 pr-4 py-2.5 rounded-lg bg-gray-50" />
         </div>
       </div>
     </section>

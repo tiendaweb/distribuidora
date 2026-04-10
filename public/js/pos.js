@@ -113,8 +113,10 @@ function renderPosProductList() {
   const filtered = STATE.products.filter(p => {
     const productName = (p.name || '').toLowerCase();
     const productShort = (p.short || '').toLowerCase();
+    const productSku = (p.sku || '').toLowerCase();
+    const productId = (p.id || '').toLowerCase();
     const categoryMatches = activeCategory === 'all' || p.cat === activeCategory;
-    const searchMatches = productName.includes(query) || productShort.includes(query);
+    const searchMatches = productName.includes(query) || productShort.includes(query) || productSku.includes(query) || productId.includes(query);
 
     return categoryMatches && searchMatches;
   });
@@ -127,7 +129,7 @@ function renderPosProductList() {
         <img class="admin-pos-product-thumb" src="${escapeHtml(p.img || '')}" alt="${escapeHtml(p.name)}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1488477181946-6428a0291777?w=200&q=80'; this.onerror=null;">
         <div class="admin-pos-product-info">
           <p class="admin-pos-product-name">${escapeHtml(p.name)}</p>
-          <p class="admin-pos-product-meta">Stock: ${p.stock} · ${fmt(p.sale)}</p>
+          <p class="admin-pos-product-meta">SKU: ${escapeHtml(p.sku || '') || '—'} · Stock: ${p.stock} · ${fmt(p.sale)}</p>
         </div>
       </div>
       <button onclick="addToAdminCart('${p.id}')" class="btn btn-primary btn-sm admin-pos-add-btn" ${p.stock <= 0 ? 'disabled' : ''}>

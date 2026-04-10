@@ -18,16 +18,26 @@ async function apiFetch(url, options = {}) {
 }
 
 async function loadPersistedData() {
+  const normalizeProduct = (product = {}) => ({
+    ...product,
+    sku: product.sku || ''
+  });
+
+  const normalizeClient = (client = {}) => ({
+    ...client,
+    client_code: client.client_code || client.codigo || ''
+  });
+
   try {
     const state = await apiFetch('/api/bootstrap');
 
     STATE.products = Array.isArray(state?.products) && state.products.length
-      ? state.products
-      : JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
+      ? state.products.map(normalizeProduct)
+      : JSON.parse(JSON.stringify(DEFAULT_PRODUCTS)).map(normalizeProduct);
 
     STATE.clients = Array.isArray(state?.clients) && state.clients.length
-      ? state.clients
-      : JSON.parse(JSON.stringify(DEFAULT_CLIENTS));
+      ? state.clients.map(normalizeClient)
+      : JSON.parse(JSON.stringify(DEFAULT_CLIENTS)).map(normalizeClient);
 
     STATE.adminOrders = Array.isArray(state?.orders) ? state.orders : [];
     STATE.adminInvoices = Array.isArray(state?.invoices) ? state.invoices : [];
@@ -36,8 +46,8 @@ async function loadPersistedData() {
       : JSON.parse(JSON.stringify(DEFAULT_SLIDES));
   } catch (err) {
     console.warn('Error loading persisted data:', err);
-    STATE.products = JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
-    STATE.clients = JSON.parse(JSON.stringify(DEFAULT_CLIENTS));
+    STATE.products = JSON.parse(JSON.stringify(DEFAULT_PRODUCTS)).map(normalizeProduct);
+    STATE.clients = JSON.parse(JSON.stringify(DEFAULT_CLIENTS)).map(normalizeClient);
     STATE.adminOrders = [];
     STATE.adminInvoices = [];
     STATE.slides = JSON.parse(JSON.stringify(DEFAULT_SLIDES));
