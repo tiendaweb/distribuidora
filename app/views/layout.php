@@ -18,20 +18,47 @@
 <link rel="stylesheet" href="/css/animations.css" />
 <link rel="stylesheet" href="/css/responsive.css" />
 </head>
-<body class="min-h-screen flex flex-col" data-route="<?= htmlspecialchars($currentRoute) ?>" data-admin-tab="<?= htmlspecialchars($activeAdminTab ?? '') ?>" data-store-tab="<?= htmlspecialchars($activeStoreTab ?? '') ?>">
+<body class="min-h-screen flex flex-col" data-route="<?= htmlspecialchars($currentRoute) ?>" data-admin-tab="<?= htmlspecialchars($activeAdminTab ?? '') ?>" data-store-tab="<?= htmlspecialchars($activeStoreTab ?? '') ?>" data-authenticated="<?= !empty($isAuthenticated) ? '1' : '0' ?>">
 
 <?php include __DIR__ . '/partials/header.php'; ?>
-<?php include __DIR__ . '/' . $contentView; ?>
+
+<?php if ($showAdminNav): ?>
+  <?php include __DIR__ . '/partials/admin_nav.php'; ?>
+<?php endif; ?>
+
+<main class="flex-1 overflow-auto">
+  <?php include __DIR__ . '/' . $contentView; ?>
+</main>
 
 <div id="cart-overlay" class="overlay fixed inset-0 bg-black/50 z-50 hidden" onclick="toggleCart()"></div>
 <aside id="cart-drawer" class="fixed right-0 top-0 h-full w-full max-w-sm bg-white z-50 shadow-2xl flex flex-col hidden">
   <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100 bg-ink"><h2 class="font-display text-2xl text-brand">Tu Pedido</h2><button onclick="toggleCart()" class="text-gray-300 hover:text-white text-2xl leading-none">&times;</button></div>
   <div id="cart-items" class="flex-1 overflow-y-auto px-4 py-3 space-y-3"></div>
   <div class="border-t border-gray-200 px-5 py-4 bg-gray-50">
-    <div class="mb-4 space-y-2"><input id="store-client-name" type="text" placeholder="Tu Nombre / Negocio" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" /><input id="store-client-address" type="text" placeholder="Dirección de entrega" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" /></div>
+    <?php if (!empty($isAuthenticated)): ?>
+      <!-- Cliente Selector para Autenticados -->
+      <div class="mb-4">
+        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Cliente</label>
+        <select id="store-authenticated-client" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+          <option value="">Seleccionar cliente...</option>
+        </select>
+      </div>
+    <?php else: ?>
+      <!-- Campos de Nombre y Dirección para Clientes Finales -->
+      <div class="mb-4 space-y-2">
+        <input id="store-client-name" type="text" placeholder="Tu Nombre / Negocio" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+        <input id="store-client-address" type="text" placeholder="Dirección de entrega" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+      </div>
+    <?php endif; ?>
+
     <div class="flex justify-between font-bold text-xl mb-4"><span>Total</span><span id="cart-total" class="text-brand">$0</span></div>
-    <button onclick="enviarPedidoWeb(true)" class="w-full bg-[#25D366] text-white font-bold py-3 rounded-xl mb-2">Enviar por WhatsApp (y Guardar)</button>
-    <button onclick="enviarPedidoWeb(false)" class="w-full bg-ink text-white font-bold py-3 rounded-xl">Solo Guardar Pedido</button>
+
+    <?php if (empty($isAuthenticated)): ?>
+      <button onclick="enviarPedidoWeb(true)" class="w-full bg-[#25D366] text-white font-bold py-3 rounded-xl mb-2">Enviar por WhatsApp (y Guardar)</button>
+      <button onclick="enviarPedidoWeb(false)" class="w-full bg-ink text-white font-bold py-3 rounded-xl">Solo Guardar Pedido</button>
+    <?php else: ?>
+      <button onclick="enviarPedidoWeb(false)" class="w-full bg-ink text-white font-bold py-3 rounded-xl">Guardar Pedido</button>
+    <?php endif; ?>
   </div>
 </aside>
 

@@ -1,6 +1,6 @@
 <div id="view-admin" class="flex-1 bg-gray-100">
   <div id="admin-facturacion" class="admin-section w-full active">
-    <div class="h-screen flex flex-col lg:flex-row bg-gray-50">
+    <div class="min-h-screen flex flex-col lg:flex-row bg-gray-50 pb-20 lg:pb-0">
       <div class="flex-1 flex flex-col overflow-hidden border-r border-gray-200">
         <div class="bg-white border-b border-gray-200 p-4 space-y-3 flex-shrink-0">
           <div class="flex items-center justify-between">
@@ -69,6 +69,56 @@
         </div>
       </div>
     </div>
+
+    <!-- Mobile Navigation Buttons -->
+    <div class="fixed bottom-0 left-0 right-0 lg:hidden bg-white border-t border-gray-200 flex gap-3 p-3 z-40">
+      <button
+        id="btn-back-to-search"
+        onclick="document.getElementById('admin-prod-list').scrollIntoView({ behavior: 'smooth', block: 'start' })"
+        class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-3 rounded-lg text-sm transition"
+        style="display: none;"
+      >
+        ← Buscar Productos
+      </button>
+      <button
+        id="btn-go-to-cart"
+        onclick="document.getElementById('admin-cart-items').scrollIntoView({ behavior: 'smooth', block: 'end' })"
+        class="flex-1 bg-brand hover:bg-brand-dark text-ink font-bold py-3 rounded-lg text-sm transition relative"
+      >
+        <span>Ver Carrito</span>
+        <span id="mobile-cart-count" class="absolute top-2 right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
+      </button>
+    </div>
+
+    <script>
+    function updateMobileNavButtons() {
+      const searchBtn = document.getElementById('btn-back-to-search');
+      const cartBtn = document.getElementById('btn-go-to-cart');
+      const cartCount = document.getElementById('mobile-cart-count');
+
+      if (window.innerWidth >= 1024) {
+        searchBtn?.style.display = 'none';
+        cartBtn?.style.display = 'none';
+        return;
+      }
+
+      const cartItems = STATE?.adminCart?.length || 0;
+      const isAtSearch = window.scrollY < document.getElementById('admin-cart-items')?.offsetTop - 100;
+
+      searchBtn.style.display = isAtSearch ? 'none' : 'block';
+      cartBtn.style.display = isAtSearch ? 'block' : 'none';
+
+      if (cartCount && cartItems > 0) {
+        cartCount.textContent = cartItems;
+        cartCount.classList.remove('hidden');
+      } else {
+        cartCount?.classList.add('hidden');
+      }
+    }
+
+    window.addEventListener('scroll', updateMobileNavButtons);
+    document.addEventListener('DOMContentLoaded', updateMobileNavButtons);
+    </script>
   </div>
 </div>
 

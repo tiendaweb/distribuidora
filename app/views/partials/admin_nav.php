@@ -45,10 +45,10 @@ $adminNavItems = [
 
 <style>
 :root {
-    --nav-bg: #0f172a; /* Azul muy oscuro profesional */
-    --nav-text: #94a3b8;
+    --nav-bg: #1a2332; /* Azul más visible */
+    --nav-text: #a0aec0;
     --nav-active-bg: #3b82f6;
-    --nav-hover-bg: #1e293b;
+    --nav-hover-bg: #2d3748;
     --width-expanded: 260px;
     --width-collapsed: 75px;
     --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -82,9 +82,9 @@ body.admin-nav-present {
     color: white;
     display: none;
     flex-direction: column;
-    z-index: 1000;
+    z-index: 999;
     transition: width var(--transition);
-    border-right: 1px solid #1e293b;
+    border-right: 1px solid #2d3748;
     overflow: hidden;
 }
 
@@ -102,16 +102,18 @@ body.admin-nav-present {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 20px;
-    border-bottom: 1px solid #1e293b;
+    padding: 0 16px;
+    border-bottom: 1px solid #2d3748;
+    background: linear-gradient(135deg, #1a2332 0%, #1f2937 100%);
 }
 
 .sidebar-title {
     font-weight: 700;
-    font-size: 1.1rem;
+    font-size: 1rem;
     white-space: nowrap;
     opacity: 1;
     transition: opacity 0.2s;
+    color: #fff;
 }
 
 .admin-nav-collapsed .sidebar-title {
@@ -121,17 +123,23 @@ body.admin-nav-present {
 
 /* Botón Toggle */
 .btn-toggle-nav {
-    background: #1e293b;
-    border: none;
-    color: white;
-    width: 32px;
-    height: 32px;
+    background: #2d3748;
+    border: 1px solid #374151;
+    color: #a0aec0;
+    width: 36px;
+    height: 36px;
     border-radius: 6px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.3s;
+    transition: all 0.3s;
+    flex-shrink: 0;
+}
+
+.btn-toggle-nav:hover {
+    background: #374151;
+    color: #fff;
 }
 
 .admin-nav-collapsed .btn-toggle-nav {
