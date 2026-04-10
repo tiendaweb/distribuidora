@@ -27,11 +27,37 @@ spl_autoload_register(static function (string $class): void {
     }
 
     $relative = substr($class, strlen($prefix));
-    $path = dirname(__DIR__) . '/app/' . str_replace('\\', '/', $relative) . '.php';
-    if (file_exists($path)) {
-        require $path;
+    $segments = explode('\\', $relative);
+    $path = dirname(__DIR__) . '/app';
+
+    foreach ($segments as $segment) {
+        $exact = $path . '/' . $segment;
+        if (is_dir($exact) || is_file($exact . '.php')) {
+            $path = $exact;
+            continue;
+        }
+
+        $lower = $path . '/' . strtolower($segment);
+        if (is_dir($lower) || is_file($lower . '.php')) {
+            $path = $lower;
+            continue;
+        }
+
+        return;
+    }
+
+    $file = $path . '.php';
+    if (file_exists($file)) {
+        require $file;
     }
 });
+
+
+$installFlag = dirname(__DIR__) . '/storage/.installed';
+if (!is_file($installFlag)) {
+    header('Location: /install.php');
+    exit;
+}
 
 $pdo = Database::connection();
 MigrationRunner::migrate($pdo);
