@@ -16,6 +16,7 @@ use App\Domain\Slides\SlideService;
 use App\Domain\Users\UserRepository;
 use App\Infra\Database;
 use App\Infra\MigrationRunner;
+use App\Infra\Seeders\DefaultDataSeeder;
 
 session_start();
 
@@ -34,6 +35,7 @@ spl_autoload_register(static function (string $class): void {
 
 $pdo = Database::connection();
 MigrationRunner::migrate($pdo);
+DefaultDataSeeder::seedIfEmpty($pdo);
 
 $productService = new ProductService(new ProductRepository($pdo));
 $clientService = new ClientService(new ClientRepository($pdo));
