@@ -174,9 +174,11 @@ function setupEventListeners() {
 
   const costInput = document.getElementById('edit-p-cost');
   const marginInput = document.getElementById('edit-p-margin');
+  const saleInput = document.getElementById('edit-p-sale');
 
-  if (costInput) costInput.addEventListener('input', recalculatePrice);
-  if (marginInput) marginInput.addEventListener('input', recalculatePrice);
+  if (costInput) costInput.addEventListener('input', () => recalculatePrice('cost'));
+  if (marginInput) marginInput.addEventListener('input', () => recalculatePrice('margin'));
+  if (saleInput) saleInput.addEventListener('input', () => recalculatePrice('sale'));
 
   // POS
   const procesarVentaBtn = document.getElementById('btn-procesar-venta');

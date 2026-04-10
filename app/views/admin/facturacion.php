@@ -36,7 +36,7 @@
           <div id="admin-pos-categories" class="flex gap-2 flex-wrap"></div>
         </div>
         <div class="flex-1 overflow-y-auto p-3 space-y-2">
-          <div id="admin-prod-list" class="space-y-2"></div>
+          <div id="admin-prod-list" class="pos-products-grid"></div>
           <div id="admin-pos-no-results" class="hidden text-center py-8 text-gray-400"><p class="text-sm">No se encontraron productos</p></div>
         </div>
       </div>

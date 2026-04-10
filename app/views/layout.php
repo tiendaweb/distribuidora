@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.css" />
 <link rel="stylesheet" href="/css/colors.css" />
 <link rel="stylesheet" href="/css/components.css" />
+<link rel="stylesheet" href="/css/product-item-views.css" />
 <link rel="stylesheet" href="/css/admin.css" />
 <link rel="stylesheet" href="/css/animations.css" />
 <link rel="stylesheet" href="/css/responsive.css" />
@@ -88,12 +89,74 @@
   </div>
 </div>
 
-<div id="admin-modal-overlay" class="overlay fixed inset-0 bg-black/60 z-[60] flex items-center justify-center p-4 hidden" onclick="closeAdminModal(event)"><div class="bg-white rounded-xl w-full max-w-sm shadow-2xl overflow-hidden p-5" onclick="event.stopPropagation()"><h3 id="edit-p-name">Editar Producto</h3><input type="hidden" id="edit-p-id"><input type="text" id="edit-p-product-name" class="w-full border rounded p-2 text-sm"><input type="text" id="edit-p-sku" placeholder="SKU / Código" class="w-full border rounded p-2 text-sm"><select id="edit-p-cat" class="w-full border rounded p-2 text-sm"><option value="helados">Helados</option><option value="pastas">Pastas</option><option value="congelados">Congelados</option></select><input type="url" id="edit-p-img" class="w-full border rounded p-2 text-sm"><input type="number" id="edit-p-stock" class="w-full border rounded p-2 text-sm"><input type="number" id="edit-p-cost" step="0.01" class="w-full border rounded p-2 text-sm" oninput="recalculatePrice()"><input type="number" id="edit-p-margin" step="0.01" class="w-full border rounded p-2 text-sm" oninput="recalculatePrice()"><input type="number" id="edit-p-sale" step="0.01" readonly class="w-full bg-transparent font-bold text-xl text-brand outline-none mt-1"><button onclick="closeAdminModal()">Cancelar</button><button onclick="deleteProductFromModal()" id="btn-delete-product" class="hidden">Eliminar</button><button onclick="saveAdminProduct()">Guardar</button></div></div>
+<div id="admin-modal-overlay" class="overlay fixed inset-0 bg-black/60 z-[60] flex items-center justify-center p-4 hidden" onclick="closeAdminModal(event)">
+  <div class="bg-white rounded-xl w-full max-w-md shadow-2xl overflow-hidden" onclick="event.stopPropagation()">
+    <div class="px-5 py-4 border-b border-gray-200">
+      <h3 id="edit-p-name" class="font-bold text-lg text-ink">Editar Producto</h3>
+      <p class="text-xs text-gray-500 mt-1">Completá los datos para actualizar el producto.</p>
+    </div>
+    <div class="p-5 space-y-3">
+      <input type="hidden" id="edit-p-id">
+
+      <div class="form-group !mb-2">
+        <label for="edit-p-product-name">Nombre del producto</label>
+        <input type="text" id="edit-p-product-name" class="w-full border rounded p-2 text-sm">
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="form-group !mb-2">
+          <label for="edit-p-sku">SKU / Código</label>
+          <input type="text" id="edit-p-sku" placeholder="Ej: HEL-001" class="w-full border rounded p-2 text-sm">
+        </div>
+        <div class="form-group !mb-2">
+          <label for="edit-p-cat">Categoría</label>
+          <select id="edit-p-cat" class="w-full border rounded p-2 text-sm">
+            <option value="helados">Helados</option>
+            <option value="pastas">Pastas</option>
+            <option value="congelados">Congelados</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group !mb-2">
+        <label for="edit-p-img">URL de imagen</label>
+        <input type="url" id="edit-p-img" class="w-full border rounded p-2 text-sm">
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div class="form-group !mb-2">
+          <label for="edit-p-stock">Stock</label>
+          <input type="number" id="edit-p-stock" class="w-full border rounded p-2 text-sm" min="0">
+        </div>
+        <div class="form-group !mb-2">
+          <label for="edit-p-cost">Costo ($)</label>
+          <input type="number" id="edit-p-cost" step="0.01" class="w-full border rounded p-2 text-sm" oninput="recalculatePrice('cost')">
+        </div>
+        <div class="form-group !mb-2">
+          <label for="edit-p-margin">Ganancia (%)</label>
+          <input type="number" id="edit-p-margin" step="0.01" class="w-full border rounded p-2 text-sm" oninput="recalculatePrice('margin')">
+        </div>
+      </div>
+
+      <div class="form-group !mb-1">
+        <label for="edit-p-sale">Precio final ($)</label>
+        <input type="number" id="edit-p-sale" step="0.01" class="w-full border rounded p-2 text-sm font-bold text-brand" oninput="recalculatePrice('sale')">
+        <small class="text-gray-500">Si cambiás el precio final, se recalcula automáticamente el porcentaje.</small>
+      </div>
+    </div>
+
+    <div class="px-5 py-4 border-t border-gray-200 bg-gray-50 flex flex-wrap justify-end gap-2">
+      <button onclick="closeAdminModal()" class="btn btn-secondary btn-sm">Cancelar</button>
+      <button onclick="deleteProductFromModal()" id="btn-delete-product" class="btn btn-danger btn-sm hidden">Eliminar</button>
+      <button onclick="saveAdminProduct()" class="btn btn-primary btn-sm">Guardar</button>
+    </div>
+  </div>
+</div>
 
 <div id="admin-order-modal" class="overlay fixed inset-0 bg-black/60 z-[60] flex items-center justify-center p-4 hidden" onclick="closeOrderModal(event)"><div class="bg-white rounded-xl w-full max-w-md shadow-2xl overflow-hidden p-5 flex flex-col max-h-[90vh]" onclick="event.stopPropagation()"><h3 class="font-bold text-xl mb-2 border-b pb-2 text-ink">Detalle de Pedido Web</h3><div id="order-modal-content" class="flex-1 overflow-y-auto space-y-2 text-sm my-3 text-ink"></div><div class="flex justify-between items-center font-bold text-lg border-t pt-3 mt-2"><span>Total del Pedido:</span><span id="order-modal-total" class="text-brand text-2xl"></span></div><button onclick="closeOrderModal()" class="w-full bg-ink text-white font-bold py-3 rounded-xl mt-4">Cerrar Detalle</button></div></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-<script src="/js/config.js"></script><script src="/js/state.js"></script><script src="/js/data.js"></script><script src="/js/utils.js"></script><script src="/js/ui-helpers.js"></script><script src="/js/store.js"></script><script src="/js/admin.js"></script><script src="/js/pos.js"></script><script src="/js/clients.js"></script><script src="/js/orders.js"></script><script src="/js/products.js"></script><script src="/js/reports.js"></script><script src="/js/pdf.js"></script><script src="/js/app.js"></script>
+<script src="/js/config.js"></script><script src="/js/state.js"></script><script src="/js/data.js"></script><script src="/js/utils.js"></script><script src="/js/ui-helpers.js"></script><script src="/js/product-item-views.js"></script><script src="/js/store.js"></script><script src="/js/admin.js"></script><script src="/js/pos.js"></script><script src="/js/clients.js"></script><script src="/js/orders.js"></script><script src="/js/products.js"></script><script src="/js/reports.js"></script><script src="/js/pdf.js"></script><script src="/js/app.js"></script>
 </body>
 </html>
