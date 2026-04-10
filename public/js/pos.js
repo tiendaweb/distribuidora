@@ -223,19 +223,10 @@ function renderPosProductList() {
 
 function handlePosSearchKeydown(event) {
   const { key } = event;
-  if (!['ArrowDown', 'ArrowUp', 'Enter'].includes(key)) return;
+  if (!['ArrowDown', 'ArrowUp'].includes(key)) return;
 
   const filtered = getFilteredPosProducts();
   if (!filtered.length) return;
-
-  if (key === 'Enter') {
-    if (STATE.posSearchActiveIndex >= 0) {
-      event.preventDefault();
-      const selected = filtered[STATE.posSearchActiveIndex];
-      if (selected) addToAdminCart(selected.id);
-    }
-    return;
-  }
 
   event.preventDefault();
   const lastIndex = filtered.length - 1;
@@ -249,7 +240,8 @@ function handlePosSearchKeydown(event) {
 }
 
 // ADMIN CART
-function addToAdminCart(productId) {
+function addToAdminCart(productId, options = {}) {
+  const { focusQtyInput = true } = options;
   const product = STATE.products.find(p => p.id === productId);
   if (!product || product.stock <= 0) {
     showToast('Producto sin stock', 'error');
@@ -275,14 +267,16 @@ function addToAdminCart(productId) {
 
   renderPosCart();
 
-  // Focus and select the quantity input for the new/updated item
-  setTimeout(() => {
-    const qtyInput = document.getElementById(`admin-qty-${productId}`);
-    if (qtyInput) {
-      qtyInput.focus();
-      qtyInput.select();
-    }
-  }, 0);
+  if (focusQtyInput) {
+    // Focus and select the quantity input for the new/updated item
+    setTimeout(() => {
+      const qtyInput = document.getElementById(`admin-qty-${productId}`);
+      if (qtyInput) {
+        qtyInput.focus();
+        qtyInput.select();
+      }
+    }, 0);
+  }
 }
 
 function removeFromAdminCart(productId) {
@@ -310,11 +304,68 @@ function updateAdminCartQty(productId, qty) {
 }
 
 function handleQuantityKeypress(event, productId) {
-  if (event.key === 'Enter') {
-    event.preventDefault();
-    procesarVenta(false);  // Process sale without auto-print
-  } else if (event.key === 'Escape') {
+  if (event.key === 'Escape') {
     document.getElementById(`admin-qty-${productId}`).blur();
+  }
+}
+
+function isPosBillingViewActive() {
+  return Boolean(document.getElementById('admin-search-prod'));
+}
+
+function isTextEditingTarget(target) {
+  if (!target) return false;
+  const tagName = (target.tagName || '').toLowerCase();
+  const isTextInput = tagName === 'input' || tagName === 'textarea' || tagName === 'select';
+  return isTextInput || target.isContentEditable;
+}
+
+function getActivePosProduct() {
+  const filtered = getFilteredPosProducts();
+  if (!filtered.length || STATE.posSearchActiveIndex < 0) return null;
+  return filtered[STATE.posSearchActiveIndex] || null;
+}
+
+function handlePosGlobalShortcuts(event) {
+  if (!isPosBillingViewActive()) return;
+  const { key, target } = event;
+  const searchInput = document.getElementById('admin-search-prod');
+  if (!searchInput) return;
+
+  if (key === '/') {
+    event.preventDefault();
+    searchInput.focus();
+    searchInput.select();
+    return;
+  }
+
+  if (key === '+') {
+    event.preventDefault();
+    const selected = getActivePosProduct();
+    if (selected) {
+      addToAdminCart(selected.id, { focusQtyInput: true });
+      setTimeout(() => {
+        const qtyInput = document.getElementById(`admin-qty-${selected.id}`);
+        const cartItem = STATE.adminCart.find(item => item.id === selected.id);
+        if (qtyInput) {
+          if (cartItem && cartItem.qty === 1) {
+            qtyInput.value = '1';
+          }
+          qtyInput.focus();
+          qtyInput.select();
+        }
+      }, 0);
+    } else {
+      searchInput.focus();
+      searchInput.select();
+    }
+    return;
+  }
+
+  if (key === 'Enter') {
+    if (isTextEditingTarget(target)) return;
+    event.preventDefault();
+    procesarVenta(false);
   }
 }
 
@@ -505,4 +556,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     searchInput.addEventListener('keydown', handlePosSearchKeydown);
   }
+
+  document.addEventListener('keydown', handlePosGlobalShortcuts);
 });
