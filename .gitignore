@@ -22,3 +22,7 @@ Thumbs.db
 # Environment
 .env
 .env.local
+
+# Archivos de runtime generados por la instalación
+storage/.installed
+storage/database.sqlite
