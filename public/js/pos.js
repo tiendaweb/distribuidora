@@ -9,6 +9,127 @@ let clientComboboxState = {
   isOpen: false
 };
 
+const POS_UNDO_HISTORY_KEY = 'posUndoHistory';
+const POS_UNDO_MAX_ENTRIES = 10;
+const POS_UNDO_DEFAULT_WINDOW_MS = 5 * 60 * 1000;
+let posUndoHistory = [];
+
+function getPosUndoWindowMs() {
+  const configuredWindow = Number(CONFIG?.POS_UNDO_WINDOW_MS);
+  if (Number.isFinite(configuredWindow) && configuredWindow > 0) {
+    return configuredWindow;
+  }
+  return POS_UNDO_DEFAULT_WINDOW_MS;
+}
+
+function persistPosUndoHistory() {
+  try {
+    localStorage.setItem(POS_UNDO_HISTORY_KEY, JSON.stringify(posUndoHistory));
+  } catch (err) {
+    console.warn('No se pudo persistir historial de deshacer POS:', err);
+  }
+}
+
+function loadPosUndoHistory() {
+  try {
+    const raw = localStorage.getItem(POS_UNDO_HISTORY_KEY);
+    if (!raw) {
+      posUndoHistory = [];
+      return;
+    }
+    const parsed = JSON.parse(raw);
+    posUndoHistory = Array.isArray(parsed) ? parsed : [];
+    purgeExpiredUndoHistory();
+  } catch (err) {
+    console.warn('No se pudo cargar historial de deshacer POS:', err);
+    posUndoHistory = [];
+  }
+}
+
+function purgeExpiredUndoHistory() {
+  const now = Date.now();
+  const windowMs = getPosUndoWindowMs();
+  posUndoHistory = posUndoHistory.filter(entry => {
+    if (!entry || typeof entry !== 'object') return false;
+    if (!Array.isArray(entry.cart) || !entry.clientId) return false;
+    if (!Number.isFinite(entry.timestamp)) return false;
+    return now - entry.timestamp <= windowMs;
+  });
+  persistPosUndoHistory();
+}
+
+function savePosUndoSnapshot() {
+  if (!STATE.adminCart.length) return;
+  const snapshot = {
+    clientId: STATE.adminSelectedClient || 'c1',
+    cart: deepClone(STATE.adminCart),
+    timestamp: Date.now(),
+    consumed: false
+  };
+
+  posUndoHistory.push(snapshot);
+  if (posUndoHistory.length > POS_UNDO_MAX_ENTRIES) {
+    posUndoHistory = posUndoHistory.slice(-POS_UNDO_MAX_ENTRIES);
+  }
+  purgeExpiredUndoHistory();
+}
+
+function getImmediateUndoCandidate(clientId) {
+  purgeExpiredUndoHistory();
+  const latest = posUndoHistory[posUndoHistory.length - 1];
+  if (!latest) return null;
+  if (latest.consumed) return null;
+  if (latest.clientId !== clientId) return null;
+  return latest;
+}
+
+function focusLastCartItemQty() {
+  if (!STATE.adminCart.length) return;
+  const lastItem = STATE.adminCart[STATE.adminCart.length - 1];
+  if (!lastItem) return;
+  setTimeout(() => {
+    const qtyInput = document.getElementById(`admin-qty-${lastItem.id}`);
+    if (!qtyInput) return;
+    qtyInput.focus();
+    qtyInput.select();
+  }, 0);
+}
+
+function showUndoAppliedFeedback() {
+  const container = document.getElementById('admin-cart-items');
+  if (container) {
+    container.style.transition = 'box-shadow 0.25s ease';
+    container.style.boxShadow = '0 0 0 2px #10b981 inset';
+    setTimeout(() => {
+      container.style.boxShadow = '';
+    }, 900);
+  }
+  showToast('Deshacer aplicado: se recuperó el último pedido del cliente', 'success');
+}
+
+function undoLastPosOrder() {
+  const clientId = STATE.adminSelectedClient || 'c1';
+  const undoCandidate = getImmediateUndoCandidate(clientId);
+  if (!undoCandidate) {
+    showToast('No hay un pedido inmediato para deshacer para este cliente', 'warning');
+    return;
+  }
+
+  // 1) Cancelar ticket actual
+  STATE.adminCart = [];
+  // 2) Recuperar último pedido inmediato del cliente seleccionado
+  STATE.adminCart = deepClone(undoCandidate.cart);
+  undoCandidate.consumed = true;
+  undoCandidate.appliedAt = Date.now();
+  persistPosUndoHistory();
+
+  // 3 + 4) Rehidratar carrito y re-render
+  renderPosCart();
+  renderPosProductList();
+  focusLastCartItemQty();
+  showUndoAppliedFeedback();
+}
+
 function renderPosClientCombobox() {
   const input = document.getElementById('admin-client-input');
   if (!input) return;
@@ -362,6 +483,13 @@ function handlePosGlobalShortcuts(event) {
     return;
   }
 
+  if (key === '-') {
+    if (isTextEditingTarget(target)) return;
+    event.preventDefault();
+    undoLastPosOrder();
+    return;
+  }
+
   if (key === 'Enter') {
     if (isTextEditingTarget(target)) return;
     event.preventDefault();
@@ -470,6 +598,9 @@ function procesarVenta(printPDF = false) {
 
   STATE.adminOrders.unshift(order);
 
+  // Snapshot para deshacer: carrito + cliente + timestamp (historial en memoria + localStorage)
+  savePosUndoSnapshot();
+
   // Deduct stock
   STATE.adminCart.forEach(item => {
     const product = STATE.products.find(p => p.id === item.id);
@@ -511,6 +642,7 @@ function procesarVenta(printPDF = false) {
 
 // SEARCH PRODUCTS IN POS
 document.addEventListener('DOMContentLoaded', function() {
+  loadPosUndoHistory();
   renderPosCategoryFilters();
 
   // Initialize client combobox
