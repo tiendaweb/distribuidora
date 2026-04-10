@@ -25,10 +25,7 @@ header {
 }
 
 /* GRID DEFAULTS (MOBILE) */
-#products-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+.store-products-grid {
   padding: 12px;
 }
 
@@ -55,9 +52,7 @@ header {
    ============================================================ */
 
 @media (min-width: 640px) {
-  #products-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+  .store-products-grid {
     padding: 16px;
   }
 
@@ -79,10 +74,7 @@ header {
    ============================================================ */
 
 @media (min-width: 768px) {
-  #products-grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-  }
+  /* store grid columns se controlan en product-item-views.css */
 
   /* POS LAYOUT TABLET */
   .pos-container {
@@ -96,9 +88,7 @@ header {
    ============================================================ */
 
 @media (min-width: 1024px) {
-  #products-grid {
-    grid-template-columns: repeat(5, 1fr);
-    gap: 20px;
+  .store-products-grid {
     padding: 20px;
   }
 
@@ -125,9 +115,7 @@ header {
    ============================================================ */
 
 @media (min-width: 1280px) {
-  #products-grid {
-    grid-template-columns: repeat(6, 1fr);
-    gap: 24px;
+  .store-products-grid {
     padding: 24px;
   }
 

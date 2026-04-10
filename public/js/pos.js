@@ -322,30 +322,12 @@ function renderPosProductList() {
 
   renderPosCategoryFilters();
 
-  list.innerHTML = filtered.map((p, index) => `
-    <div
-      class="admin-pos-product-card ${index === STATE.posSearchActiveIndex ? 'search-active' : ''} cursor-pointer hover:shadow-md transition-all"
-      onclick="addToAdminCart('${p.id}', { focusQtyInput: true })"
-      style="display: flex; flex-direction: column; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px; background: white; gap: 8px; ${p.stock <= 0 ? 'opacity: 0.6; cursor: not-allowed;' : ''}"
-    >
-      <img
-        class="admin-pos-product-thumb"
-        src="${escapeHtml(p.img || '')}"
-        alt="${escapeHtml(p.name)}"
-        loading="lazy"
-        style="width: 100%; aspect-ratio: 1 / 1; object-fit: contain; border-radius: 6px; background: #f9fafb;"
-        onerror="this.src='https://images.unsplash.com/photo-1488477181946-6428a0291777?w=200&q=80'; this.onerror=null;"
-      >
-      <div class="admin-pos-product-info" style="flex: 1;">
-        <p class="admin-pos-product-name" style="margin: 0; font-weight: 600; font-size: 14px; color: #1f2937; line-height: 1.3;">${escapeHtml(p.name)}</p>
-        <p class="admin-pos-product-meta" style="margin: 4px 0 0; font-size: 12px; color: #6b7280;">SKU: ${escapeHtml(p.sku || '') || '—'}</p>
-        <p style="margin: 2px 0 0; font-size: 12px; color: #6b7280;">Stock: ${p.stock}</p>
-      </div>
-      <div style="padding-top: 8px; border-top: 1px solid #f3f4f6;">
-        <span style="font-weight: bold; font-size: 16px; color: #f59e0b;">${fmt(p.sale)}</span>
-      </div>
-    </div>
-  `).join('');
+  list.innerHTML = filtered.map((p, index) => (
+    renderPosProductCard(p, {
+      index,
+      activeIndex: STATE.posSearchActiveIndex
+    })
+  )).join('');
 
   if (noResults) {
     noResults.classList.toggle('hidden', filtered.length > 0);

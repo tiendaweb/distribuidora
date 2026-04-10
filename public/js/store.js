@@ -49,43 +49,14 @@ function renderProducts() {
   if (noRes) noRes.classList.add('hidden');
 
   grid.innerHTML = filtered.map((p, index) => {
-    const discount = p.badge ? calculateDiscount(p.price, p.sale) : 0;
     const cartItem = STATE.cart.find(c => c.id === p.id);
     const qty = cartItem ? cartItem.qty : 1;
-    const outOfStock = p.stock <= 0;
-    const isActive = index === STATE.storeSearchActiveIndex;
 
-    return `
-    <div class="product-card ${outOfStock ? 'disabled' : ''} ${isActive ? 'search-active' : ''}" onclick="${outOfStock ? '' : `openStoreProduct('${p.id}')`}">
-      <div style="position: relative;">
-        <img src="${p.img}" alt="${p.name}" class="product-card-img"
-          onerror="this.src='https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&q=70'"/>
-        ${p.badge ? `<span class="badge-oferta" style="position: absolute; top: 8px; left: 8px;">${discount}% OFF</span>` : ''}
-        ${outOfStock ? `<div style="position: absolute; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; border-radius: 12px 12px 0 0;">
-          <span style="color: white; font-weight: bold; font-size: 12px; text-transform: uppercase;">Sin Stock</span>
-        </div>` : ''}
-      </div>
-      <div class="product-card-body">
-        <h3 class="product-card-name">${escapeHtml(p.name)}</h3>
-        <p class="product-card-short">${escapeHtml(p.short)}</p>
-        <div style="margin-top: auto;">
-          ${p.price !== p.sale ? `<div class="price-regular">${fmt(p.price)}</div>` : ''}
-          <div class="price-sale">${fmt(p.sale)}</div>
-
-          ${outOfStock ? '' : `
-          <div style="display: flex; align-items: center; gap: 4px; margin: 8px 0;">
-            <button class="qty-btn" onclick="event.stopPropagation(); changeStoreQty('${p.id}', -1)">−</button>
-            <input type="number" id="qty-${p.id}" value="${qty}" min="1" max="${p.stock}" class="qty-input" readonly />
-            <button class="qty-btn" onclick="event.stopPropagation(); changeStoreQty('${p.id}', 1)">+</button>
-          </div>
-          <button onclick="event.stopPropagation(); addToCart('${p.id}')"
-            class="btn btn-primary" style="width: 100%; font-size: 12px;">
-            Agregar
-          </button>
-          `}
-        </div>
-      </div>
-    </div>`;
+    return renderStoreProductCard(p, {
+      index,
+      activeIndex: STATE.storeSearchActiveIndex,
+      quantity: qty
+    });
   }).join('');
 }
 

@@ -1,0 +1,113 @@
+/* ============================================================
+   PRODUCT ITEM VIEWS STYLES (STORE + POS)
+   ============================================================ */
+
+/* Store grid */
+.store-products-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+@media (min-width: 768px) {
+  .store-products-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .store-products-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 20px;
+  }
+}
+
+.product-card-media {
+  position: relative;
+}
+
+.product-card-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+}
+
+.product-card-out {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.42);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 12px;
+  text-transform: uppercase;
+  border-radius: 12px 12px 0 0;
+}
+
+.product-card-footer {
+  margin-top: auto;
+}
+
+.store-qty-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 8px 0;
+}
+
+.store-add-btn {
+  width: 100%;
+  font-size: 12px;
+}
+
+/* POS grid */
+.pos-products-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+@media (min-width: 1024px) {
+  .pos-products-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.admin-pos-product-card.disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.admin-pos-product-price-row {
+  padding: 8px 10px 10px;
+  border-top: 1px solid #f3f4f6;
+}
+
+.admin-pos-product-price {
+  font-weight: 800;
+  font-size: 16px;
+  color: #f59e0b;
+}
+
+/* Slider sizing improvements */
+.slider-shell {
+  position: relative;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 8px 12px 14px;
+}
+
+@media (max-width: 640px) {
+  .slider-shell {
+    max-width: 92%;
+    padding-top: 10px;
+  }
+
+  .slider-container {
+    border-radius: 12px;
+    max-height: 220px;
+  }
+}

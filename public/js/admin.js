@@ -444,16 +444,37 @@ function openCreateProductModal() {
   openModal('admin-modal-overlay');
 }
 
-function recalculatePrice() {
+function recalculatePrice(source = 'margin') {
   const costInput = document.getElementById('edit-p-cost');
   const marginInput = document.getElementById('edit-p-margin');
   const saleInput = document.getElementById('edit-p-sale');
 
-  const cost = parseFloat(costInput?.value) || 0;
-  const margin = parseFloat(marginInput?.value) || 0;
-  const sale = calculateSalePrice(cost, margin);
+  if (!costInput || !marginInput || !saleInput) return;
 
-  if (saleInput) saleInput.value = sale;
+  const cost = Number.parseFloat(costInput.value) || 0;
+  let margin = Number.parseFloat(marginInput.value) || 0;
+  let sale = Number.parseFloat(saleInput.value) || 0;
+
+  if (source === 'sale') {
+    margin = cost > 0 ? ((sale - cost) / cost) * 100 : 0;
+    margin = Number(margin.toFixed(2));
+    marginInput.value = margin;
+    saleInput.value = roundPrice(sale);
+    return;
+  }
+
+  if (source === 'cost') {
+    const currentlyEditingSale = document.activeElement === saleInput;
+    if (currentlyEditingSale) {
+      margin = cost > 0 ? ((sale - cost) / cost) * 100 : 0;
+      marginInput.value = Number(margin.toFixed(2));
+      return;
+    }
+  }
+
+  sale = calculateSalePrice(cost, margin);
+  saleInput.value = sale;
+  marginInput.value = Number(margin.toFixed(2));
 }
 
 function saveEditedProduct() {
@@ -466,6 +487,7 @@ function saveEditedProduct() {
   const stockInput = document.getElementById('edit-p-stock');
   const costInput = document.getElementById('edit-p-cost');
   const marginInput = document.getElementById('edit-p-margin');
+  const saleInput = document.getElementById('edit-p-sale');
   const productName = productNameInput?.value.trim();
 
   if (!productName) {
@@ -487,9 +509,14 @@ function saveEditedProduct() {
     img: normalizedImage,
     stock: parseInt(stockInput?.value) || 0,
     cost: parseFloat(costInput?.value) || 0,
-    margin: parseFloat(marginInput?.value) || 0
+    margin: Number((parseFloat(marginInput?.value) || 0).toFixed(2))
   };
-  productData.sale = calculateSalePrice(productData.cost, productData.margin);
+  productData.sale = parseFloat(saleInput?.value);
+  if (!Number.isFinite(productData.sale)) {
+    productData.sale = calculateSalePrice(productData.cost, productData.margin);
+  } else {
+    productData.sale = roundPrice(productData.sale);
+  }
   productData.price = productData.sale;
 
   const existingIdx = STATE.products.findIndex(p => p.id === productData.id);
