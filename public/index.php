@@ -94,6 +94,17 @@ if (str_starts_with($currentRoute, '/api/')) {
         $json(['ok' => true]);
     }
 
+
+    if ($currentRoute === '/api/slides' && $method === 'DELETE') {
+        $payload = $body();
+        $id = (int)($payload['id'] ?? 0);
+        if ($id <= 0) {
+            $json(['error' => 'ID inválido'], 422);
+        }
+        $slideService->delete($id);
+        $json(['ok' => true]);
+    }
+
     $entityMap = [
         'products' => $productService,
         'clients' => $clientService,
@@ -134,7 +145,11 @@ if (str_starts_with($currentRoute, '/api/')) {
         }
 
         if ($method === 'DELETE' && $id !== null) {
-            $service->delete($id);
+            if ($entity === 'slides') {
+                $service->delete((int)$id);
+            } else {
+                $service->delete($id);
+            }
             $json(['ok' => true]);
         }
     }

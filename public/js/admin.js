@@ -535,3 +535,97 @@ function closeOrderModal() {
   closeModal('order-detail-modal');
   closeModal('admin-order-modal');
 }
+
+function renderSlidesList() {
+  const list = document.getElementById('slides-list');
+  const empty = document.getElementById('slides-empty');
+  if (!list || !empty) return;
+
+  const slides = [...(STATE.slides || [])].sort((a, b) => Number(a.sort_order || 0) - Number(b.sort_order || 0));
+
+  if (!slides.length) {
+    list.innerHTML = '';
+    empty.classList.remove('hidden');
+    return;
+  }
+
+  empty.classList.add('hidden');
+  list.innerHTML = slides.map(slide => `
+    <div class="border border-gray-200 rounded-lg p-3 flex items-center gap-3">
+      <img src="${slide.image_url}" alt="${escapeHtml(slide.title || 'Slide')}" class="w-20 h-14 object-cover rounded bg-gray-100" />
+      <div class="flex-1 min-w-0">
+        <p class="text-sm font-semibold text-ink truncate">${escapeHtml(slide.title || 'Sin texto')}</p>
+        <p class="text-xs text-gray-500 truncate">${escapeHtml(slide.image_url)}</p>
+        <p class="text-xs text-gray-500">Orden: ${Number(slide.sort_order || 0)} · ${Number(slide.is_active || 0) ? 'Activo' : 'Inactivo'}</p>
+      </div>
+      <button onclick="deleteSlide(${Number(slide.id)})" class="text-xs bg-red-100 text-red-700 font-semibold px-3 py-1 rounded">Eliminar</button>
+    </div>
+  `).join('');
+}
+
+async function createSlide(event) {
+  event.preventDefault();
+
+  const imageUrlInput = document.getElementById('slide-image-url');
+  const titleInput = document.getElementById('slide-title');
+  const sortOrderInput = document.getElementById('slide-sort-order');
+  const isActiveInput = document.getElementById('slide-is-active');
+
+  const payload = {
+    image_url: imageUrlInput?.value.trim() || '',
+    title: titleInput?.value.trim() || '',
+    sort_order: parseInt(sortOrderInput?.value || '0', 10) || 0,
+    is_active: isActiveInput?.checked ? 1 : 0
+  };
+
+  if (!payload.image_url) {
+    showToast('Ingresá una URL de imagen válida', 'warning');
+    return;
+  }
+
+  try {
+    const slide = await apiFetch('/api/slides', { method: 'POST', body: JSON.stringify(payload) });
+    STATE.slides = [...(STATE.slides || []), slide];
+    renderSlidesList();
+    renderSlider();
+
+    if (imageUrlInput) imageUrlInput.value = '';
+    if (titleInput) titleInput.value = '';
+    if (sortOrderInput) sortOrderInput.value = '0';
+    if (isActiveInput) isActiveInput.checked = true;
+
+    showToast('Slide agregado', 'success');
+  } catch (error) {
+    console.error(error);
+    showToast('No se pudo guardar el slide', 'error');
+  }
+}
+
+async function deleteSlide(id) {
+  if (!id) return;
+
+  showConfirmDialog('¿Eliminar este slide?', async () => {
+    try {
+      await apiFetch(`/api/slides/${id}`, { method: 'DELETE' });
+      STATE.slides = (STATE.slides || []).filter(slide => Number(slide.id) !== Number(id));
+      renderSlidesList();
+      renderSlider();
+      showToast('Slide eliminado', 'success');
+    } catch (error) {
+      console.error(error);
+      showToast('No se pudo eliminar el slide', 'error');
+    }
+  });
+}
+
+function initSlidesSettings() {
+  const form = document.getElementById('slides-form');
+  if (!form || form.dataset.bound === '1') {
+    renderSlidesList();
+    return;
+  }
+
+  form.addEventListener('submit', createSlide);
+  form.dataset.bound = '1';
+  renderSlidesList();
+}

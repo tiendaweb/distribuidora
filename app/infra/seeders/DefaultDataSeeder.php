@@ -47,8 +47,8 @@ final class DefaultDataSeeder
     ];
 
     private const DEFAULT_SLIDES = [
-        ['id' => 'slide-1', 'title' => 'Banner 1', 'subtitle' => '', 'image' => 'https://aapp.space/storage/store/images/usSqH9EIpZEjRAkO53Fo.png', 'ctaText' => '', 'ctaLink' => '', 'sort_order' => 0, 'active' => 1],
-        ['id' => 'slide-2', 'title' => 'Banner 2', 'subtitle' => '', 'image' => 'https://aapp.space/storage/store/images/McJ06c7ki18GY9ZSziWs.png', 'ctaText' => '', 'ctaLink' => '', 'sort_order' => 1, 'active' => 1],
+        ['image_url' => 'https://aapp.space/storage/store/images/usSqH9EIpZEjRAkO53Fo.png', 'title' => 'Banner 1', 'sort_order' => 0, 'is_active' => 1],
+        ['image_url' => 'https://aapp.space/storage/store/images/McJ06c7ki18GY9ZSziWs.png', 'title' => 'Banner 2', 'sort_order' => 1, 'is_active' => 1],
     ];
 
     public static function seedIfEmpty(PDO $pdo): void
@@ -125,21 +125,16 @@ final class DefaultDataSeeder
         }
 
         $stmt = $pdo->prepare(
-            'INSERT INTO slides (id, title, subtitle, image, cta_text, cta_link, sort_order, active, payload, updated_at)
-             VALUES (:id, :title, :subtitle, :image, :cta_text, :cta_link, :sort_order, :active, :payload, CURRENT_TIMESTAMP)'
+            'INSERT INTO slides (image_url, title, sort_order, is_active)
+             VALUES (:image_url, :title, :sort_order, :is_active)'
         );
 
         foreach (self::DEFAULT_SLIDES as $slide) {
             $stmt->execute([
-                ':id' => $slide['id'],
+                ':image_url' => $slide['image_url'],
                 ':title' => $slide['title'],
-                ':subtitle' => $slide['subtitle'],
-                ':image' => $slide['image'],
-                ':cta_text' => $slide['ctaText'],
-                ':cta_link' => $slide['ctaLink'],
                 ':sort_order' => (int)$slide['sort_order'],
-                ':active' => (int)$slide['active'],
-                ':payload' => json_encode($slide, JSON_UNESCAPED_UNICODE),
+                ':is_active' => (int)$slide['is_active'],
             ]);
         }
     }

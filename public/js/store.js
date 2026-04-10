@@ -263,8 +263,36 @@ function searchProducts(query) {
 }
 
 // SLIDER
+function getActiveSlides() {
+  const sourceSlides = Array.isArray(STATE.slides) && STATE.slides.length ? STATE.slides : DEFAULT_SLIDES;
+  return sourceSlides
+    .filter(slide => Number(slide.is_active ?? 1) === 1)
+    .sort((a, b) => Number(a.sort_order || 0) - Number(b.sort_order || 0));
+}
+
+function renderSlider() {
+  const track = document.getElementById('slider-track');
+  const dots = document.getElementById('slider-dots');
+  if (!track || !dots) return;
+
+  const slides = getActiveSlides();
+  const resolvedSlides = slides.length ? slides : DEFAULT_SLIDES;
+
+  track.innerHTML = resolvedSlides.map((slide, index) => `
+    <img src="${slide.image_url}" class="slide object-cover w-full" alt="${escapeHtml(slide.title || `Banner ${index + 1}`)}" />
+  `).join('');
+
+  dots.innerHTML = resolvedSlides.map((_, index) => `
+    <div class="dot ${index === 0 ? 'active' : ''}" onclick="goToSlide(${index})"></div>
+  `).join('');
+
+  STATE.sliderIdx = 0;
+  goToSlide(0);
+}
+
 function changeSlide(direction) {
-  STATE.sliderIdx = (STATE.sliderIdx + direction + 2) % 2;
+  const totalSlides = Math.max(getActiveSlides().length, 1);
+  STATE.sliderIdx = (STATE.sliderIdx + direction + totalSlides) % totalSlides;
   goToSlide(STATE.sliderIdx);
 }
 
@@ -282,6 +310,9 @@ function goToSlide(index) {
 
 function resetSliderTimer() {
   clearInterval(STATE.sliderTimer);
+  if (Math.max(getActiveSlides().length, 1) <= 1) {
+    return;
+  }
   STATE.sliderTimer = setInterval(() => changeSlide(1), 4500);
 }
 
