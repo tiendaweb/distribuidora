@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       searchProducts(this.value);
     }, 300));
   }
+  setupStoreSearchInputListeners();
 
   // Setup category filter buttons
   const catButtons = document.querySelectorAll('.cat-btn');
