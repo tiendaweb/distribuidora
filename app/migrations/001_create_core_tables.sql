@@ -1,0 +1,94 @@
+CREATE TABLE IF NOT EXISTS users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  email TEXT NOT NULL UNIQUE,
+  password_hash TEXT NOT NULL,
+  name TEXT,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS products (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  short TEXT DEFAULT '',
+  description TEXT DEFAULT '',
+  price REAL DEFAULT 0,
+  sale REAL DEFAULT 0,
+  cat TEXT DEFAULT 'all',
+  badge TEXT DEFAULT '',
+  img TEXT DEFAULT '',
+  cost REAL DEFAULT 0,
+  margin REAL DEFAULT 0,
+  stock INTEGER DEFAULT 0,
+  payload TEXT,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS clients (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  address TEXT DEFAULT '',
+  phone TEXT DEFAULT '',
+  email TEXT DEFAULT '',
+  cuit TEXT DEFAULT '',
+  tax TEXT DEFAULT 'Consumidor Final',
+  notes TEXT DEFAULT '',
+  payload TEXT,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS orders (
+  id TEXT PRIMARY KEY,
+  client_id TEXT,
+  client TEXT,
+  address TEXT,
+  status TEXT DEFAULT 'pending',
+  source TEXT DEFAULT 'web',
+  total REAL DEFAULT 0,
+  invoice_id TEXT,
+  payload TEXT,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS order_items (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  order_id TEXT NOT NULL,
+  product_id TEXT,
+  name TEXT,
+  qty REAL DEFAULT 0,
+  price REAL DEFAULT 0,
+  sale REAL DEFAULT 0,
+  payload TEXT,
+  FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS invoices (
+  id TEXT PRIMARY KEY,
+  order_id TEXT,
+  client_id TEXT,
+  client TEXT,
+  doc_type TEXT DEFAULT 'blanco',
+  total REAL DEFAULT 0,
+  payload TEXT,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE SET NULL,
+  FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS slides (
+  id TEXT PRIMARY KEY,
+  title TEXT,
+  subtitle TEXT,
+  image TEXT,
+  cta_text TEXT,
+  cta_link TEXT,
+  sort_order INTEGER DEFAULT 0,
+  active INTEGER DEFAULT 1,
+  payload TEXT,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

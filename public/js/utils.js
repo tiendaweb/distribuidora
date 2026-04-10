@@ -2,55 +2,81 @@
    UTILITY FUNCTIONS
    ============================================================ */
 
-// LocalStorage
-function loadPersistedData() {
+// API Persistence
+async function apiFetch(url, options = {}) {
+  const response = await fetch(url, {
+    headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+    ...options
+  });
+
+  if (!response.ok) {
+    throw new Error(`API ${response.status}: ${url}`);
+  }
+
+  const text = await response.text();
+  return text ? JSON.parse(text) : null;
+}
+
+async function loadPersistedData() {
   try {
-    const savedProducts = JSON.parse(localStorage.getItem(CONFIG.DB_KEYS.products) || 'null');
-    const savedClients = JSON.parse(localStorage.getItem(CONFIG.DB_KEYS.clients) || 'null');
-    const savedOrders = JSON.parse(localStorage.getItem(CONFIG.DB_KEYS.webOrders) || 'null');
-    const savedInvoices = JSON.parse(localStorage.getItem(CONFIG.DB_KEYS.invoices) || 'null');
+    const state = await apiFetch('/api/bootstrap');
 
-    if (Array.isArray(savedProducts) && savedProducts.length) {
-      STATE.products = savedProducts;
-    } else {
-      STATE.products = JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
-    }
+    STATE.products = Array.isArray(state?.products) && state.products.length
+      ? state.products
+      : JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
 
-    if (Array.isArray(savedClients) && savedClients.length) {
-      STATE.clients = savedClients;
-    } else {
-      STATE.clients = JSON.parse(JSON.stringify(DEFAULT_CLIENTS));
-    }
+    STATE.clients = Array.isArray(state?.clients) && state.clients.length
+      ? state.clients
+      : JSON.parse(JSON.stringify(DEFAULT_CLIENTS));
 
-    if (Array.isArray(savedOrders)) {
-      STATE.adminOrders = savedOrders;
-    } else {
-      STATE.adminOrders = [];
-    }
-
-    if (Array.isArray(savedInvoices)) {
-      STATE.adminInvoices = savedInvoices;
-    } else {
-      STATE.adminInvoices = [];
-    }
+    STATE.adminOrders = Array.isArray(state?.orders) ? state.orders : [];
+    STATE.adminInvoices = Array.isArray(state?.invoices) ? state.invoices : [];
+    STATE.slides = Array.isArray(state?.slides) ? state.slides : [];
   } catch (err) {
     console.warn('Error loading persisted data:', err);
     STATE.products = JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
     STATE.clients = JSON.parse(JSON.stringify(DEFAULT_CLIENTS));
     STATE.adminOrders = [];
     STATE.adminInvoices = [];
+    STATE.slides = [];
   }
 }
 
-function persistData() {
+async function persistData() {
   try {
-    localStorage.setItem(CONFIG.DB_KEYS.products, JSON.stringify(STATE.products));
-    localStorage.setItem(CONFIG.DB_KEYS.clients, JSON.stringify(STATE.clients));
-    localStorage.setItem(CONFIG.DB_KEYS.webOrders, JSON.stringify(STATE.adminOrders));
-    localStorage.setItem(CONFIG.DB_KEYS.invoices, JSON.stringify(STATE.adminInvoices));
+    await apiFetch('/api/state', {
+      method: 'PUT',
+      body: JSON.stringify({
+        products: STATE.products,
+        clients: STATE.clients,
+        orders: STATE.adminOrders,
+        invoices: STATE.adminInvoices,
+        slides: STATE.slides || []
+      })
+    });
   } catch (err) {
     console.warn('Error persisting data:', err);
   }
+}
+
+async function saveProductApi(product) {
+  return apiFetch(`/api/products/${encodeURIComponent(product.id)}`, { method: 'PUT', body: JSON.stringify(product) });
+}
+
+async function saveClientApi(client) {
+  return apiFetch(`/api/clients/${encodeURIComponent(client.id)}`, { method: 'PUT', body: JSON.stringify(client) });
+}
+
+async function saveOrderApi(order) {
+  return apiFetch(`/api/orders/${encodeURIComponent(order.id)}`, { method: 'PUT', body: JSON.stringify(order) });
+}
+
+async function saveInvoiceApi(invoice) {
+  return apiFetch(`/api/invoices/${encodeURIComponent(invoice.id)}`, { method: 'PUT', body: JSON.stringify(invoice) });
+}
+
+async function saveSlideApi(slide) {
+  return apiFetch(`/api/slides/${encodeURIComponent(slide.id)}`, { method: 'PUT', body: JSON.stringify(slide) });
 }
 
 // Validation

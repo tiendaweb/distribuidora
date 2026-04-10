@@ -2,11 +2,11 @@
    APP BOOTSTRAP & INITIALIZATION
    ============================================================ */
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
   console.log('Inicializando aplicación...');
 
   // Load persisted data
-  loadPersistedData();
+  await loadPersistedData();
   console.log(`Productos cargados: ${STATE.products.length}`);
   console.log(`Clientes cargados: ${STATE.clients.length}`);
 
