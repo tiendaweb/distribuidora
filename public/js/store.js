@@ -15,9 +15,11 @@ function getFilteredProducts() {
   if (STATE.currentSearch) {
     const q = STATE.currentSearch.toLowerCase();
     filtered = filtered.filter(p =>
-      p.name.toLowerCase().includes(q) ||
-      p.short.toLowerCase().includes(q) ||
-      p.desc.toLowerCase().includes(q)
+      (p.name || '').toLowerCase().includes(q) ||
+      (p.short || '').toLowerCase().includes(q) ||
+      (p.desc || '').toLowerCase().includes(q) ||
+      (p.sku || '').toLowerCase().includes(q) ||
+      (p.id || '').toLowerCase().includes(q)
     );
   }
 

@@ -8,7 +8,7 @@
           <select id="admin-client-select" class="w-full border rounded-lg px-3 py-2 text-sm"><option value="">Seleccionar cliente...</option></select>
         </div>
         <div class="bg-white border-b border-gray-200 p-3 space-y-2 flex-shrink-0">
-          <input type="text" id="admin-search-prod" placeholder="🔍 Buscar producto..." class="w-full border rounded-lg px-3 py-2 text-sm">
+          <input type="text" id="admin-search-prod" placeholder="🔍 Buscar por nombre o código..." class="w-full border rounded-lg px-3 py-2 text-sm">
           <div id="admin-pos-categories" class="flex gap-2 flex-wrap"></div>
         </div>
         <div class="flex-1 overflow-y-auto p-3 space-y-2">

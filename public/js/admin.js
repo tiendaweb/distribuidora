@@ -216,6 +216,7 @@ function renderClientsTable() {
   tbody.innerHTML = STATE.clients.map(c => `
     <tr>
       <td style="font-weight: bold;">${escapeHtml(c.name)}</td>
+      <td style="font-size: 12px;">${escapeHtml(c.client_code || '') || '—'}</td>
       <td style="font-size: 12px;">${c.address || '—'}</td>
       <td style="font-size: 12px;">${c.cuit || '—'}</td>
       <td><span style="background: #f3f4f6; padding: 2px 8px; border-radius: 4px; font-size: 11px;">${c.tax}</span></td>
@@ -233,6 +234,7 @@ function editClientForm(clientId) {
 
   const idInput = document.getElementById('c-id');
   const nameInput = document.getElementById('c-name');
+  const codeInput = document.getElementById('c-code');
   const addressInput = document.getElementById('c-address');
   const phoneInput = document.getElementById('c-phone');
   const emailInput = document.getElementById('c-email');
@@ -242,6 +244,7 @@ function editClientForm(clientId) {
 
   if (idInput) idInput.value = client.id;
   if (nameInput) nameInput.value = client.name;
+  if (codeInput) codeInput.value = client.client_code || '';
   if (addressInput) addressInput.value = client.address || '';
   if (phoneInput) phoneInput.value = client.phone || '';
   if (emailInput) emailInput.value = client.email || '';
@@ -258,6 +261,7 @@ function editClientForm(clientId) {
 function resetClientForm() {
   const idInput = document.getElementById('c-id');
   const nameInput = document.getElementById('c-name');
+  const codeInput = document.getElementById('c-code');
   const addressInput = document.getElementById('c-address');
   const phoneInput = document.getElementById('c-phone');
   const emailInput = document.getElementById('c-email');
@@ -267,6 +271,7 @@ function resetClientForm() {
 
   if (idInput) idInput.value = '';
   if (nameInput) nameInput.value = '';
+  if (codeInput) codeInput.value = '';
   if (addressInput) addressInput.value = '';
   if (phoneInput) phoneInput.value = '';
   if (emailInput) emailInput.value = '';
@@ -281,6 +286,7 @@ function resetClientForm() {
 function saveClient() {
   const idInput = document.getElementById('c-id');
   const nameInput = document.getElementById('c-name');
+  const codeInput = document.getElementById('c-code');
   const addressInput = document.getElementById('c-address');
   const phoneInput = document.getElementById('c-phone');
   const emailInput = document.getElementById('c-email');
@@ -297,6 +303,7 @@ function saveClient() {
   const clientData = {
     id: idInput?.value || generateId('c'),
     name,
+    client_code: codeInput?.value.trim() || '',
     address: addressInput?.value.trim() || '',
     phone: phoneInput?.value.trim() || '',
     email: emailInput?.value.trim() || '',
@@ -347,7 +354,10 @@ function renderStockTable() {
     <tr>
       <td style="font-weight: bold; display: flex; align-items: center; gap: 8px;">
         <img src="${p.img}" alt="${p.name}" style="width: 32px; height: 32px; border-radius: 4px; object-fit: cover; border: 1px solid #ddd;">
-        <span style="display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;">${escapeHtml(p.name)}</span>
+        <span style="display: flex; flex-direction: column; min-width: 0;">
+          <span style="display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;">${escapeHtml(p.name)}</span>
+          <span style="font-size: 11px; color: #6b7280;">SKU: ${escapeHtml(p.sku || '') || '—'}</span>
+        </span>
       </td>
       <td style="${p.stock <= 5 ? 'color: #ef4444; font-weight: bold;' : 'color: #10b981; font-weight: bold;'}">${p.stock} u.</td>
       <td>${fmt(p.cost)}</td>
@@ -368,6 +378,7 @@ function openEditProductModal(productId) {
   const idInput = document.getElementById('edit-p-id');
   const nameEl = document.getElementById('edit-p-name');
   const productNameInput = document.getElementById('edit-p-product-name');
+  const skuInput = document.getElementById('edit-p-sku');
   const categoryInput = document.getElementById('edit-p-cat');
   const imageInput = document.getElementById('edit-p-img');
   const stockInput = document.getElementById('edit-p-stock');
@@ -379,6 +390,7 @@ function openEditProductModal(productId) {
   if (idInput) idInput.value = product.id;
   if (nameEl) nameEl.textContent = 'Editar Producto';
   if (productNameInput) productNameInput.value = product.name || '';
+  if (skuInput) skuInput.value = product.sku || '';
   if (categoryInput) categoryInput.value = product.cat || 'congelados';
   if (imageInput) imageInput.value = product.img || '';
   if (stockInput) stockInput.value = product.stock;
@@ -395,6 +407,7 @@ function openCreateProductModal() {
   const idInput = document.getElementById('edit-p-id');
   const nameEl = document.getElementById('edit-p-name');
   const productNameInput = document.getElementById('edit-p-product-name');
+  const skuInput = document.getElementById('edit-p-sku');
   const categoryInput = document.getElementById('edit-p-cat');
   const imageInput = document.getElementById('edit-p-img');
   const stockInput = document.getElementById('edit-p-stock');
@@ -406,6 +419,7 @@ function openCreateProductModal() {
   if (idInput) idInput.value = '';
   if (nameEl) nameEl.textContent = 'Nuevo Producto';
   if (productNameInput) productNameInput.value = '';
+  if (skuInput) skuInput.value = '';
   if (categoryInput) categoryInput.value = 'congelados';
   if (imageInput) imageInput.value = '';
   if (stockInput) stockInput.value = 0;
@@ -435,6 +449,7 @@ function saveEditedProduct() {
   const idInput = document.getElementById('edit-p-id');
   const productId = idInput?.value;
   const productNameInput = document.getElementById('edit-p-product-name');
+  const skuInput = document.getElementById('edit-p-sku');
   const categoryInput = document.getElementById('edit-p-cat');
   const imageInput = document.getElementById('edit-p-img');
   const stockInput = document.getElementById('edit-p-stock');
@@ -450,6 +465,7 @@ function saveEditedProduct() {
   const normalizedImage = imageInput?.value.trim() || 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=200&q=80';
   const productData = {
     id: productId || generateId('p'),
+    sku: skuInput?.value.trim() || '',
     name: productName,
     short: productName,
     desc: productName,
