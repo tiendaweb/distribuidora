@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title><?= htmlspecialchars($pageTitle ?? 'La Distribuidora') ?></title>
 <script src="https://cdn.tailwindcss.com"></script>
+<?php if (!empty($requiresAlpine)): ?>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<?php endif; ?>
 <script>
   tailwind.config = {
     theme: {
@@ -51,6 +54,7 @@
 <link rel="stylesheet" href="/css/admin.css" />
 <link rel="stylesheet" href="/css/animations.css" />
 <link rel="stylesheet" href="/css/responsive.css" />
+<style>[x-cloak]{display:none !important;}</style>
 </head>
 <body class="min-h-screen flex flex-col" data-route="<?= htmlspecialchars($currentRoute) ?>" data-admin-tab="<?= htmlspecialchars($activeAdminTab ?? '') ?>" data-store-tab="<?= htmlspecialchars($activeStoreTab ?? '') ?>" data-authenticated="<?= !empty($isAuthenticated) ? '1' : '0' ?>">
 
