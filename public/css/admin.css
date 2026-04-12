@@ -901,3 +901,72 @@ body.admin-nav-present #view-admin {
     justify-content: center;
   }
 }
+
+/* FACTURACIÓN ADMIN FALLBACK (cuando Tailwind no carga) */
+#admin-facturacion > div {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 92px);
+  background: #f9fafb;
+}
+
+#admin-facturacion > div > div:first-child {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #e5e7eb;
+  background: #fff;
+}
+
+#admin-facturacion > div > div:last-child {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-left: 1px solid #e5e7eb;
+}
+
+#admin-facturacion #admin-client-input,
+#admin-facturacion #admin-search-prod,
+#admin-facturacion #admin-tipo-comp {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+#admin-facturacion #admin-pos-categories {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+#admin-facturacion #admin-prod-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+#admin-facturacion #admin-cart-items {
+  flex: 1;
+  overflow-y: auto;
+}
+
+#admin-facturacion #admin-cart-total {
+  font-family: 'Courier New', monospace;
+}
+
+@media (min-width: 1024px) {
+  #admin-facturacion > div {
+    flex-direction: row;
+  }
+
+  #admin-facturacion > div > div:first-child {
+    flex: 1;
+    min-width: 0;
+  }
+
+  #admin-facturacion > div > div:last-child {
+    width: 420px;
+    flex-shrink: 0;
+  }
+}
