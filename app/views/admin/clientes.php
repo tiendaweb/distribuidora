@@ -1,8 +1,26 @@
 <?php
+$requiresAlpine = true;
 ob_start();
 ?>
 <div id="view-admin" class="flex-1 bg-gray-100">
-  <div id="admin-clientes" class="admin-section max-w-7xl mx-auto px-4 py-6 active">
+  <div id="admin-clientes" class="admin-section max-w-7xl mx-auto px-4 py-6 active space-y-4" x-data="adminClientsPilot()" x-init="init()">
+    <div class="rounded-admin-md border border-slate-200 bg-white p-4 shadow-admin-card">
+      <div class="grid grid-cols-1 gap-3 md:grid-cols-4">
+        <input x-model.trim="filters.query" type="text" placeholder="Buscar por nombre, código o CUIT" class="w-full rounded border border-slate-300 px-3 py-2 text-sm">
+        <select x-model="filters.tax" class="w-full rounded border border-slate-300 px-3 py-2 text-sm">
+          <option value="all">Todas las condiciones</option>
+          <option value="Consumidor Final">Consumidor Final</option>
+          <option value="Monotributista">Monotributista</option>
+          <option value="Responsable Inscripto">Responsable Inscripto</option>
+        </select>
+        <label class="inline-flex items-center gap-2 rounded border border-slate-300 px-3 py-2 text-sm">
+          <input x-model="filters.withAddress" type="checkbox" class="rounded border-slate-300">
+          <span>Solo con dirección</span>
+        </label>
+        <button @click="clearFilters()" class="rounded border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50">Limpiar filtros</button>
+      </div>
+    </div>
+
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       <?php
       ob_start();

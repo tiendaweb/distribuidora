@@ -105,25 +105,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     exportReportsBtn.addEventListener('click', exportReportsToCSV);
   }
 
-  // Setup stock table filters
-  const bulkEditApplyBtn = document.getElementById('btn-bulk-edit-apply');
-  if (bulkEditApplyBtn) {
-    bulkEditApplyBtn.addEventListener('click', applyBulkEdit);
-  }
-
-  const bulkEditCancelBtn = document.getElementById('btn-bulk-edit-cancel');
-  if (bulkEditCancelBtn) {
-    bulkEditCancelBtn.addEventListener('click', cancelBulkEdit);
-  }
-
-  // Setup order filters
-  const ordersFilterBtn = document.getElementById('btn-clear-orders-filters');
-  if (ordersFilterBtn) {
-    ordersFilterBtn.addEventListener('click', clearOrdersFilters);
-  }
-
-
-
   // Initialize route-driven view state
   const route = document.body?.dataset?.route || '/';
   const adminTab = document.body?.dataset?.adminTab || '';
@@ -210,20 +191,6 @@ function setupEventListeners() {
     dateToInput.addEventListener('change', generateAllReports);
   }
 
-  // Orders filter
-  const ordersSourceSelect = document.getElementById('orders-filter-source');
-  const ordersStatusSelect = document.getElementById('orders-filter-status');
-
-  if (ordersSourceSelect) {
-    ordersSourceSelect.addEventListener('change', function() {
-      setOrdersFilter('source', this.value);
-    });
-  }
-  if (ordersStatusSelect) {
-    ordersStatusSelect.addEventListener('change', function() {
-      setOrdersFilter('status', this.value);
-    });
-  }
 }
 
 function setupModalHandlers() {

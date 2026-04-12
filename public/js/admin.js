@@ -2,6 +2,139 @@
    ADMIN CORE FUNCTIONS
    ============================================================ */
 
+const ADMIN_UI_FILTERS = {
+  stock: { query: '', category: 'all', onlyLowStock: false },
+  orders: { query: '', source: 'all', status: 'all' },
+  clients: { query: '', tax: 'all', withAddress: false }
+};
+
+function emitAdminStockUi(event, detail = {}) {
+  window.dispatchEvent(new CustomEvent('admin-stock-ui', { detail: { event, ...detail } }));
+}
+
+function applyStockFilters(products = []) {
+  const filters = ADMIN_UI_FILTERS.stock;
+  const query = (filters.query || '').trim().toLowerCase();
+
+  return products.filter(product => {
+    const matchQuery = !query
+      || product.name?.toLowerCase().includes(query)
+      || (product.sku || '').toLowerCase().includes(query);
+    const matchCategory = filters.category === 'all' || product.cat === filters.category;
+    const matchLowStock = !filters.onlyLowStock || Number(product.stock || 0) <= 5;
+    return matchQuery && matchCategory && matchLowStock;
+  });
+}
+
+function applyOrderFilters(orders = []) {
+  const filters = ADMIN_UI_FILTERS.orders;
+  const query = (filters.query || '').trim().toLowerCase();
+
+  return orders.filter(order => {
+    const matchQuery = !query
+      || (order.client || '').toLowerCase().includes(query)
+      || (order.address || '').toLowerCase().includes(query);
+    const matchSource = filters.source === 'all' || order.source === filters.source;
+    const matchStatus = filters.status === 'all' || order.status === filters.status;
+    return matchQuery && matchSource && matchStatus;
+  });
+}
+
+function applyClientFilters(clients = []) {
+  const filters = ADMIN_UI_FILTERS.clients;
+  const query = (filters.query || '').trim().toLowerCase();
+
+  return clients.filter(client => {
+    const matchQuery = !query
+      || (client.name || '').toLowerCase().includes(query)
+      || (client.client_code || '').toLowerCase().includes(query)
+      || (client.cuit || '').toLowerCase().includes(query);
+    const matchTax = filters.tax === 'all' || client.tax === filters.tax;
+    const matchAddress = !filters.withAddress || Boolean((client.address || '').trim());
+    return matchQuery && matchTax && matchAddress;
+  });
+}
+
+function setStockTableFilters(filters = {}) {
+  ADMIN_UI_FILTERS.stock = { ...ADMIN_UI_FILTERS.stock, ...filters };
+  renderStockTable();
+}
+
+function setOrdersTableFilters(filters = {}) {
+  ADMIN_UI_FILTERS.orders = { ...ADMIN_UI_FILTERS.orders, ...filters };
+  renderOrdersTable();
+}
+
+function setClientsTableFilters(filters = {}) {
+  ADMIN_UI_FILTERS.clients = { ...ADMIN_UI_FILTERS.clients, ...filters };
+  renderClientsTable();
+}
+
+window.adminStockPilot = function adminStockPilot() {
+  return {
+    filters: { ...ADMIN_UI_FILTERS.stock },
+    isModalOpen: false,
+    feedback: { type: '', message: '' },
+    feedbackTimer: null,
+    init() {
+      this.$watch('filters', value => setStockTableFilters(value), { deep: true });
+      setStockTableFilters(this.filters);
+    },
+    clearFilters() {
+      this.filters = { query: '', category: 'all', onlyLowStock: false };
+    },
+    handleEvent(detail = {}) {
+      if (!detail?.event) return;
+      if (detail.event === 'modal-open') {
+        this.isModalOpen = true;
+        return;
+      }
+      if (detail.event === 'modal-close') {
+        this.isModalOpen = false;
+        return;
+      }
+      if (detail.event === 'action-loading') {
+        this.feedback = { type: 'loading', message: detail.message || 'Procesando acción...' };
+        if (this.feedbackTimer) clearTimeout(this.feedbackTimer);
+        return;
+      }
+      if (detail.event === 'action-success') {
+        this.feedback = { type: 'success', message: detail.message || 'Acción completada.' };
+        if (this.feedbackTimer) clearTimeout(this.feedbackTimer);
+        this.feedbackTimer = setTimeout(() => {
+          this.feedback = { type: '', message: '' };
+        }, 1800);
+      }
+    }
+  };
+};
+
+window.adminOrdersPilot = function adminOrdersPilot() {
+  return {
+    filters: { ...ADMIN_UI_FILTERS.orders },
+    init() {
+      this.$watch('filters', value => setOrdersTableFilters(value), { deep: true });
+      setOrdersTableFilters(this.filters);
+    },
+    clearFilters() {
+      this.filters = { query: '', source: 'all', status: 'all' };
+    }
+  };
+};
+
+window.adminClientsPilot = function adminClientsPilot() {
+  return {
+    filters: { ...ADMIN_UI_FILTERS.clients },
+    init() {
+      this.$watch('filters', value => setClientsTableFilters(value), { deep: true });
+      setClientsTableFilters(this.filters);
+    },
+    clearFilters() {
+      this.filters = { query: '', tax: 'all', withAddress: false };
+    }
+  };
+};
+
 function toggleAdminMode() {
   STATE.isAdminMode = !STATE.isAdminMode;
 
@@ -135,12 +268,14 @@ function renderOrdersTable() {
   const tbody = document.getElementById('admin-orders-tbody');
   if (!tbody) return;
 
-  if (!STATE.adminOrders.length) {
+  const visibleOrders = applyOrderFilters(STATE.adminOrders || []);
+
+  if (!visibleOrders.length) {
     tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 32px; color: #999; font-weight: bold;">No hay pedidos registrados</td></tr>';
     return;
   }
 
-  tbody.innerHTML = STATE.adminOrders.map(o => {
+  tbody.innerHTML = visibleOrders.map(o => {
     const isWeb = o.source === 'web';
     const statusColor = o.status === 'pending' ? 'background: #fef3c7; color: #92400e;' : 'background: #d1fae5; color: #065f46;';
 
@@ -224,7 +359,14 @@ function renderClientsTable() {
   const tbody = document.getElementById('admin-clients-tbody');
   if (!tbody) return;
 
-  tbody.innerHTML = STATE.clients.map(c => `
+  const visibleClients = applyClientFilters(STATE.clients || []);
+
+  if (!visibleClients.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 32px; color: #999; font-weight: bold;">No hay clientes para los filtros seleccionados</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = visibleClients.map(c => `
     <tr>
       <td style="font-weight: bold;">${escapeHtml(c.name)}</td>
       <td style="font-size: 12px;">${escapeHtml(c.client_code || '') || '—'}</td>
@@ -361,7 +503,14 @@ function renderStockTable() {
   const tbody = document.getElementById('admin-stock-tbody');
   if (!tbody) return;
 
-  tbody.innerHTML = STATE.products.map(p => `
+  const visibleProducts = applyStockFilters(STATE.products || []);
+
+  if (!visibleProducts.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 32px; color: #999; font-weight: bold;">No hay productos para los filtros seleccionados</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = visibleProducts.map(p => `
     <tr>
       <td style="font-weight: bold; display: flex; align-items: center; gap: 8px;">
         <img src="${p.img}" alt="${p.name}" style="width: 32px; height: 32px; border-radius: 4px; object-fit: cover; border: 1px solid #ddd;">
@@ -412,6 +561,7 @@ function openEditProductModal(productId) {
 
   openModal('edit-product-modal');
   openModal('admin-modal-overlay');
+  emitAdminStockUi('modal-open', { mode: 'edit', productId });
 }
 
 function openCreateProductModal() {
@@ -442,6 +592,7 @@ function openCreateProductModal() {
   recalculatePrice();
   openModal('edit-product-modal');
   openModal('admin-modal-overlay');
+  emitAdminStockUi('modal-open', { mode: 'create' });
 }
 
 function recalculatePrice(source = 'margin') {
@@ -544,12 +695,14 @@ function deleteProductWithConfirm(productId) {
   if (!product) return;
 
   showConfirmDialog(`¿Eliminar el producto "${product.name}"?`, () => {
+    emitAdminStockUi('action-loading', { message: 'Eliminando producto...' });
     STATE.products = STATE.products.filter(p => p.id !== productId);
     persistData();
     renderStockTable();
     renderPosProductList();
     renderProducts();
     showToast('Producto eliminado', 'success');
+    emitAdminStockUi('action-success', { message: 'Producto eliminado correctamente.' });
   });
 }
 
@@ -577,12 +730,15 @@ function recalcPrice() {
 }
 
 function saveAdminProduct() {
+  emitAdminStockUi('action-loading', { message: 'Guardando cambios de stock...' });
   saveEditedProduct();
+  emitAdminStockUi('action-success', { message: 'Producto guardado correctamente.' });
 }
 
 function closeAdminModal() {
   closeModal('edit-product-modal');
   closeModal('admin-modal-overlay');
+  emitAdminStockUi('modal-close');
 }
 
 function closeOrderModal() {
