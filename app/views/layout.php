@@ -6,7 +6,40 @@
 <title><?= htmlspecialchars($pageTitle ?? 'La Distribuidora') ?></title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
-  tailwind.config = { theme: { extend: { colors: { brand: { DEFAULT: '#F5C000', dark: '#D4A800', light: '#FDD835', pale: '#FFF9E0' }, ink: '#1A1A1A', frost: '#F7F7F7' }, fontFamily: { display: ['Bebas Neue', 'Impact', 'sans-serif'], body: ['Nunito', 'sans-serif'] } } } }
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          brand: { DEFAULT: '#F5C000', dark: '#D4A800', light: '#FDD835', pale: '#FFF9E0' },
+          ink: '#1A1A1A',
+          frost: '#F7F7F7',
+          admin: {
+            sidebar: '#1a2332',
+            sidebarSoft: '#2d3748',
+            sidebarMuted: '#a0aec0',
+            sidebarActive: '#3b82f6'
+          }
+        },
+        borderRadius: {
+          'admin-sm': '0.375rem',
+          'admin-md': '0.5rem',
+          'admin-lg': '0.75rem'
+        },
+        boxShadow: {
+          'admin-card': '0 1px 2px 0 rgba(15, 23, 42, 0.06), 0 1px 3px 0 rgba(15, 23, 42, 0.10)',
+          'admin-elevated': '0 8px 24px -12px rgba(15, 23, 42, 0.35)'
+        },
+        spacing: {
+          'admin-shell-x': '1.5rem',
+          'admin-shell-y': '1.25rem'
+        },
+        fontFamily: {
+          display: ['Bebas Neue', 'Impact', 'sans-serif'],
+          body: ['Nunito', 'sans-serif']
+        }
+      }
+    }
+  }
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
