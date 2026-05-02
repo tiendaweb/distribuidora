@@ -1,0 +1,20 @@
+/* ============================================================
+   PRODUCT GRIDS (STORE + POS)
+   ============================================================ */
+
+/* STORE GRID — 2 columnas móvil, 4 columnas escritorio */
+.store-products-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 12px;
+}
+
+@media (min-width: 640px) {
+  .store-products-grid { gap: 14px; padding: 16px; }
+}
+
+@media (min-width: 1024px) {
+  .store-products-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; padding: 20px; }
+}
+

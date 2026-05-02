@@ -1,0 +1,28 @@
+# Backups
+*.backup
+*.bak
+
+# Node modules (si se usa en el futuro)
+node_modules/
+package-lock.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+
+# Archivos de runtime generados por la instalación
+storage/.installed
+storage/database.sqlite
